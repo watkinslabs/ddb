@@ -58,6 +58,7 @@ void vomit(int err_no){
         case ERR_JOIN_WITHOUT_EXPR           : msg="join missing conditional expresion"; break;
         case ERR_INVALID_JOIN_IDENTITY       : msg="join identity missing "; break;
         case ERR_NO_TABLE_SELECTED           : msg="No table selected"; break;
+        case ERR_TABLE_ALREADY_EXISTS        : msg="Table already exists"; break;
         
         default: msg="NO CLUE";
     }

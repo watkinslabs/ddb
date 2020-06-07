@@ -13,6 +13,7 @@ int        free_data_columns(data_column_t *columns);
 int        free_cursor(cursor_t *cursor);
 int        validate_select(select_t *select);
 int        fixup_create_table(cursor_t *cursor,table_def_t *table);
+int        compare_identifiers(identifier_t *source,identifier_t *dest);
 int        validate_create_table(cursor_t * cursor,table_def_t *table);
 cursor_t * init_cursor();
 void       debug_cursor(cursor_t *cursor);
@@ -1243,6 +1244,12 @@ int fixup_create_table(cursor_t *cursor,table_def_t *table){
     return 1;
 }
 
+int compare_identifiers(identifier_t *source,identifier_t *dest){
+    if (strcmp(source->qualifier,dest->qualifier)==0 && 
+        strcmp(source->source,dest->source)==0)) return 1;
+    return 0;
+}
+
 /* Function: validate_create_table
  * -----------------------
  * validate a create_table structures logic
@@ -1269,15 +1276,14 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     }
     while(next){
         if(next->identifier) {
-            //if(next->identifier->qualifier) {
-                
-            
-           // if (strcmp(next->identifier->qualifier,table->identifier->qualifier)==0 && 
-           //     strcmp(next->identifier->source   ,table->identifier->source)==0)
-        } 
+            if(compare_identifiers(next->identifier,table->identifier)){
+                cursor->error=ERR_TABLE_ALREADY_EXISTS;
+                sprintf(cursor->error_message,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
+                return 0;
+            }
         next=next->next;
     }
-    return 0;
+    return 1;
 }
 
 

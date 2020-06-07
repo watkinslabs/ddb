@@ -26,5 +26,6 @@
     #define ERR_JOIN_WITHOUT_EXPR           21
     #define ERR_INVALID_JOIN_IDENTITY       22
     #define ERR_NO_TABLE_SELECTED           23
+    #define ERR_TABLE_ALREADY_EXISTS        24
 #endif
 
