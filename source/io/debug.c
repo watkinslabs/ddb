@@ -62,7 +62,7 @@ char * vomit(int err_no){
         case ERR_FILE_NOT_FOUND              : msg="File not found"; break;
         case ERR_FILE_READ_PERMISSION        : msg="File Read permission"; break;
         case ERR_FILE_WRITE_PERMISSION       : msg="File write permission"; break;
-        case ERR_TABLE_HAS_NO_COLUMNS        : msg="table has no columns"; break
+        case ERR_TABLE_HAS_NO_COLUMNS        : msg="table has no columns"; break;
         case ERR_INVALID_COLUMN_NAME         : msg="invalid column name"; break;
         
         default: msg="NO CLUE";
