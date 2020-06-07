@@ -1265,7 +1265,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     // the source will always be available. this is caught in the parsing phase
     // the db may not be set.
     if(table->identifier->qualifier==0) {
-        table->identifier->qualifier=get_curent_database(cursor);
+        table->identifier->qualifier=get_current_database(cursor);
     }
     while(next){
         if(next->identifier) {
