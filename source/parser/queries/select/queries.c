@@ -1360,7 +1360,6 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         cursor->active_table=table;
     }
 
-    cursor->tables;
     return 1;
 }
 
