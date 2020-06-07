@@ -29,3 +29,38 @@
 - rtrim
 - count ; aggregate func
 
+### BASH Use
+- pipe the statments directly into ddb
+```
+echo create table company.users (fname,lname,age) file="/var/company/users.csv" delimiter='|';select * from company.users where lname='sanders'|ddb
+```
+OR
+
+- pipe the statments directly into ddb and use a premade definition file
+
+```
+# file ->company.ddl.sql
+create table company.users (fname,lname,age) file="/var/company/users.csv" delimiter='|';
+
+
+$ echo select * from company.users where lname='sanders'|ddb company.ddl.sql
+
+```
+
+### Python Use
+```
+import ddb
+ddb.init(confid_dir=config_dir)
+res=ddb.query("select * from company.users where lname='sanders'")
+if res.success==True:
+ print ("successfull")
+ for row in res.data:
+  for column in row:
+   print (column)
+
+```
+
+### PERL Use
+```
+uh.. perl guys help?
+```
