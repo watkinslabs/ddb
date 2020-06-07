@@ -554,9 +554,22 @@ int process_queries(cursor_t *cursor,char *queries){
 
 
 
-    // free resources;
+
+
+    // validate/fixup;
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
+
+    while(tmp_ptr){
+        switch(tmp_ptr->type){
+            case TOKEN_CREATE_TABLE: validate_create_table(cursor,(table_def_t*)tmp_ptr->command);
+                                     break;
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+
+    tmp_ptr=commands;
+    // free resources;
     while(tmp_ptr){
         switch(tmp_ptr->type){
             case TOKEN_SELECT:       select_print((select_t*)tmp_ptr->command);
