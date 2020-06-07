@@ -7,13 +7,16 @@
 #define EXPRESSION_ORDER_BY 4
 #define EXPRESSION_COLUMN   5
 
+#define DEFAULT_DATABASE_NAME "this"
 
-int       free_data_columns(data_column_t *columns);
-int       free_cursor(cursor_t *cursor);
-int       validate_select(select_t *select);
-int       fixup_create_table(cursor_t *cursor,table_def_t *table);
-int       validate_create_table(cursor_t * cursor,table_def_t *table);
-cursor_t *init_cursor();
+int        free_data_columns(data_column_t *columns);
+int        free_cursor(cursor_t *cursor);
+int        validate_select(select_t *select);
+int        fixup_create_table(cursor_t *cursor,table_def_t *table);
+int        validate_create_table(cursor_t * cursor,table_def_t *table);
+cursor_t * init_cursor();
+void       debug_cursor(cursor_t *cursor);
+char     * get_curent_database(cursot_t *cursor);
 
 
 /* Function: duplicate_token
@@ -1233,7 +1236,7 @@ typedef struct data_set{
  */
 int fixup_create_table(cursor_t *cursor,table_def_t *table){
     if(cursor->active_table==0) {
-        ghost(ERR_NO_TABLE_SELECTED); 
+        ghost(ERR_NO_TABLE_SELECTED);  
     }
     
 
@@ -1259,6 +1262,11 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     */
 
     table_def_t *next=cursor->tables;
+    // the source will always be available. this is caught in the parsing phase
+    // the db may not be set.
+    if(table->identifier->qualifier==0) {
+        table->identifier->qualifier=get_curent_database(cursor);
+    }
     while(next){
         if(next->identifier) {
             //if(next->identifier->qualifier) {
@@ -1284,6 +1292,7 @@ void debug_cursor(cursor_t *cursor){
 
     printf("# Cursor\n");
 
+    printf("- Active database: %s\n", get_current_database(cursor) );
     printf("- Created: %s", ctime(&cursor->created));
     printf("- Ended: %s", ctime(&cursor->ended));
     printf("- Data Length: %d\n", cursor->data_length);
@@ -1310,7 +1319,9 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
-
-
-
+char *get_current_database(cursot_t *cursor){
+    // always set.. defaults to "information_schema"
+    if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
+    return cursor->active_table->identity->qualifier;
+}
 

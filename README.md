@@ -21,6 +21,8 @@ This is a total rebuild of ddb, a python or cython module, in pure c. It's a WIP
 - DELETE FROM  identifier [WHERE where_expr]
 - TRUNCATE TABLE $identifier
 - CREATE TABLE identifier (columns) file=$file delimiter=$char
+- USE $database
+
 
 ### SQL FUNCTION
 - date
