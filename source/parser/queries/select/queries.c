@@ -1276,27 +1276,29 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         }
         next=next->next;
     }
-    
+    char *msg=0;    
     if( access( table->file, F_OK) != -1 ) {
         if( access( table->file, R_OK) != -1 ) {
             if( access( table->file, W_OK) != -1 ) {
             } else {
-                cursor->error=ERR_FILE_WRITE_PERMISSION;
-                sprintf(&cursor->error_message,"Cant write to file %s",table->file);
+                msg=safe_malloc(1000,1);
+                sprintf(&msg,"Cant write to file %s",table->file);
+                set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg)
                 return 0;
             }
         } else {
-            cursor->error=ERR_FILE_READ_PERMISSION;
-            sprintf(&cursor->error_message,"Cant read from file %s",table->file);
+            msg=safe_malloc(1000,1);
+            sprintf(&msg,"Cant read from file %s",table->file);
+            set_error(cursor,ERR_FILE_READ_PERMISSION,msg)
             return 0;
         }
     } else {
-        cursor->error=ERR_FILE_NOT_FOUND;
-        sprintf(&cursor->error_message,"Cant find file %s",table->file);
+        msg=safe_malloc(1000,1);      
+        sprintf(&msg,"Cant find file %s",table->file);
+        set_error(cursor,ERR_FILE_NOT_FOUND,msg)
         return 0;
 
     }
-
     return 1;
 }
 
@@ -1344,4 +1346,12 @@ char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
     if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
     return cursor->active_table->identifier->qualifier;
+}
+
+void set_error(cursor_t *cursor,int error_no,char *msg){
+    if(cursor->error_message) {
+        free(cursor->error_message);
+    }
+    cursor->error=error_no;
+    cursor->error_message=msg;
 }

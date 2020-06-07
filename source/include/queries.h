@@ -47,6 +47,8 @@
     cursor_t      * init_cursor              ();
     void            debug_cursor             (cursor_t *cursor);
     char          * get_current_database     (cursor_t *cursor);
+    void            set_error(cursor_t *cursor,int error_no,char *msg);
+
 
     
     void select_debug();
