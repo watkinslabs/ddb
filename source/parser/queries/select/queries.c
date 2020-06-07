@@ -1290,7 +1290,7 @@ cursor_t *init_cursor(){
 
 void debug_cursor(cursor_t *cursor){
 
-    printf("# Cursor\n");
+    printf("\n# Cursor\n");
 
     printf("- Active database: %s\n", get_current_database(cursor) );
     printf("- Created: %s", ctime(&cursor->created));
