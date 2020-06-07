@@ -1281,6 +1281,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                 sprintf(cursor->error_message,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
                 return 0;
             }
+        }
         next=next->next;
     }
     return 1;
