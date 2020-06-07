@@ -1,6 +1,8 @@
 # ddb
 ## A multi platform ETL tool for text files using natural SQL language
 
+This is a total rebuild of ddb, a python or cython module, in pure c. It's a WIP and not funcitonal.
+
 ### ROADMAP Compatibility
 |OS     |CLI|LIB|PERL|PYTHON 2| Python 3 |Mono|NET|.NET Core| Ansible | AWS Lambda |
 |-------|---|---|----|--------|----------|----|---|---------|---------|------------|
