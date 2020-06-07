@@ -1244,8 +1244,8 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     return 0;
 }
 
-int compare_literals(char *source,char *dest){
-    if (strcmp(source,dest)==0) return 1;
+int compare_literals(token_t *source,token_t *dest){
+    if (strcmp(source->value,dest->value)==0) return 1;
     return 0;
 }
 
@@ -1329,7 +1329,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                 if(inner_index!=outer_index) {
                     if(compare_literals(outer_tmp->literal,inner_tmp->literal)) {
                         msg=safe_malloc(1000,1);      
-                        sprintf(msg,"Column must be a unique literal");
+                        sprintf(msg,"Column must be a unique literal %s",inner_tmp->literal->value);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
                         return 0;
                     }
@@ -1340,7 +1340,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 
         } else {
             msg=safe_malloc(1000,1);      
-            sprintf(msg,"Column must be a unique identifier or string");
+            sprintf(msg,"Column must be a unique literal");
             set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
             return 0;
         }
