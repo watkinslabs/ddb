@@ -865,7 +865,7 @@ int free_table_def(table_def_t *table_def){
         if(table_def->file      ) free(table_def->file      );
         if(table_def->next) free_table_def(table_def->next);
         free(table_def);
-        &table_def=0;
+        *table_def=0;
     } 
     return 1;
 }
