@@ -1333,6 +1333,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                     return 0;
                 }
                 ++inner_index;
+                inner_tmp=inner_tmp->expression;
             }
 
         } else {
