@@ -1432,7 +1432,7 @@ identifier_t *duplicate_identifier(identifier_t *ident){
 
 data_column_t * duplicate_columns(data_column_t *columns){
     data_column_t *new_columns=0;
-    data_column_t tmp_ptr=columns;
+    data_column_t *tmp_ptr=columns;
 
     if(columns) {
         while(tmp_ptr) {
