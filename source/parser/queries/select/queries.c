@@ -1326,11 +1326,12 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             inner_index=0;
             while(inner_tmp){
                 // skip itself
-                if(inner_index==outer_index) continue;
-                if(compare_literals(outer_tmp->literal,inner_tmp->literal)) {
-                    sprintf(msg,"Column must be a unique literal");
-                    set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
-                    return 0;
+                if(inner_index!=outer_index) {
+                    if(compare_literals(outer_tmp->literal,inner_tmp->literal)) {
+                        sprintf(msg,"Column must be a unique literal");
+                        set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
+                        return 0;
+                    }
                 }
                 ++inner_index;
                 inner_tmp=inner_tmp->expression;
