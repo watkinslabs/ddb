@@ -1355,9 +1355,9 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         cursor->tables->tail=table;
         cursor->active_table=table;
     } else {
-        cursor->tables->tail->next=table;
-        cursor->tables->tail=table;
-        cursor->active_table=table;
+        //cursor->tables->tail->next=table;
+        //cursor->tables->tail=table;
+        //cursor->active_table=table;
     }
 
     return 1;
