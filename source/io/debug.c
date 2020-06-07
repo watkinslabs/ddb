@@ -32,7 +32,7 @@ void goop(int depth,char *source,char *msg){
  #endif
 }   
 
-void vomit(int err_no){
+char * vomit(int err_no){
     char *msg;
     switch(err_no){
         case ERR_UNTERMINATED_COMMENT_BLOCK  : msg="unterminated comment block"; break;
@@ -66,8 +66,9 @@ void vomit(int err_no){
         
         default: msg="NO CLUE";
     }
-    printf("%d ",err_no);
-    gabble("SYS",msg);
+    //printf("%d ",err_no);
+    //gabble("SYS",msg);
+    return msg;
 }
 
 void ghost(int err_no){

@@ -12,14 +12,14 @@
     #define ANSI_COLOR_RESET   "\x1b[0m"
 
 
-    void gabble(char *source,char *msg);
-    void gobble(char *source,char *msg);
-    void goop(int depth,char *source,char *msg);
-    void vomit(int err_no);
-    void ghost(int err_no);
-    char *string_duplicate(const char *str);
-    char *sub_str_cpy(char *data,int start,int length);
-    void error(cursor_t *cursor,int ERR_NUM,char *message);
+    void   gabble(char *source,char *msg);
+    void   gobble(char *source,char *msg);
+    void   goop(int depth,char *source,char *msg);
+    char * vomit(int err_no);
+    void   ghost(int err_no);
+    char * string_duplicate(const char *str);
+    char * sub_str_cpy(char *data,int start,int length);
+    void   error(cursor_t *cursor,int ERR_NUM,char *message);
 
  
 #endif
