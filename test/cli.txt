@@ -1,0 +1,64 @@
+
+SELECT col1 as ACOL,col2 as BCOL,col3 as CCOL,col1,col2,col3 as COL3
+    FROM test.mock as f1
+    WHERE first_name='bob'
+    or x =1
+    or id=0x04F
+    or id=0x04A
+
+    limit 1,11
+;
+
+SELECT col1 as name, (select 'last_name' as name) as col2 , (select 'bob' as name )  as name
+    FROM test.mock as f1
+    WHERE first_name='bob'
+    or id=0x04F
+    and id=0x4
+    and id=0x04F
+    and id=0xFFaf04F
+    and id=0x00
+    and id=0b00
+    and id=0b01
+    and id=0b0101101
+    and id=0b01011101
+    and id=-11
+    and id=-11
+    and id=-11
+    and id=+11
+--   and id=+11.44E-11
+--    and id=+11.44E11
+ /*   and id=+11E1
+    and id=11
+    and id=111.1111111
+    and id=111.111111111111111 
+   */ and id=111.111111111111111 + 5
+    and id=111.111111111111111+45
+    and last_name != 'sam'
+    and gender=F
+    -- and last_name in (select last_name FROM test.mock WHERE last_name like '%sam%')  -- as first_name
+
+
+    /* this is a block comment */
+   /* this is a multiline
+   INNER JOIN test as j1 ON f1.firstname=j1
+    LEFT OUTER JOIN test as j2 ON f1.firstname=j2
+    RIGHT OUTER JOIN test as j3 ON f1.firstname=j3
+    block comment */
+   -- heQ-- this is a commen
+-- this is another comment /* */ f
+    -- this is also a comment 'quote
+    -- this is also a comment \"double quote\"
+
+;
+
+/*
+
+# TODO.... 
+COMMENT SINGLE LINE SEEMS BROKE
+NOT seems BROKE OR NOT IMPLIENTED
+START STORING DATA FOR PARSING.....
+ERROR MESSAGES
+ARGUMENTS TO GET 
+  TOKENS
+  PARSE TREE
+  */

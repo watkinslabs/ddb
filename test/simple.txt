@@ -1,0 +1,41 @@
+CREATE TABLE test.mock ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
+
+
+SELECT 
+    DISTINCT 
+    res.col0, --identfier
+    x as x, --identifier
+    f1.col0 as ID1_A1, --identfier with alias
+    'col0', --litteral 
+    'col0' as LIT1_A1, --litteral 
+    4, --litteral 
+    4 as LIT2_A2, --litteral 
+    col1 as ACOL,
+    col2 as BCOL,
+    col3 as CCOL,
+    col1,col2,
+    col3 as COL3
+    
+    FROM    
+        test.mock as f1
+    LEFT  JOIN test2 as t2 ON -a-1*5+5=b and -c=sc-1
+    RIGHT JOIN test3 as t3 ON a=b and c=sc
+    JOIN test4 as t4 ON a=b and c=sc
+    FULL OUTER JOIN test5 as t5 ON a=b and c=sc
+    INNER JOIN test6 as t6 ON a=b and c=sc
+    
+    
+    WHERE 
+        res.first_name='bob'
+        or 1  or 2
+        or x=1.54
+        and  id=0x04F 
+        or id=0x04A
+        or x =-1-1
+        
+    GROUP BY col3,f1.col2
+    ORDER BY COL3,LIT2_A2 DESC,LIT1_A1 ASC,res.col0,f1.col1 desc
+    LIMIT 
+        1
+        , 11;
+        Select this
