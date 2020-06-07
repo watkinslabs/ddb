@@ -3,6 +3,7 @@
 
 ### ROADMAP Compatibility
 |OS     |CLI|LIB|PERL|PYTHON 2| Python 3 |Mono|NET|.NET Core| Ansible | AWS Lambda |
+|-------|---|---|----|--------|----------|----|---|---------|---------|------------|
 |Linux  | x | x | x  | x      | x        |  x | x | x       | x       | x          |
 |Windows| x | x | x  | x      | x        |    | x | x       | x       |            |
 |Mac    | x | x | x  | x      | x        |    |   |         | x       |            |
