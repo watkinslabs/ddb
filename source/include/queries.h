@@ -6,7 +6,7 @@
 
     // helpers
     token_t       * token_at                 (token_array_t *tokens,int  index);
-    token_t       * duplicate_token          (token_array_t *tokens,int  index);
+    token_t       * duplicate_token          (token_t *tokens);
     char          * copy_token_value_at      (token_array_t *tokens,int  index);
     int             add_expr                 (expression_t *expression,expression_t *item);
     // workers

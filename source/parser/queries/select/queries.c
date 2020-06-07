@@ -24,17 +24,16 @@ table_def_t *duplicate_table(table_def_t *table);
  * returns: token_t if the token and index are valid
  *          returns zero (NULL) otherwise
  */
-token_t * duplicate_token(token_array_t *tokens,int index){
-    token_t *src=token_at(tokens,index);
-    // if its a bad token.. dont duplicate
-    if(src==0) return 0;
+token_t * duplicate_token(token_t *src){
     token_t *dst=safe_malloc(sizeof(token_t),1); 
     dst->depth  =src->depth;
     dst->type   =src->type;
-    dst->value  =copy_token_value_at(tokens,index);
+    dst->value  =string_duplicate(src->value);
     for(int i=0;i<TOKEN_MAX_DEPTH;i++) dst->expr[i]=src->expr[i];
     return dst;
 }
+
+
 
 /* Function: token_at
  * -----------------------------
@@ -157,7 +156,7 @@ token_t * process_litteral(token_array_t *tokens,int *index){
         case TOKEN_BINARY :
         case TOKEN_STRING :
         case TOKEN_NUMERIC:
-        case TOKEN_REAL   : temp_token=duplicate_token(tokens,*index); 
+        case TOKEN_REAL   : temp_token=duplicate_token(&tokens->array[index]); 
                             if (temp_token) ++*index;
                             return temp_token;
     }
@@ -1051,7 +1050,7 @@ expression_t * process_column_list(token_array_t *tokens,int *index){
     while(loop) {
         token_t *column=0;
         if(token_at(tokens,*index)->type==TOKEN_STRING) {
-            column=duplicate_token(tokens,*index); 
+            column=duplicate_token(&tokens->array[index]);
             ++*index;
         }
         if(column) {
