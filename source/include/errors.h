@@ -32,5 +32,6 @@
     #define ERR_FILE_WRITE_PERMISSION       27   
     #define ERR_TABLE_HAS_NO_COLUMNS        28 
     #define ERR_INVALID_COLUMN_NAME         29
+    #define ERR_AMBIGUOUS_COLUMN_NAME       30
 #endif
 

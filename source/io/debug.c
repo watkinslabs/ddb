@@ -64,6 +64,7 @@ char * vomit(int err_no){
         case ERR_FILE_WRITE_PERMISSION       : msg="File write permission"; break;
         case ERR_TABLE_HAS_NO_COLUMNS        : msg="table has no columns"; break;
         case ERR_INVALID_COLUMN_NAME         : msg="invalid column name"; break;
+        case ERR_AMBIGUOUS_COLUMN_NAME       : msg="ambiguous column name"; break;
         
         default: msg="NO CLUE";
     }
