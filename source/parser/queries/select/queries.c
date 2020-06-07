@@ -1270,7 +1270,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         if(next->identifier) {
             if(compare_identifiers(next->identifier,table->identifier)){
                 cursor->error=ERR_TABLE_ALREADY_EXISTS;
-                sprintf(cursor->error_message,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
+                sprintf(&cursor->error_message,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
                 return 0;
             }
         }
@@ -1282,17 +1282,17 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             if( access( table->file, W_OK) != -1 ) {
             } else {
                 cursor->error=ERR_FILE_WRITE_PERMISSION;
-                sprintf(cursor->error_message,"Cant write to file %s",table->file);
+                sprintf(&cursor->error_message,"Cant write to file %s",table->file);
                 return 0;
             }
         } else {
             cursor->error=ERR_FILE_READ_PERMISSION;
-            sprintf(cursor->error_message,"Cant read from file %s",table->file);
+            sprintf(&cursor->error_message,"Cant read from file %s",table->file);
             return 0;
         }
     } else {
         cursor->error=ERR_FILE_NOT_FOUND;
-        sprintf(cursor->error_message,"Cant find file %s",table->file);
+        sprintf(&cursor->error_message,"Cant find file %s",table->file);
         return 0;
 
     }
