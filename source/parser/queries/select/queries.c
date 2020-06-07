@@ -1352,7 +1352,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 
 
     // set most recent addition to active. append to end of list. update next and tail
-    table_t *new_table=duplicate_table(table);
+    table_def_t *new_table=duplicate_table(table);
     if(cursor->tables==0)  {
         cursor->tables=new_table;
         cursor->tables->tail=new_table;
