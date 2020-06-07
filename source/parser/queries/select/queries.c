@@ -1319,7 +1319,7 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
-char *get_current_database(cursot_t *cursor){
+char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
     if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
     return cursor->active_table->identity->qualifier;
