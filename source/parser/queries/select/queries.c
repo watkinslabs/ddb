@@ -1445,10 +1445,10 @@ data_column_t * duplicate_columns(data_column_t *columns){
             }
             if(new_columns==0){
                 new_columns=new_column;
-                new_columns->tail=new_column;
+                new_columns->next_tail=new_column;
             } else {
-                new_columns->tail->next=new_column;
-                new_columns->tail=new_column;
+                new_columns->next_tail->next=new_column;
+                new_columns->next_tail=new_column;
             }
             tmp_ptr=tmp_ptr->next;
         }
