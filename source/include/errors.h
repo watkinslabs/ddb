@@ -27,5 +27,8 @@
     #define ERR_INVALID_JOIN_IDENTITY       22
     #define ERR_NO_TABLE_SELECTED           23
     #define ERR_TABLE_ALREADY_EXISTS        24
+    #define ERR_FILE_NOT_FOUND              25
+    #define ERR_FILE_READ_PERMISSION        26   
+    #define ERR_FILE_WRITE_PERMISSION       27    
 #endif
 

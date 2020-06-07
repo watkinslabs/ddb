@@ -1284,6 +1284,32 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         }
         next=next->next;
     }
+    
+    if( access( table->file, F_OK) != -1 ) {
+        if( access( table->file, R_OK) != -1 ) {
+            if( access( table->file, W_OK) != -1 ) {
+            } else {
+                cursor->error=ERR_FILE_WRITE_PERMISSION;
+                sprintf(cursor->error_message,"Cant write to file %s",table->file);
+                return 0;
+            }
+        } else {
+            cursor->error=ERR_FILE_READ_PERMISSION;
+            sprintf(cursor->error_message,"Cant read from file %s",table->file);
+            return 0;
+        }
+    } else {
+        cursor->error=ERR_FILE_NOT_FOUND;
+        sprintf(cursor->error_message,"Cant find file %s",table->file);
+        return 0;
+
+    }
+
+    // file exists
+    } else {
+        // file doesn't exist
+    }
+    if()
     return 1;
 }
 

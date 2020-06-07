@@ -59,6 +59,10 @@ void vomit(int err_no){
         case ERR_INVALID_JOIN_IDENTITY       : msg="join identity missing "; break;
         case ERR_NO_TABLE_SELECTED           : msg="No table selected"; break;
         case ERR_TABLE_ALREADY_EXISTS        : msg="Table already exists"; break;
+        case ERR_FILE_NOT_FOUND              : msg="File not found"; break;
+        case ERR_FILE_READ_PERMISSION        : msg="File Read permission"; break;
+        case ERR_FILE_WRITE_PERMISSION       : msg="File write permission"; break;
+
         
         default: msg="NO CLUE";
     }
