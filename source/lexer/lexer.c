@@ -559,8 +559,9 @@ int process_queries(cursor_t *cursor,char *queries){
     // validate/fixup;
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
-
+    //doing this while no errors exist
     while(tmp_ptr){
+        if(cursor->error) break;
         switch(tmp_ptr->type){
             case TOKEN_CREATE_TABLE: validate_create_table(cursor,(table_def_t*)tmp_ptr->command);
                                      break;

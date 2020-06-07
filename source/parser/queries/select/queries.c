@@ -1347,6 +1347,20 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         outer_tmp=outer_tmp->expression;
         ++outer_index;
     }
+
+
+    // set most recent addition to active. append to end of list. update next and tail
+    if(cursor->tables)  {
+        cursor->tables=table;
+        cursor->tables->tail=table;
+        cursor->active_table=table;
+    } else {
+        cursor->tables->tail->next=table;
+        cursor->tables->tail=table;
+        cursor->active_table=table;
+    }
+
+    cursor->tables;
     return 1;
 }
 
