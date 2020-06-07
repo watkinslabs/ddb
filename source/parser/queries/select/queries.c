@@ -1246,7 +1246,7 @@ int fixup_create_table(cursor_t *cursor,table_def_t *table){
 
 int compare_identifiers(identifier_t *source,identifier_t *dest){
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
-        strcmp(source->source,dest->source)==0)) return 1;
+        strcmp(source->source,dest->source)==0) return 1;
     return 0;
 }
 
