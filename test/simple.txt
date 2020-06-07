@@ -1,4 +1,4 @@
-CREATE TABLE test.mock ('id','id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
+CREATE TABLE test.mock ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 
 
 SELECT 
