@@ -156,7 +156,7 @@ token_t * process_litteral(token_array_t *tokens,int *index){
         case TOKEN_BINARY :
         case TOKEN_STRING :
         case TOKEN_NUMERIC:
-        case TOKEN_REAL   : temp_token=duplicate_token(&tokens->array[index]); 
+        case TOKEN_REAL   : temp_token=duplicate_token(&tokens->array[*index]); 
                             if (temp_token) ++*index;
                             return temp_token;
     }
@@ -1050,7 +1050,7 @@ expression_t * process_column_list(token_array_t *tokens,int *index){
     while(loop) {
         token_t *column=0;
         if(token_at(tokens,*index)->type==TOKEN_STRING) {
-            column=duplicate_token(&tokens->array[index]);
+            column=duplicate_token(&tokens->array[*index]);
             ++*index;
         }
         if(column) {
