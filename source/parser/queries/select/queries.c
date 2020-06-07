@@ -14,7 +14,7 @@
 int compare_literals(token_t *source,token_t *dest);
 void set_error(cursor_t *cursor,int error_no,char *msg);
 identifier_t *duplicate_identifier(identifier_t *ident);
-data_column_t * duplicate_columns(data_column_t columns);
+data_column_t * duplicate_columns(data_column_t *columns);
 table_def_t *duplicate_table(table_def_t *table);
 
 /* Function: duplicate_token
