@@ -13,6 +13,9 @@
 
 int compare_literals(token_t *source,token_t *dest);
 void set_error(cursor_t *cursor,int error_no,char *msg);
+identifier_t *duplicate_identifier(identifier_t *ident);
+data_column_t * duplicate_columns(data_column_t columns);
+table_def_t *duplicate_table(table_def_t *table);
 
 /* Function: duplicate_token
  * -----------------------
@@ -1352,12 +1355,12 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     // set most recent addition to active. append to end of list. update next and tail
     if(cursor->tables==0)  {
         cursor->tables=table;
-        //cursor->tables->tail=table;
-        //cursor->active_table=table;
+        cursor->tables->tail=table;
+        cursor->active_table=table;
     } else {
-        //cursor->tables->tail->next=table;
-        //cursor->tables->tail=table;
-        //cursor->active_table=table;
+        cursor->tables->tail->next=table;
+        cursor->tables->tail=table;
+        cursor->active_table=table;
     }
 
     return 1;
@@ -1415,4 +1418,57 @@ void set_error(cursor_t *cursor,int error_no,char *msg){
     }
     cursor->error=error_no;
     cursor->error_message=msg;
+}
+
+identifier_t *duplicate_identifier(identifier_t *ident){
+    identifier_t *new_ident=0;
+    if(ident){
+        new_ident=safe_malloc(sizeof(identifier_t),1);
+        new_ident->qualifier=string_duplicate(ident->qualifier);
+        new_ident->source=string_duplicate(ident->source);
+    }
+    return new_ident;
+}
+
+data_column_t * duplicate_columns(data_column_t columns){
+    data_column_t *new_columns=0;
+    data_column_t tmp_ptr=columns;
+
+    if(columns) {
+        while(tmp_ptr) {
+            data_column_t *new_column=safe_malloc(sizeof(data_column_t),1);
+            new_column->alias    =string_duplicate(tmp_ptr->alias);
+            new_column->ordinal  =tmp_ptr->ordinal;
+            new_column->type     =tmp_ptr->type;
+            
+            if(tmp_ptr->type==EXPRESSION_COLUMN) {
+                new_column->object   =duplicate_token((token_t*)tmp_ptr->object);
+            }
+            if(new_columns==0){
+                new_columns=new_column;
+                new_columns->tail=new_column;
+            } else {
+                new_columns->tail->next=new_column;
+                new_columns->tail=new_column;
+            }
+            tmp_ptr=tmp_ptr->next;
+        }
+
+    }
+    return new_columns;
+}
+
+table_def_t *duplicate_table(table_def_t *table){
+    table_def_t *new_table=0;
+    if (table){
+        new_table=safe_malloc(sizeof(table_def_t),1);
+        new_table->columns=duplicate_columns(table->columns);
+        new_table->strict=table->strict;
+        new_table->file=string_duplicate(table->file);
+        new_table->column=string_duplicate(table->column);
+        new_table->next=0;
+        new_table->tail=0;
+        new_table->identifier=duplicate_identifier(table->identifier);
+    }
+    return new_table;
 }
