@@ -79,6 +79,7 @@ void ghost(int err_no){
 }
 
 char *string_duplicate(const char *str){
+    if (str==0) return 0;
     char *new_str = strdup(str);
     if(new_str == NULL)
         ghost(ERR_STRING_DUPLICATION_ERROR);
