@@ -25,6 +25,7 @@ table_def_t *duplicate_table(table_def_t *table);
  *          returns zero (NULL) otherwise
  */
 token_t * duplicate_token(token_t *src){
+    if(src==0) return 0;
     token_t *dst=safe_malloc(sizeof(token_t),1); 
     dst->depth  =src->depth;
     dst->type   =src->type;
