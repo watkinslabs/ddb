@@ -1315,13 +1315,13 @@ void debug_cursor(cursor_t *cursor){
     }
     if(cursor->error) {
         printf("- ERROR: %s\n",cursor->error_message);
-    }
+    }identifieridentifier
 
 }
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
     if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
-    return cursor->active_table->identity->qualifier;
+    return cursor->active_table->identifier->qualifier;
 }
 
