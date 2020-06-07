@@ -11,7 +11,7 @@
 #define DEFAULT_DATABASE_NAME "this"
 
 
-int compare_literals(char *source,char *dest);
+int compare_literals(token_t *source,token_t *dest);
 void set_error(cursor_t *cursor,int error_no,char *msg);
 
 /* Function: duplicate_token
