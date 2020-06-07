@@ -1320,8 +1320,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     expression_t *inner_tmp;
     int outer_index=0;
     int inner_index=0;
-    while(outer_tmpvoid set_error(cursor_t *cursor,int error_no,char *msg){
-){
+    while(outer_tmp){
         if(outer_tmp->litteral) {
             inner_tmp=table->columns;
             inner_index=0;
