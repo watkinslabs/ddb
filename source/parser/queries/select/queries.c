@@ -1272,7 +1272,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             if(compare_identifiers(next->identifier,table->identifier)){
                 msg=safe_malloc(1000,1);
                 sprintf(msg,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
-                set_error(cursor,ERR_TABLE_ALREADY_EXISTS,msg)
+                set_error(cursor,ERR_TABLE_ALREADY_EXISTS,msg);
                 return 0;
             }
         }
@@ -1284,13 +1284,13 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             } else {
                 msg=safe_malloc(1000,1);
                 sprintf(msg,"Cant write to file %s",table->file);
-                set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg)
+                set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg);
                 return 0;
             }
         } else {
             msg=safe_malloc(1000,1);
             sprintf(msg,"Cant read from file %s",table->file);
-            set_error(cursor,ERR_FILE_READ_PERMISSION,msg)
+            set_error(cursor,ERR_FILE_READ_PERMISSION,msg);
             return 0;
         }
     } else {
