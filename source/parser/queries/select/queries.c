@@ -1315,7 +1315,7 @@ void debug_cursor(cursor_t *cursor){
     }
     if(cursor->error) {
         printf("- ERROR: %s\n",cursor->error_message);
-    }identifieridentifier
+    }
 
 }
 
