@@ -1296,7 +1296,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     } else {
         msg=safe_malloc(1000,1);      
         sprintf(msg,"Cant find file %s",table->file);
-        set_error(cursor,ERR_FILE_NOT_FOUND,msg)
+        set_error(cursor,ERR_FILE_NOT_FOUND,msg);
         return 0;
 
     }
