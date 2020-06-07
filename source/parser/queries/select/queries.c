@@ -16,7 +16,7 @@ int        fixup_create_table(cursor_t *cursor,table_def_t *table);
 int        validate_create_table(cursor_t * cursor,table_def_t *table);
 cursor_t * init_cursor();
 void       debug_cursor(cursor_t *cursor);
-char     * get_curent_database(cursor_t *cursor);
+char     * get_current_database(cursor_t *cursor);
 
 
 /* Function: duplicate_token
@@ -1324,4 +1324,3 @@ char *get_current_database(cursor_t *cursor){
     if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
     return cursor->active_table->identifier->qualifier;
 }
-
