@@ -1321,7 +1321,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     int outer_index=0;
     int inner_index=0;
     while(outer_tmp){
-        if(outer_tmp->litteral) {
+        if(outer_tmp->literal) {
             inner_tmp=table->columns;
             inner_index=0;
             while(inner_tmp){
