@@ -11,7 +11,7 @@
 #define DEFAULT_DATABASE_NAME "this"
 
 
-int compare_literal(char *source,char *dest);
+int compare_literals(char *source,char *dest);
 void set_error(cursor_t *cursor,int error_no,char *msg);
 
 /* Function: duplicate_token
@@ -1244,7 +1244,7 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     return 0;
 }
 
-int compare_literal(char *source,char *dest){
+int compare_literals(char *source,char *dest){
     if (strcmp(source,dest)==0) return 1;
     return 0;
 }
