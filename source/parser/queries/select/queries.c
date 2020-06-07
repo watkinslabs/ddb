@@ -1328,6 +1328,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                 // skip itself
                 if(inner_index!=outer_index) {
                     if(compare_literals(outer_tmp->literal,inner_tmp->literal)) {
+                        msg=safe_malloc(1000,1);      
                         sprintf(msg,"Column must be a unique literal");
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
                         return 0;
@@ -1338,6 +1339,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             }
 
         } else {
+            msg=safe_malloc(1000,1);      
             sprintf(msg,"Column must be a unique identifier or string");
             set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
             return 0;
