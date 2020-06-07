@@ -1305,11 +1305,6 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 
     }
 
-    // file exists
-    } else {
-        // file doesn't exist
-    }
-    if()
     return 1;
 }
 
