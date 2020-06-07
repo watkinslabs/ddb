@@ -38,6 +38,16 @@
     int             free_table_def           (table_def_t *table_def);
     void            debug_identifier         (identifier_t *identifier);
     void            debug_create_table       (table_def_t *table);
+    int             free_data_columns        (data_column_t *columns);
+    int             free_cursor              (cursor_t *cursor);
+    int             validate_select          (select_t *select);
+    int             fixup_create_table       (cursor_t *cursor,table_def_t *table);
+    int             compare_identifiers      (identifier_t *source,identifier_t *dest);
+    int             validate_create_table    (cursor_t * cursor,table_def_t *table);
+    cursor_t      * init_cursor              ();
+    void            debug_cursor             (cursor_t *cursor);
+    char          * get_current_database     (cursor_t *cursor);
+
     
     void select_debug();
 #endif  
