@@ -29,6 +29,8 @@
     #define ERR_TABLE_ALREADY_EXISTS        24
     #define ERR_FILE_NOT_FOUND              25
     #define ERR_FILE_READ_PERMISSION        26   
-    #define ERR_FILE_WRITE_PERMISSION       27    
+    #define ERR_FILE_WRITE_PERMISSION       27   
+    #define ERR_TABLE_HAS_NO_COLUMNS        28 
+    #define ERR_INVALID_COLUMN_NAME         29
 #endif
 

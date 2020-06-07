@@ -11,6 +11,7 @@
 #define DEFAULT_DATABASE_NAME "this"
 
 
+int compare_literal(char *source,char *dest);
 
 /* Function: duplicate_token
  * -----------------------
@@ -1242,6 +1243,11 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     return 0;
 }
 
+int compare_literal(char *source,char *dest){
+    if (strcmp(source,dest)==0) return 1;
+    return 0;
+}
+
 /* Function: validate_create_table
  * -----------------------
  * validate a create_table structures logic
@@ -1267,6 +1273,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     if(table->identifier->qualifier==0) {
         table->identifier->qualifier=get_current_database(cursor);
     }
+    // check to see if table exists
     while(next){
         if(next->identifier) {
             if(compare_identifiers(next->identifier,table->identifier)){
@@ -1278,6 +1285,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         }
         next=next->next;
     }
+    // check to see if file is accessable
     if( access( table->file, F_OK) != -1 ) {
         if( access( table->file, R_OK) != -1 ) {
             if( access( table->file, W_OK) != -1 ) {
@@ -1298,7 +1306,40 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         sprintf(msg,"Cant find file %s",table->file);
         set_error(cursor,ERR_FILE_NOT_FOUND,msg);
         return 0;
+    }
+    //check to see if table has columns and they are uniquely named
 
+    if(table->columns==0) {
+        msg=safe_malloc(1000,1);      
+        sprintf(msg,"no columns in %s.%s",table->identifier->qualifier,table->identifier->source);
+        set_error(cursor,ERR_TABLE_HAS_NO_COLUMNS,msg);
+        return 1;
+    }
+    expression_t *outer_tmp=table->columns;
+    expression_t *inner_tmp;
+    int outer_index=0;
+    int inner_index=0;
+    while(outer_){
+        if(outer_tmp->litteral) {
+            inner_tmp=table->columns;
+            inner_index=0;
+            while(inner_tmp){
+                // skip itself
+                if(inner_index==outer_index) continue;
+                if(compare_literals(outer_tmp->literal,inner_tmp->literal) {
+                    sprintf(msg,"Column must be a unique literal");
+                    set_error(cursor,ERR_DUPLICATE_COLUMN_NAME,msg);
+                }
+                ++inner_index;
+            }
+
+        } else {
+            sprintf(msg,"Column must be a unique identifier or string");
+            set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
+            return 0;
+        }
+        outer_tmp=outer_tmp->expression;
+        ++outer_index;
     }
     return 1;
 }
