@@ -1,6 +1,7 @@
 #include "../../../include/errors.h"
 #include "../../../include/tokens.h"
 #include "../../../include/structure.h"
+#include "../../../include/debug.h"
 #include "../../../include/select.h"
 
 #define EXPRESSION_GROUP_BY 3
@@ -1342,6 +1343,7 @@ void debug_cursor(cursor_t *cursor){
         }
     }
     if(cursor->error) {
+        printf("- ERROR NUM: %d %s\n",cursor->error,vomit(cursor->error));
         printf("- ERROR: %s\n",cursor->error_message);
     }
 
