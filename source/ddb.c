@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     }
 
     // create a cursor and process queries
-    cursor_t *cursor=init_cursor(cursor);
+    cursor_t *cursor=init_cursor();
     process_queries(cursor,query_str);
     debug_cursor(cursor);
 

@@ -1085,7 +1085,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     return 1;
 }
 
-cursor_t *init_cursor(){
+cursor_t * init_cursor(){
     cursor_t * cursor=safe_malloc(sizeof(cursor_t),1);
     cursor->data_length=0;
     clock_gettime(CLOCK_REALTIME,&cursor->created);
