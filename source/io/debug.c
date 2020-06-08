@@ -259,6 +259,9 @@ void debug_tuple(char *key,char* value){
 void debug_value(char* value){
     printf (" - %s\n",value);
 }
+void debug_ordinal(int ordinal) {
+    printf (" - ordinal: %d",ordinal);
+}
 
 /* Function: debug_select
  * -----------------------
@@ -294,11 +297,9 @@ void debug_select(select_t *select){
                  printf("%s ",  next->alias);
                  printf("%d\n",  next->ordinal);
                                   break;
-                case TOKEN_IDENTIFIER: printf("%s- %s.%s ALIAS %s, %d\n",token_type(next->type),
-                                                            ((identifier_t *)next->object)->qualifier ,
-                                                            ((identifier_t *)next->object)->source ,
-                                                            next->alias ,
-                                                            next->ordinal );
+                case TOKEN_IDENTIFIER: debug_identifier((identifier_t *)next->object); 
+                                       debug_alias(next->alias);
+                                       debug_ordinal(next->ordinal);
                                     break;
                 default:   debug_value(token_type(next->type));
                             break;
