@@ -260,7 +260,7 @@ void debug_value(char* value){
     printf (" - %s\n",value);
 }
 void debug_ordinal(int ordinal) {
-    printf (" - ordinal: %d",ordinal);
+    printf ("   - ordinal: %d\n",ordinal);
 }
 
 /* Function: debug_select
