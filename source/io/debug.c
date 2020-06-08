@@ -243,18 +243,18 @@ void debug_cursor(cursor_t *cursor){
 }
 
 void debug_header(char *title) {
-    printf (" # %s",title);
+    printf (" # %s\n",title);
 }
 
 void debug_sub_header(char *title) {
-    printf (" ## %s",title);
+    printf (" ## %s\n",title);
 }
 
 void debug_tuple(char *key,char* value){
-    printf (" - %s: %s",key,value);
+    printf (" - %s: %s\n",key,value);
 }
 void debug_value(char* value){
-    printf (" - %s",value);
+    printf (" - %s\n",value);
 }
 
 /* Function: debug_select
@@ -268,14 +268,14 @@ void debug_select(select_t *select){
 
     if(select==0) return;
     debug_header("Select");
-    if (select->distinct) debug_sub_header("HAS DISTINCT\n");
+    if (select->distinct) debug_sub_header("HAS DISTINCT");
     if (select->columns){
         data_column_t * next=select->columns;
         // skip root element;
         if(next) next=next->next;
         
         while(next){
-            if(next->object==0) debug_sub_header("Missing object in datacolumn \n");
+            if(next->object==0) debug_sub_header("Missing object in datacolumn");
             else 
             switch(next->type){
 
