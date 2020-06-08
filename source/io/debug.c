@@ -298,7 +298,7 @@ void debug_select(select_t *select){
                                                             next->ordinal );
                                     break;
                 default:   debug_value(token_type(next->type));
-                            break
+                            break;
             }//end switch
             next=next->next;
         }//end while
