@@ -131,7 +131,7 @@ void debug_expr(expression_t *expr,int depth){
         return;
     }
     char *pad="";
-    if(depth>0) pad=safe_malloc(depth+1,1);
+    //if(depth>0) pad=safe_malloc(depth+1,1);
 
     for(int i=0;i<depth;i++) pad[i]=' ';
 
