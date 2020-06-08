@@ -1454,7 +1454,7 @@ expression_t * duplicate_columns(expression_t *columns){
                 new_columns=new_column;
                 new_columns->expression_tail=new_column;
             } else {
-                new_columns->expression_tail->next=new_column;
+                new_columns->expression_tail->expression=new_column;
                 new_columns->expression_tail=new_column;
             }
             tmp_ptr=tmp_ptr->expression;
