@@ -242,6 +242,21 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
+void debug_header(char title) {
+    printf (" # %s",title);
+}
+
+void debug_sub_header(char title) {
+    printf (" ## %s",title);
+}
+
+void debug_tuple(char *key,char* value){
+    printf (" - %s: %s",key,value);
+}
+void debug_value(char* value){
+    printf (" - %s",value);
+}
+
 /* Function: debug_select
  * -----------------------
  * visibly print the select data structure
@@ -252,15 +267,15 @@ void debug_select(select_t *select){
     // DEBUGGING INFORMATION
 
     if(select==0) return;
-    printf("\n# Select\n");
-    if (select->distinct) printf("HAS DISTINCT\n");
+    debug_header("Select");
+    if (select->distinct) debug_sub_header("HAS DISTINCT\n");
     if (select->columns){
         data_column_t * next=select->columns;
         // skip root element;
         if(next) next=next->next;
         
         while(next){
-            if(next->object==0) printf ("Missing object in datacolumn \n");
+            if(next->object==0) debug_sub_header("Missing object in datacolumn \n");
             else 
             switch(next->type){
 
@@ -282,26 +297,21 @@ void debug_select(select_t *select){
                                                             next->alias ,
                                                             next->ordinal );
                                     break;
-                default:   printf("%s \n",token_type(next->type));
-                            break;
+                default:   debug_value(token_type(next->type));
+                            break
             }//end switch
             next=next->next;
         }//end while
     } else {
-        printf("  NO COLUMNS\n");
+        debug_sub_header("NO COLUMNS");
     }
    
 
      if (select->from) {
-        printf("FROM\n");
-        if(select->from->qualifier) {
-            printf("%s.",select->from->qualifier);
-        }
-        if(select->from->source) {
-            printf("%s",select->from->source);
-            if(select->alias) printf(" ALIAS: %s ",select->alias);
-            printf("\n");
-        }
+        debug_sub_header("FROM");
+        debug_identifier(select->from);
+        if(select->alias) printf(" ALIAS: %s \n",select->alias);
+        
         
     }
 
