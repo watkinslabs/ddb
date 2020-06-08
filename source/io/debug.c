@@ -136,16 +136,16 @@ void debug_expr(expression_t *expr,int depth){
     for(int i=0;i<depth;i++) pad[i]=' ';
 
     printf("%s- expr:\n",pad);
-    printf("%s  - mode:   %d ",pad,expr->mode);
-    printf("%s  - list:   %d ",pad,expr->list);
-    printf("%s  - not:    %d ",pad,expr->not);
-    printf("%s  - not_in: %d ",pad,expr->not_in);
-    printf("%s  - in:     %d \n",pad,expr->in);
-    printf("%s  - direction:  %s ",pad,token_type(expr->direction));
-    printf("%s  - negative:   %d ",pad,expr->negative);
-    printf("%s  - positive:   %d ",pad,expr->positive);
-    printf("%s  - comparitor: %s ",pad,token_type(expr->comparitor));
-    printf("%s  - operator:   %s \n",pad,token_type(expr->operator));
+    if(expr->mode)        if(printf("%s  - mode:   %d ",pad,expr->mode);
+    if(expr->list)        if(printf("%s  - list:   %d ",pad,expr->list);
+    if(expr->not)         if(printf("%s  - not:    %d ",pad,expr->not);
+    if(expr->not_in)      if(printf("%s  - not_in: %d ",pad,expr->not_in);
+    if(expr->in)          if(printf("%s  - in:     %d \n",pad,expr->in);
+    if(expr->direction)   if(printf("%s  - direction:  %s ",pad,token_type(expr->direction));
+    if(expr->negative)    if(printf("%s  - negative:   %d ",pad,expr->negative);
+    if(expr->positive)    if(printf("%s  - positive:   %d ",pad,expr->positive);
+    if(expr->comparitor)  if(printf("%s  - comparitor: %s ",pad,token_type(expr->comparitor));
+    if(expr->operator)    if(printf("%s  - operator:   %s \n",pad,token_type(expr->operator));
     if(expr->identifier){
         printf("%s - Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
     }
