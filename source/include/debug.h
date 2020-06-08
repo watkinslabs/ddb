@@ -1,5 +1,7 @@
 // debugging 
 
+#include "tokens.h"
+
 #if !defined (_DEBUG_H_)
     #define _DEBUG_H_ 1
 
@@ -21,6 +23,12 @@
     char * sub_str_cpy(char *data,int start,int length);
     void   error(cursor_t *cursor,int ERR_NUM,char *message);
 
+
+    void debug_expr        (expression_t *expr,int depth);
+    void debug_identifier  (identifier_t *identifier);
+    void debug_cursor      (cursor_t *cursor);
+    void debug_select      (select_t *select);
+    void debug_create_table(table_def_t *table);
 
  
 #endif

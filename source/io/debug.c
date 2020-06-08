@@ -237,3 +237,102 @@ void debug_cursor(cursor_t *cursor){
     }
 
 }
+
+/* Function: debug_select
+ * -----------------------
+ * visibly print the select data structure
+ * 
+ * returns: nothing. All output is via stdio
+ */
+void debug_select_(select_t *select){
+    // DEBUGGING INFORMATION
+
+    if(select==0) return;
+    printf("SELECT\n");
+    if (select->distinct) printf("HAS DISTINCT\n");
+    if (select->columns){
+        data_column_t * next=select->columns;
+        // skip root element;
+        if(next) next=next->next;
+        
+        while(next){
+            if(next->object==0) printf ("Missing object in datacolumn \n");
+            else 
+            switch(next->type){
+
+                case TOKEN_STRING:
+                case TOKEN_NUMERIC:
+                case TOKEN_HEX:
+                case TOKEN_BINARY:
+                case TOKEN_REAL:
+                case TOKEN_NULL: 
+                
+                 printf("%s ",  token_type(next->type));
+                 printf("%s ", (char*)next->object);
+                 printf("%s ",  next->alias);
+                 printf("%d\n",  next->ordinal);
+                                  break;
+                case TOKEN_IDENTIFIER: printf("%s- %s.%s ALIAS %s, %d\n",token_type(next->type),
+                                                            ((identifier_t *)next->object)->qualifier ,
+                                                            ((identifier_t *)next->object)->source ,
+                                                            next->alias ,
+                                                            next->ordinal );
+                                    break;
+                default:   printf("%s \n",token_type(next->type));
+                            break;
+            }//end switch
+            next=next->next;
+        }//end while
+    } else {
+        printf("  NO COLUMNS\n");
+    }
+   
+
+     if (select->from) {
+        printf("FROM\n");
+        if(select->from->qualifier) {
+            printf("%s.",select->from->qualifier);
+        }
+        if(select->from->source) {
+            printf("%s",select->from->source);
+            if(select->alias) printf(" ALIAS: %s ",select->alias);
+            printf("\n");
+        }
+        
+    }
+
+    if (select->join) {
+        printf("JOIN %d\n",select->join_length);
+        for(int i=0;i<select->join_length;i++){
+            if(select->join[i].identifier) {
+                if(select->join[i].identifier->qualifier) {
+                    printf("%s.",select->join[i].identifier->qualifier);
+                }
+                if(select->join[i].identifier->source) {
+                    printf("%s ",select->join[i].identifier->source);
+                }
+                if(select->join[i].alias) printf("ALIAS: %s",select->join[i].alias);
+                printf("\n");
+            }
+            debug_expr(select->join[i].expression,0);
+        }
+        
+    }
+    if(select->where) {
+        printf(" ---WHERE---");
+        debug_expr(select->where,0);
+    }
+    if(select->group) {
+        printf(" ---GROUP---");
+        debug_expr(select->group,0);
+    }
+    if(select->order) {
+        printf(" ---ORDER---");
+        debug_expr(select->order,0);
+    }
+
+
+    if (select->has_limit_start) printf("LIMIT_START:   %d\n",select->limit_start);
+    if (select->has_limit_length) printf("LIMIT_LENGTH : %d\n",select->limit_length);
+}
+

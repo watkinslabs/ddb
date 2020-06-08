@@ -17,6 +17,32 @@ identifier_t *duplicate_identifier(identifier_t *ident);
 expression_t * duplicate_columns(expression_t *columns);
 table_def_t *duplicate_table(table_def_t *table);
 
+
+char *get_current_database(cursor_t *cursor){
+    // always set.. defaults to "information_schema"
+    if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
+    return cursor->active_table->identifier->qualifier;
+}
+
+void set_error(cursor_t *cursor,int error_no,char *msg){
+    if(cursor->error_message) {
+        free(cursor->error_message);
+    }
+    cursor->error=error_no;
+    cursor->error_message=msg;
+}
+
+int compare_identifiers(identifier_t *source,identifier_t *dest){
+    if (strcmp(source->qualifier,dest->qualifier)==0 && 
+        strcmp(source->source,dest->source)==0) return 1;
+    return 0;
+}
+
+int compare_literals(token_t *source,token_t *dest){
+    if (strcmp(source->value,dest->value)==0) return 1;
+    return 0;
+}
+
 /* Function: duplicate_token
  * -----------------------
  * returns a copy of a token_t from an token_array_t
@@ -34,7 +60,63 @@ token_t * duplicate_token(token_t *src){
     return dst;
 }
 
+identifier_t *duplicate_identifier(identifier_t *ident){
+    identifier_t *new_ident=0;
+    if(ident){
+        new_ident=safe_malloc(sizeof(identifier_t),1);
+        new_ident->qualifier=string_duplicate(ident->qualifier);
+        new_ident->source=string_duplicate(ident->source);
+    }
+    return new_ident;
+}
 
+expression_t * duplicate_columns(expression_t *columns){
+    expression_t *new_columns=0;
+    expression_t *tmp_ptr=columns;
+
+    if(columns) {
+        while(tmp_ptr) {
+            expression_t *new_column=safe_malloc(sizeof(expression_t),1);
+            new_column->positive     =tmp_ptr->positive;
+            new_column->operator     =tmp_ptr->operator;
+            new_column->not_in       =tmp_ptr->not_in;
+            new_column->not          =tmp_ptr->not;
+            new_column->negative     =tmp_ptr->negative;
+            new_column->mode         =tmp_ptr->mode;
+            new_column->list         =tmp_ptr->list;
+            new_column->in           =tmp_ptr->in;
+            new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);;
+            new_column->identifier   =duplicate_token(tmp_ptr->identifier);
+
+            // attach list
+            if(new_columns==0){
+                new_columns=new_column;
+                new_columns->expression_tail=new_column;
+            } else {
+                new_columns->expression_tail->expression=new_column;
+                new_columns->expression_tail=new_column;
+            }
+            tmp_ptr=tmp_ptr->expression;
+        }
+
+    }
+    return new_columns;
+}
+
+table_def_t *duplicate_table(table_def_t *table){
+    table_def_t *new_table=0;
+    if (table){
+        new_table=safe_malloc(sizeof(table_def_t),1);
+        new_table->columns=duplicate_columns(table->columns);
+        new_table->strict=table->strict;
+        new_table->file=string_duplicate(table->file);
+        new_table->column=string_duplicate(table->column);
+        new_table->next=0;
+        new_table->tail=0;
+        new_table->identifier=duplicate_identifier(table->identifier);
+    }
+    return new_table;
+}
 
 /* Function: token_at
  * -----------------------------
@@ -725,106 +807,6 @@ select_t * process_select(token_array_t *tokens,int *start){
   return select;
 }
 
-
-/* Function: select_print
- * -----------------------
- * visibly print the select data structure
- * 
- * returns: nothing. All output is via stdio
- */
-void select_print(select_t *select){
-    // DEBUGGING INFORMATION
-
-    if(select==0) return;
-    printf("SELECT\n");
-    if (select->distinct) printf("HAS DISTINCT\n");
-    if (select->columns){
-        data_column_t * next=select->columns;
-        // skip root element;
-        if(next) next=next->next;
-        
-        while(next){
-            if(next->object==0) printf ("Missing object in datacolumn \n");
-            else 
-            switch(next->type){
-
-                case TOKEN_STRING:
-                case TOKEN_NUMERIC:
-                case TOKEN_HEX:
-                case TOKEN_BINARY:
-                case TOKEN_REAL:
-                case TOKEN_NULL: 
-                
-                 printf("%s ",  token_type(next->type));
-                 printf("%s ", (char*)next->object);
-                 printf("%s ",  next->alias);
-                 printf("%d\n",  next->ordinal);
-                                  break;
-                case TOKEN_IDENTIFIER: printf("%s- %s.%s ALIAS %s, %d\n",token_type(next->type),
-                                                            ((identifier_t *)next->object)->qualifier ,
-                                                            ((identifier_t *)next->object)->source ,
-                                                            next->alias ,
-                                                            next->ordinal );
-                                    break;
-                default:   printf("%s \n",token_type(next->type));
-                            break;
-            }//end switch
-            next=next->next;
-        }//end while
-    } else {
-        printf("  NO COLUMNS\n");
-    }
-   
-
-     if (select->from) {
-        printf("FROM\n");
-        if(select->from->qualifier) {
-            printf("%s.",select->from->qualifier);
-        }
-        if(select->from->source) {
-            printf("%s",select->from->source);
-            if(select->alias) printf(" ALIAS: %s ",select->alias);
-            printf("\n");
-        }
-        
-    }
-
-    if (select->join) {
-        printf("JOIN %d\n",select->join_length);
-        for(int i=0;i<select->join_length;i++){
-            if(select->join[i].identifier) {
-                if(select->join[i].identifier->qualifier) {
-                    printf("%s.",select->join[i].identifier->qualifier);
-                }
-                if(select->join[i].identifier->source) {
-                    printf("%s ",select->join[i].identifier->source);
-                }
-                if(select->join[i].alias) printf("ALIAS: %s",select->join[i].alias);
-                printf("\n");
-            }
-            debug_expr(select->join[i].expression,0);
-        }
-        
-    }
-    if(select->where) {
-        printf(" ---WHERE---");
-        debug_expr(select->where,0);
-    }
-    if(select->group) {
-        printf(" ---GROUP---");
-        debug_expr(select->group,0);
-    }
-    if(select->order) {
-        printf(" ---ORDER---");
-        debug_expr(select->order,0);
-    }
-
-
-    if (select->has_limit_start) printf("LIMIT_START:   %d\n",select->limit_start);
-    if (select->has_limit_length) printf("LIMIT_LENGTH : %d\n",select->limit_length);
-}
-
-
 /* Function: process_column_list
  * -----------------------
  * process table column definitions list (for group by)
@@ -953,8 +935,6 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
     return table_def;
 }
 
-
-
 /* Function: validate_select
  * -----------------------
  * validate a select structures logic
@@ -988,17 +968,6 @@ int fixup_create_table(cursor_t *cursor,table_def_t *table){
     
 
     return 1;
-}
-
-int compare_identifiers(identifier_t *source,identifier_t *dest){
-    if (strcmp(source->qualifier,dest->qualifier)==0 && 
-        strcmp(source->source,dest->source)==0) return 1;
-    return 0;
-}
-
-int compare_literals(token_t *source,token_t *dest){
-    if (strcmp(source->value,dest->value)==0) return 1;
-    return 0;
 }
 
 /* Function: validate_create_table
@@ -1116,84 +1085,10 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
     return 1;
 }
 
-
 cursor_t *init_cursor(){
     cursor_t * cursor=safe_malloc(sizeof(cursor_t),1);
     cursor->data_length=0;
     clock_gettime(CLOCK_REALTIME,&cursor->created);
     return cursor;
-}
-
-
-char *get_current_database(cursor_t *cursor){
-    // always set.. defaults to "information_schema"
-    if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
-    return cursor->active_table->identifier->qualifier;
-}
-
-void set_error(cursor_t *cursor,int error_no,char *msg){
-    if(cursor->error_message) {
-        free(cursor->error_message);
-    }
-    cursor->error=error_no;
-    cursor->error_message=msg;
-}
-
-identifier_t *duplicate_identifier(identifier_t *ident){
-    identifier_t *new_ident=0;
-    if(ident){
-        new_ident=safe_malloc(sizeof(identifier_t),1);
-        new_ident->qualifier=string_duplicate(ident->qualifier);
-        new_ident->source=string_duplicate(ident->source);
-    }
-    return new_ident;
-}
-
-expression_t * duplicate_columns(expression_t *columns){
-    expression_t *new_columns=0;
-    expression_t *tmp_ptr=columns;
-
-    if(columns) {
-        while(tmp_ptr) {
-            expression_t *new_column=safe_malloc(sizeof(expression_t),1);
-            new_column->positive     =tmp_ptr->positive;
-            new_column->operator     =tmp_ptr->operator;
-            new_column->not_in       =tmp_ptr->not_in;
-            new_column->not          =tmp_ptr->not;
-            new_column->negative     =tmp_ptr->negative;
-            new_column->mode         =tmp_ptr->mode;
-            new_column->list         =tmp_ptr->list;
-            new_column->in           =tmp_ptr->in;
-            new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);;
-            new_column->identifier   =duplicate_token(tmp_ptr->identifier);
-
-            // attach list
-            if(new_columns==0){
-                new_columns=new_column;
-                new_columns->expression_tail=new_column;
-            } else {
-                new_columns->expression_tail->expression=new_column;
-                new_columns->expression_tail=new_column;
-            }
-            tmp_ptr=tmp_ptr->expression;
-        }
-
-    }
-    return new_columns;
-}
-
-table_def_t *duplicate_table(table_def_t *table){
-    table_def_t *new_table=0;
-    if (table){
-        new_table=safe_malloc(sizeof(table_def_t),1);
-        new_table->columns=duplicate_columns(table->columns);
-        new_table->strict=table->strict;
-        new_table->file=string_duplicate(table->file);
-        new_table->column=string_duplicate(table->column);
-        new_table->next=0;
-        new_table->tail=0;
-        new_table->identifier=duplicate_identifier(table->identifier);
-    }
-    return new_table;
 }
 
