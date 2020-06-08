@@ -133,7 +133,7 @@ void debug_expr(expression_t *expr,int depth){
     char *pad=" ";
     //if(depth>0) pad=safe_malloc(depth+1,1);
 
-    for(int i=0;i<depth;i++) pad[i]=' ';
+    //for(int i=0;i<depth;i++) pad[i]=' ';
 
     printf("%s- expr:\n",pad);
     if(expr->mode)        printf("%s  - mode:   %d ",pad,expr->mode);
