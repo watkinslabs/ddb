@@ -725,171 +725,6 @@ select_t * process_select(token_array_t *tokens,int *start){
   return select;
 }
 
-/* Function: free_data_columns
- * -----------------------
- * free the nested resources in a data_column_t linked list
- * 
- * returns: 1 on success
- *          zero or NULL otherwise
- */
-int free_data_columns(data_column_t *columns){
-    data_column_t *ptr=columns;
-    data_column_t *tmp_ptr=0;
-    
-    while(ptr){
-        switch(ptr->type){
-            case TOKEN_STRING:
-            case TOKEN_NUMERIC:
-            case TOKEN_HEX:
-            case TOKEN_BINARY:
-            case TOKEN_REAL:
-            case TOKEN_NULL: if(ptr->object) free(ptr->object); 
-                             break;
-            case TOKEN_IDENTIFIER: free_ident(ptr->object); 
-            break;
-        }
-        free_string(ptr->alias);
-        tmp_ptr=ptr;
-        ptr=ptr->next;
-        free(tmp_ptr);
-    }
-    return 1;
-}
-/* Function: select_free
- * -----------------------------
- * free the data structure of a select_t
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_select(select_t *select) {
-    // free resources
-    free_data_columns(select->columns);
-    if(select->from) {
-        free_ident(select->from);
-        free_string(select->alias);
-    }
-    if(select->join) {
-        for(int i=0;i<select->join_length;i++) {
-            free_ident(select->join[i].identifier);
-            free_expression(select->join[i].expression);
-            free_string(select->join[i].alias);
-        }
-        free(select->join);
-    }
-    free_expression(select->where);
-    free_expression(select->group);
-    free_expression(select->order);
-    free(select);
-    return 0;
-}
-
-/* Function: free_string
- * -----------------------------
- * free the data structure of a char*
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_string(char *data){
-    if(data) free(data);
- return 1;
-}
-
-/* Function: free_expression
- * -----------------------------
- * free the data structure of a expression_t
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_expression(expression_t *expr){
- expression_t *expr_ptr=expr;
- while(expr_ptr){
-     if(expr_ptr->literal) free_litteral(expr_ptr->literal);
-     if(expr_ptr->identifier) free_ident(expr_ptr->identifier);
-     expression_t * last=expr_ptr;
-     expr_ptr=expr_ptr->expression;
-     free(last);
- }
- return 1;
-}
-
-/* Function: free_ident
- * -----------------------------
- * free the data structure of a identifier_t
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_ident(identifier_t *ident){
-    if(ident){
-        if(ident->qualifier) {
-            free(ident->qualifier);
-        }
-        if(ident->source) {
-            free(ident->source);
-        }
-        free(ident);
-    }
-    return 1;
-}
-
-/* Function: free_litteral
- * -----------------------------
- * free the data structure of a token_t
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_litteral(token_t *token){
-    if(token){
-        if(token->value) {
-            free(token->value);
-        }
-        free(token);
-    }
-    return 1;
-}
-
-/* Function: free_table_def
- * -----------------------
- * free the table_def_t structure
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_table_def(table_def_t *table_def){
-    if(table_def){
-        if(table_def->columns   ) free_expression(table_def->columns);
-        if(table_def->column    ) free_string(table_def->column);
-        if(table_def->identifier) free_ident(table_def->identifier);
-        /*
-        if(table_def->url       ) free(table_def->url       );
-        if(table_def->repo_path ) free(table_def->repo_path );
-        if(table_def->repo_base ) free(table_def->repo_base );
-        if(table_def->repo      ) free(table_def->repo      );
-        if(table_def->password  ) free(table_def->password  );
-        if(table_def->fifo      ) free(table_def->fifo      );*/
-        if(table_def->file      ) free(table_def->file      );
-        if(table_def->next) free_table_def(table_def->next);
-        free(table_def);
-        table_def=0;
-    } 
-    return 1;
-}
-
-/* Function: free_cursor
- * -----------------------
- * free the cursor_t structure, the 
- *   root of all query operations
- * 
- * returns: 1 for success or 0 (NULL) for failure
- */
-int free_cursor(cursor_t *cursor){
-    if(cursor->error_message  ) free_string(cursor->error_message);
-    if(cursor->executed_query ) free_string(cursor->executed_query);
-    if(cursor->requested_query) free_string(cursor->requested_query);
-    if(cursor->tables)          free_table_def(cursor->tables);
-    if(cursor->active_table)    cursor->active_table=0;
-    
-    if(cursor) free(cursor);
-    return 1;
-}
 
 /* Function: select_print
  * -----------------------
@@ -989,45 +824,6 @@ void select_print(select_t *select){
     if (select->has_limit_length) printf("LIMIT_LENGTH : %d\n",select->limit_length);
 }
 
-/* Function: debug_expr
- * -----------------------
- * visibly print the nested expresison_t data structure
- * 
- * returns: nothing. All output is via stdio
- */
-void debug_expr(expression_t *expr,int depth){
-    if(expr==0) {
-        printf ("Expression NULL\n");
-        return;
-    }
-    char *pad="";
-    if(depth>0) pad=safe_malloc(depth+1,1);
-
-    for(int i=0;i<depth;i++) pad[i]=' ';
-
-    printf("%s- expr:\n",pad);
-    printf("%s  - mode:   %d ",pad,expr->mode);
-    printf("%s  - list:   %d ",pad,expr->list);
-    printf("%s  - not:    %d ",pad,expr->not);
-    printf("%s  - not_in: %d ",pad,expr->not_in);
-    printf("%s  - in:     %d \n",pad,expr->in);
-    printf("%s  - direction:  %s ",pad,token_type(expr->direction));
-    printf("%s  - negative:   %d ",pad,expr->negative);
-    printf("%s  - positive:   %d ",pad,expr->positive);
-    printf("%s  - comparitor: %s ",pad,token_type(expr->comparitor));
-    printf("%s  - operator:   %s \n",pad,token_type(expr->operator));
-    if(expr->identifier){
-        printf("%s - Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
-    }
-    if(expr->literal) {
-        printf("%s - Litteral: [%s] '%s'\n",pad,token_type(expr->literal->type),expr->literal->value);
-    }
-
-    if(depth>0) free(pad);
-    if(expr->expression) debug_expr(expr->expression,depth+1);
-    printf("\n");
-
-}
 
 /* Function: process_column_list
  * -----------------------
@@ -1155,53 +951,6 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
     
         
     return table_def;
-}
-
-/* Function: debug_identifier
- * -----------------------
- * visibly print the identifier_t data structure
- * 
- * returns: nothing
- */
-void debug_identifier(identifier_t *identifier) {
-    printf ("  Identifier: %s.%s\n",identifier->qualifier,identifier->source);
-
-}
-
-/* Function: debug_create_table
- * -----------------------
- * visibly print the tabel_def data structure
- * 
- * returns: nothing
- */
-void debug_create_table(table_def_t *table) {
-    if(table==0) {
-        printf ("Cant debug create table. Null\n");
-    } 
-    printf (" -- CREATE_TABLE DEBUG -------------\n");
-    expression_t *temp_ptr=table->columns;
-    debug_identifier(table->identifier);
-    
-    while(temp_ptr){
-        printf("  Column : %s\n",temp_ptr->literal->value);
-        temp_ptr=temp_ptr->expression;
-    } 
-
-    /*printf("base:          %s \n",table->base);
-    printf("fifo:          %s \n",table->fifo);
-    printf("repo:          %s \n",table->repo);
-    printf("url:           %s \n",table->url);
-    printf("account:       %s \n",table->account);
-    printf("password:      %s \n",table->password);
-    printf("repo_path:     %s \n",table->repo_path);
-    printf("repo_base:     %s \n",table->repo_base);
-    printf("push_on_commit:%d \n",table->push_on_commit);
-    printf("pull_on_read:  %d \n",table->pull_on_read);
-    */
-    printf("  file:          %s \n",table->file);
-    printf("  column:        %s \n",table->column);
-    printf("  strict:        %d \n",table->strict);
-    printf (" --\n");
 }
 
 
@@ -1375,37 +1124,6 @@ cursor_t *init_cursor(){
     return cursor;
 }
 
-void debug_cursor(cursor_t *cursor){
-
-    printf("\n# Cursor\n");
-
-    printf("- Active database: %s\n", get_current_database(cursor) );
-    printf("- Created: %s", ctime(&cursor->created));
-    printf("- Ended: %s", ctime(&cursor->ended));
-    printf("- Data Length: %d\n", cursor->data_length);
-    
-    printf("- Ellapsed Time: %ld.%09ld\n", (long)(cursor->ended.tv_sec - cursor->created.tv_sec),
-        cursor->ended.tv_nsec - cursor->created.tv_nsec);
-        
-    int                 data_length;
-    if(cursor->status){
-        printf("- Status: SUCCESS\n");
-    } else {
-        printf("- Status: FAILURE\n");
-    }
-
-    if(cursor->requested_query) {
-        printf("- Resuested: %s\n",cursor->requested_query);
-        if(cursor->executed_query) {
-            printf("- Executed: %s\n",cursor->executed_query);
-        }
-    }
-    if(cursor->error) {
-        printf("- ERROR NUM: %d %s\n",cursor->error,vomit(cursor->error));
-        printf("- ERROR: %s\n",cursor->error_message);
-    }
-
-}
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
@@ -1478,3 +1196,4 @@ table_def_t *duplicate_table(table_def_t *table){
     }
     return new_table;
 }
+

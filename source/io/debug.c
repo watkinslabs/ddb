@@ -116,3 +116,124 @@ void error(cursor_t *cursor,int ERR_NUM,char *message){
     cursor->error_message=message;
 
 }
+
+
+
+/* Function: debug_expr
+ * -----------------------
+ * visibly print the nested expresison_t data structure
+ * 
+ * returns: nothing. All output is via stdio
+ */
+void debug_expr(expression_t *expr,int depth){
+    if(expr==0) {
+        printf ("Expression NULL\n");
+        return;
+    }
+    char *pad="";
+    if(depth>0) pad=safe_malloc(depth+1,1);
+
+    for(int i=0;i<depth;i++) pad[i]=' ';
+
+    printf("%s- expr:\n",pad);
+    printf("%s  - mode:   %d ",pad,expr->mode);
+    printf("%s  - list:   %d ",pad,expr->list);
+    printf("%s  - not:    %d ",pad,expr->not);
+    printf("%s  - not_in: %d ",pad,expr->not_in);
+    printf("%s  - in:     %d \n",pad,expr->in);
+    printf("%s  - direction:  %s ",pad,token_type(expr->direction));
+    printf("%s  - negative:   %d ",pad,expr->negative);
+    printf("%s  - positive:   %d ",pad,expr->positive);
+    printf("%s  - comparitor: %s ",pad,token_type(expr->comparitor));
+    printf("%s  - operator:   %s \n",pad,token_type(expr->operator));
+    if(expr->identifier){
+        printf("%s - Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
+    }
+    if(expr->literal) {
+        printf("%s - Litteral: [%s] '%s'\n",pad,token_type(expr->literal->type),expr->literal->value);
+    }
+
+    if(depth>0) free(pad);
+    if(expr->expression) debug_expr(expr->expression,depth+1);
+    printf("\n");
+
+}
+
+/* Function: debug_identifier
+ * -----------------------
+ * visibly print the identifier_t data structure
+ * 
+ * returns: nothing
+ */
+void debug_identifier(identifier_t *identifier) {
+    printf ("  Identifier: %s.%s\n",identifier->qualifier,identifier->source);
+
+}
+
+/* Function: debug_create_table
+ * -----------------------
+ * visibly print the tabel_def data structure
+ * 
+ * returns: nothing
+ */
+void debug_create_table(table_def_t *table) {
+    if(table==0) {
+        printf ("Cant debug create table. Null\n");
+    } 
+    printf (" -- CREATE_TABLE DEBUG -------------\n");
+    expression_t *temp_ptr=table->columns;
+    debug_identifier(table->identifier);
+    
+    while(temp_ptr){
+        printf("  Column : %s\n",temp_ptr->literal->value);
+        temp_ptr=temp_ptr->expression;
+    } 
+
+    /*printf("base:          %s \n",table->base);
+    printf("fifo:          %s \n",table->fifo);
+    printf("repo:          %s \n",table->repo);
+    printf("url:           %s \n",table->url);
+    printf("account:       %s \n",table->account);
+    printf("password:      %s \n",table->password);
+    printf("repo_path:     %s \n",table->repo_path);
+    printf("repo_base:     %s \n",table->repo_base);
+    printf("push_on_commit:%d \n",table->push_on_commit);
+    printf("pull_on_read:  %d \n",table->pull_on_read);
+    */
+    printf("  file:          %s \n",table->file);
+    printf("  column:        %s \n",table->column);
+    printf("  strict:        %d \n",table->strict);
+    printf (" --\n");
+}
+
+void debug_cursor(cursor_t *cursor){
+
+    printf("\n# Cursor\n");
+
+    printf("- Active database: %s\n", get_current_database(cursor) );
+    printf("- Created: %s", ctime(&cursor->created));
+    printf("- Ended: %s", ctime(&cursor->ended));
+    printf("- Data Length: %d\n", cursor->data_length);
+    
+    printf("- Ellapsed Time: %ld.%09ld\n", (long)(cursor->ended.tv_sec - cursor->created.tv_sec),
+        cursor->ended.tv_nsec - cursor->created.tv_nsec);
+        
+    int                 data_length;
+    if(cursor->status){
+        printf("- Status: SUCCESS\n");
+    } else {
+        printf("- Status: FAILURE\n");
+    }
+
+    if(cursor->requested_query) {
+        printf("- Resuested: %s\n",cursor->requested_query);
+        if(cursor->executed_query) {
+            printf("- Executed: %s\n",cursor->executed_query);
+        }
+    }
+    if(cursor->error) {
+        printf("- ERROR NUM: %d %s\n",cursor->error,vomit(cursor->error));
+        printf("- ERROR: %s\n",cursor->error_message);
+    }
+
+}
