@@ -147,10 +147,10 @@ void debug_expr(expression_t *expr,int depth){
     if(expr->comparitor)  printf("%s  comparitor: %s ,",pad,token_type(expr->comparitor));
     if(expr->operator)    printf("%s  operator:   %s \n",pad,token_type(expr->operator));
     if(expr->identifier){
-        printf("%s - Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
+        printf("%s Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
     }
     if(expr->literal) {
-        printf("%s - Litteral: [%s] '%s'\n",pad,token_type(expr->literal->type),expr->literal->value);
+        printf("%s Litteral: [%s] '%s'\n",pad,token_type(expr->literal->type),expr->literal->value);
     }
 
     //if(depth>0) free(pad);
