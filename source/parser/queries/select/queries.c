@@ -86,7 +86,7 @@ expression_t * duplicate_columns(expression_t *columns){
             new_column->list         =tmp_ptr->list;
             new_column->in           =tmp_ptr->in;
             new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);;
-            new_column->identifier   =duplicate_token(tmp_ptr->identifier);
+            new_column->identifier   =duplicate_identifier(tmp_ptr->identifier);
 
             // attach list
             if(new_columns==0){

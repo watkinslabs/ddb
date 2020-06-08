@@ -172,7 +172,7 @@ void debug_identifier(identifier_t *identifier) {
 
 /* Function: debug_create_table
  * -----------------------
- * visibly print the tabel_def data structure
+ * visibly print the table_def data structure
  * 
  * returns: nothing
  */
@@ -206,6 +206,12 @@ void debug_create_table(table_def_t *table) {
     printf (" --\n");
 }
 
+/* Function: debug_cursor
+ * -----------------------
+ * visibly print the cursor data structure
+ * 
+ * returns: nothing
+ */
 void debug_cursor(cursor_t *cursor){
 
     printf("\n# Cursor\n");
