@@ -312,14 +312,22 @@ void debug_select(select_t *select){
         printf("JOIN %d\n",select->join_length);
         for(int i=0;i<select->join_length;i++){
             if(select->join[i].identifier) {
+                int printed=0;
                 if(select->join[i].identifier->qualifier) {
                     printf("%s.",select->join[i].identifier->qualifier);
+                    printed=1;
                 }
                 if(select->join[i].identifier->source) {
                     printf("%s ",select->join[i].identifier->source);
+                    printed=1;
                 }
-                if(select->join[i].alias) printf("ALIAS: %s",select->join[i].alias);
-                printf("\n");
+                if(select->join[i].alias) {
+                    printf("ALIAS: %s",select->join[i].alias);
+                    printed=1;
+                }
+                if(printed==1){
+                    printf("\n");
+                }
             }
             debug_expr(select->join[i].expression,0);
         }
