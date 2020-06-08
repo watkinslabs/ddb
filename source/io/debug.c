@@ -224,9 +224,9 @@ void debug_cursor(cursor_t *cursor){
         
     int                 data_length;
     if(cursor->status){
-        printf("- Status: SUCCESS\n");
+        printf("- Status  : SUCCESS\n");
     } else {
-        printf("- Status: FAILURE\n");
+        printf("- Status  : FAILURE\n");
     }
 
     if(cursor->requested_query) {
