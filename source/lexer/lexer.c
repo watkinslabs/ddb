@@ -8,6 +8,7 @@
 #include "../include/structure.h"
 #include "../include/queries.h"
 #include "../include/debug.h"
+#include "../include/free.h"
 
 
 token_array_t *lex(char * query){
