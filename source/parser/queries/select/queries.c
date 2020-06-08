@@ -1463,7 +1463,7 @@ table_def_t *duplicate_table(table_def_t *table){
     table_def_t *new_table=0;
     if (table){
         new_table=safe_malloc(sizeof(table_def_t),1);
-        new_table->columns=duplicate_columns(table->columns);
+        //new_table->columns=duplicate_columns(table->columns);
         new_table->strict=table->strict;
         new_table->file=string_duplicate(table->file);
         new_table->column=string_duplicate(table->column);
