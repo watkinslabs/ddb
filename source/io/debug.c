@@ -242,11 +242,11 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
-void debug_header(char title) {
+void debug_header(char *title) {
     printf (" # %s",title);
 }
 
-void debug_sub_header(char title) {
+void debug_sub_header(char *title) {
     printf (" ## %s",title);
 }
 
