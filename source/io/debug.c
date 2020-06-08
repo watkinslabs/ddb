@@ -326,7 +326,7 @@ void debug_select(select_t *select){
                     printed=1;
                 }
                 if(printed==1){
-                    printf("\n");
+                    printf("..\n");
                 }
             }
             debug_expr(select->join[i].expression,0);
