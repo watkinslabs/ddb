@@ -244,7 +244,7 @@ void debug_cursor(cursor_t *cursor){
  * 
  * returns: nothing. All output is via stdio
  */
-void debug_select_(select_t *select){
+void debug_select(select_t *select){
     // DEBUGGING INFORMATION
 
     if(select==0) return;
