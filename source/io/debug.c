@@ -326,15 +326,15 @@ void debug_select(select_t *select){
         
     }
     if(select->where) {
-        printf(" ---WHERE---");
+        printf(" ---WHERE---\n");
         debug_expr(select->where,0);
     }
     if(select->group) {
-        printf(" ---GROUP---");
+        printf(" ---GROUP---\n");
         debug_expr(select->group,0);
     }
     if(select->order) {
-        printf(" ---ORDER---");
+        printf(" ---ORDER---\n");
         debug_expr(select->order,0);
     }
 
