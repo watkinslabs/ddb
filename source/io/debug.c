@@ -135,7 +135,7 @@ void debug_expr(expression_t *expr,int depth){
 
     //for(int i=0;i<depth;i++) pad[i]=' ';
 
-    printf("%s- expr:\n",pad);
+    printf("%s- expr: ",pad);
     if(expr->mode)        printf("%s  - mode:   %d ",pad,expr->mode);
     if(expr->list)        printf("%s  - list:   %d ",pad,expr->list);
     if(expr->not)         printf("%s  - not:    %d ",pad,expr->not);
