@@ -573,7 +573,7 @@ int process_queries(cursor_t *cursor,char *queries){
     // free resources;
     while(tmp_ptr){
         switch(tmp_ptr->type){
-            case TOKEN_SELECT:       select_print((select_t*)tmp_ptr->command);
+            case TOKEN_SELECT:       debug_select((select_t*)tmp_ptr->command);
                                      free_select((select_t*)tmp_ptr->command); 
                                      break;
             case TOKEN_CREATE_TABLE: debug_create_table((table_def_t*)tmp_ptr->command);
