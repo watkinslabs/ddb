@@ -6,7 +6,7 @@
 #include "../include/errors.h"
 #include "../include/tokens.h"
 #include "../include/structure.h"
-#include "../include/select.h"
+#include "../include/queries.h"
 #include "../include/debug.h"
 
 
