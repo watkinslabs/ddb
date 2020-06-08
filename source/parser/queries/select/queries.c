@@ -884,7 +884,7 @@ int free_cursor(cursor_t *cursor){
     if(cursor->error_message  ) free_string(cursor->error_message);
     if(cursor->executed_query ) free_string(cursor->executed_query);
     if(cursor->requested_query) free_string(cursor->requested_query);
-    if(cursor->tables)  free_table_def(cursor->tables);
+    //if(cursor->tables)  free_table_def(cursor->tables);
     if(cursor->active_table)  cursor->active_table=0;
     
     if(cursor) free(cursor);
