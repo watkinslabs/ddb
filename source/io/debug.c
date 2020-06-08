@@ -164,8 +164,7 @@ void debug_expr(expression_t *expr,int depth){
  * returns: nothing
  */
 void debug_identifier(identifier_t *identifier) {
-    printf ("  Identifier: %s.%s\n",identifier->qualifier,identifier->source);
-
+    printf (" - identifier: %s.%s\n",identifier->qualifier,identifier->source);
 }
 
 /* Function: debug_create_table
@@ -242,6 +241,10 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
+void debug_alias(char *alias) {
+    printf (" - alias: %s\n",alias);
+}
+
 void debug_header(char *title) {
     printf (" # %s\n",title);
 }
@@ -310,13 +313,12 @@ void debug_select(select_t *select){
      if (select->from) {
         debug_sub_header("FROM");
         debug_identifier(select->from);
-        if(select->alias) printf(" ALIAS: %s \n",select->alias);
-        
+        if(select->alias) debug_alias(select->alias);
         
     }
 
     if (select->join) {
-        printf("JOIN %d\n",select->join_length);
+        debug_sub_header("JOIN");// %d\n",select->join_length);
         for(int i=0;i<select->join_length;i++){
             if(select->join[i].identifier) {
                 int printed=0;
