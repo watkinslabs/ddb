@@ -252,7 +252,7 @@ void debug_select(select_t *select){
     // DEBUGGING INFORMATION
 
     if(select==0) return;
-    printf("SELECT\n");
+    printf("\n# Select\n");
     if (select->distinct) printf("HAS DISTINCT\n");
     if (select->columns){
         data_column_t * next=select->columns;
