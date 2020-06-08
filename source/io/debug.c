@@ -242,7 +242,7 @@ void debug_cursor(cursor_t *cursor){
 }
 
 void debug_alias(char *alias) {
-    printf (" - alias: %s\n",alias);
+    printf ("   - alias: %s\n",alias);
 }
 
 void debug_header(char *title) {
