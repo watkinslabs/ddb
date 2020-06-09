@@ -942,33 +942,19 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
  * returns: nothing
  */
 int validate_select(select_t *select){
+    /*
+    Select rules...
+    select from a list. ic tan be a function, identifier, or expression and can have an alias
+    select all column's must be unique
+    all unnamed qualifiers will be applied to whatever from/join available
+    if ambiguious then abort.
+    group and order columns must come from select list
+    */
+   
 
     return 0;
 }
-/*
-typedef struct data_set{
-    column_t columns;
-    rows_t data;
 
-}
-*/
-/* Function: validate_create_table
- * -----------------------
- * validate a create_table structures logic
- *
- * fail if:  
- *   if the table exists in the curent global memory
- * returns: 1 for success
- *          zero or null otherwise
- */
-int fixup_create_table(cursor_t *cursor,table_def_t *table){
-    if(cursor->active_table==0) {
-        ghost(ERR_NO_TABLE_SELECTED);  
-    }
-    
-
-    return 1;
-}
 
 /* Function: validate_create_table
  * -----------------------
