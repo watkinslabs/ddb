@@ -958,9 +958,13 @@ int validate_select(select_t *select){
     data_column_t *tmp_ptr=select->columns;
     int column_length=0;
     while(tmp_ptr){
-
-
+        ++column_length;
         tmp_ptr=tmp_ptr->next;
+    }
+
+    if(column_length==0) {
+        printf("ERROR NO COLUMNS");
+        return 0;
     }
 
     
