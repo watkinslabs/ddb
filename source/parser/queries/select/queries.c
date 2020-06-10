@@ -33,7 +33,7 @@ void set_error(cursor_t *cursor,int error_no,char *msg){
     cursor->error_message=msg;
 }
 
-int compare_identifiers(identifier_t *source,identifier_t *dest){
+int compare_identifiers(identifier_t *source,i      dentifier_t *dest){
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
         strcmp(source->source,dest->source)==0) return 1;
     return 0;
@@ -948,13 +948,61 @@ int validate_select(select_t *select){
     select from a list. it can be a function, identifier, or expression and can have an alias
     select all column's must be unique
     all unnamed qualifiers will be applied to whatever from/join available
+    targets must exist
     if ambiguious then abort.
     group and order columns must come from select list
+    .. JOB 1 determine available source (data) columns and identity conflicts within...
     */
-   
+
+   // count columns and create an array
+    data_column_t *tmp_ptr=select->columns;
+    int column_length=0;
+    while(tmp_ptr){
+
+
+        tmp_ptr=tmp_ptr->next;
+    }
+
+    
+    // ambiguious column check
+    // must be a unique column in from/join or an expression/function with an unique alias
+
+    // qualifier check
+    // qualifiers muse exist in from/join
+
+    // from source check 
+    // table must exist
+    
+    // join source check
+    // table must exist
+
+    // where check
+    // identifier must be in from/target
+    // expression must validate
+
+    // group check
+    // columns must exist in select
+    // columns must be unique
+
+    // order check
+    // columns must exist in select
+    // columns must be unique
+
 
     return 0;
 }
+
+
+data_column_t * match_data_column(data_column_t *data,char *name) {
+    data_column_t *tmp_ptr=data;
+    while(tmp_ptr){
+            if(tmp_ptr->alias) 
+
+        tmp_ptr=tmp_ptr->next;
+    }
+    return tmp_ptr;
+}
+
 
 
 /* Function: validate_create_table
