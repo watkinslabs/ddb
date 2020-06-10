@@ -2,7 +2,8 @@
 #include "../../../include/tokens.h"
 #include "../../../include/structure.h"
 #include "../../../include/debug.h"
-#include "../../../include/select.h"
+#include "../../../include/queries.h"
+#include <time.h>
 
 #define EXPRESSION_GROUP_BY 3
 #define EXPRESSION_ORDER_BY 4
@@ -944,7 +945,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
 int validate_select(select_t *select){
     /*
     Select rules...
-    select from a list. ic tan be a function, identifier, or expression and can have an alias
+    select from a list. it can be a function, identifier, or expression and can have an alias
     select all column's must be unique
     all unnamed qualifiers will be applied to whatever from/join available
     if ambiguious then abort.
