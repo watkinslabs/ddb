@@ -33,7 +33,7 @@ void set_error(cursor_t *cursor,int error_no,char *msg){
     cursor->error_message=msg;
 }
 
-int compare_identifiers(identifier_t *source,i      dentifier_t *dest){
+int compare_identifiers(identifier_t *source,identifier_t *dest){
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
         strcmp(source->source,dest->source)==0) return 1;
     return 0;
