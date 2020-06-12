@@ -942,7 +942,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
  * 
  * returns: nothing
  */
-int validate_select(select_t *select){
+int validate_select(cursor_t * cursor,select_t *select){
     /*
     Select rules...
     select from a list. it can be a function, identifier, or expression and can have an alias

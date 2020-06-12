@@ -566,6 +566,8 @@ int process_queries(cursor_t *cursor,char *queries){
         switch(tmp_ptr->type){
             case TOKEN_CREATE_TABLE: validate_create_table(cursor,(table_def_t*)tmp_ptr->command);
                                      break;
+            case TOKEN_SELECT: validate_select(cursor,(select_t*)tmp_ptr->command);
+                                     break;
         }
         tmp_ptr=tmp_ptr->next;
     }
