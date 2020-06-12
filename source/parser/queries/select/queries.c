@@ -971,6 +971,16 @@ int validate_select(select_t *select){
     // ambiguious column check
     // must be a unique column in from/join or an expression/function with an unique alias
 
+    tmp_ptr=select->columns;
+    while(tmp_ptr){
+        //if(tmp_ptr->type)
+        tmp_ptr=tmp_ptr->next;
+    }
+
+    
+
+    
+    
     // qualifier check
     // qualifiers muse exist in from/join
 
