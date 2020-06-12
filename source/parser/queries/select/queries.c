@@ -967,20 +967,31 @@ int validate_select(select_t *select){
         return 0;
     }
 
+    char *
     
-    // ambiguious column check
-    // must be a unique column in from/join or an expression/function with an unique alias
 
+
+    // FIXUP create target name in alias if missing
     tmp_ptr=select->columns;
     while(tmp_ptr){
         switch(tmp_ptr->type){
-            case TOKEN_STRING:        break;
-            case TOKEN_NUMERIC:       break;
-            case TOKEN_HEX:           break;
-            case TOKEN_BINARY:        break;
-            case TOKEN_REAL:          break;
-            case TOKEN_NULL:          break;
-            case TOKEN_IDENTIFIER:    break;
+            case TOKEN_STRING:        
+            case TOKEN_NUMERIC:       
+            case TOKEN_HEX:           
+            case TOKEN_BINARY:        
+            case TOKEN_REAL:          
+            case TOKEN_NULL: 
+                             if (tmp_ptr->alias==0) {
+                                tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
+                             }
+                             break;
+            case TOKEN_IDENTIFIER:    
+                             if (tmp_ptr->alias==0) {
+                                tmp_ptr->alias=string_duplicate(((identifier_t *)tmp_ptr->object)->source);
+                             }
+                             break;
+            
+            break;
             default:
                 printf("UNKNOWN COLUMN TYPE IN SELECT");
                 return 0;
@@ -990,6 +1001,9 @@ int validate_select(select_t *select){
     }
 
     
+    // ambiguious column check
+    // does the column have a name or alias. if not self assign
+    // name must be unique in selection "from/join" or an expression/function
 
     
     
@@ -1019,11 +1033,13 @@ int validate_select(select_t *select){
 }
 
 
-data_column_t * match_data_column(data_column_t *data,char *name) {
+data_column_t * match_data_column(data_column_t *data,char *name,int ignore_ordinal) {
     data_column_t *tmp_ptr=data;
+    int index=0;
     while(tmp_ptr){
-            if(tmp_ptr->alias) 
+        if(tmp_ptr->ordinal!=ignore_ordinal) {
 
+        }
         tmp_ptr=tmp_ptr->next;
     }
     return tmp_ptr;
