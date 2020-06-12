@@ -29,7 +29,7 @@
     table_def_t   * process_create_table     (token_array_t *tokens,int *start);
     expression_t  * process_column_list      (token_array_t *tokens,int *index);
     int             free_data_columns        (data_column_t *columns);
-    int             validate_select          (select_t *select);
+    int             validate_select          (cursor_t *cursor,select_t *select);
     int             fixup_create_table       (cursor_t *cursor,table_def_t *table);
     int             compare_identifiers      (identifier_t *source,identifier_t *dest);
     int             validate_create_table    (cursor_t * cursor,table_def_t *table);
