@@ -967,8 +967,6 @@ int validate_select(select_t *select){
         return 0;
     }
 
-    char *
-    
 
 
     // FIXUP create target name in alias if missing
