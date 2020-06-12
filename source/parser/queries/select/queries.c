@@ -973,7 +973,19 @@ int validate_select(select_t *select){
 
     tmp_ptr=select->columns;
     while(tmp_ptr){
-        //if(tmp_ptr->type)
+        switch(tmp_ptr->type){
+            case TOKEN_STRING:        break;
+            case TOKEN_NUMERIC:       break;
+            case TOKEN_HEX:           break;
+            case TOKEN_BINARY:        break;
+            case TOKEN_REAL:          break;
+            case TOKEN_NULL:          break;
+            case TOKEN_IDENTIFIER:    break;
+            default:
+                printf("UNKNOWN COLUMN TYPE IN SELECT");
+                return 0;
+        }
+        
         tmp_ptr=tmp_ptr->next;
     }
 
