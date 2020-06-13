@@ -975,6 +975,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 
     // FIXUP create target name in alias if missing
     tmp_ptr=select->columns;
+    
     while(tmp_ptr){
         switch(tmp_ptr->type){
             case TOKEN_STRING:        
@@ -989,7 +990,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                                  printf( "-?%s\n",((token_t *)tmp_ptr->object)->value);
                                 //tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
                                  } else {
-                                     printf ("\nNO OBJ? %s\n",token_type(tmp_ptr->type));
+                                     printf ("\nNO OBJ? %s - %d\n",token_type(tmp_ptr->type),tmp_ptr->ordinal);
                                  }
                              }
                              break;
