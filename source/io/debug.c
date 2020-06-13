@@ -292,10 +292,10 @@ void debug_select(select_t *select){
                 case TOKEN_REAL:
                 case TOKEN_NULL: 
                 
-                 printf("%s ",  token_type(next->type));
-                 printf("%s ", (char*)next->object);
-                 printf("%s ",  next->alias);
-                 printf("%d\n",  next->ordinal);
+                 printf(" - %s ",  token_type(next->type));
+                 printf(" %s ", (char*)next->object);
+                            debug_alias(next->alias);
+                            debug_ordinal(next->ordinal);
                                   break;
                 case TOKEN_IDENTIFIER: debug_identifier((identifier_t *)next->object); 
                                        debug_alias(next->alias);
