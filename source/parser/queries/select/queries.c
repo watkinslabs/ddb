@@ -992,7 +992,8 @@ int validate_select(cursor_t * cursor,select_t *select){
             
             break;
             default:
-                printf("UNKNOWN COLUMN TYPE IN SELECT");
+                
+                printf("UNKNOWN COLUMN TYPE IN SELECT: %s\n",token_type(tmp_ptr->type));
                 return 0;
         }
         
