@@ -985,7 +985,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             case TOKEN_NULL: 
                              
                              if (!tmp_ptr->alias) {
-                                tmp_ptr->alias="bob";//string_duplicate(((token_t *)tmp_ptr->object)->value);
+                                tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
                              }
                              break;
             case TOKEN_IDENTIFIER:    
