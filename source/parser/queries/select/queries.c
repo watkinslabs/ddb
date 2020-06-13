@@ -620,7 +620,6 @@ data_column_t *add_data_column(data_column_t *column,unsigned int type,void *ite
     return column;
 }
 
-
 data_column_t *process_select_list(token_array_t *tokens,int *index){
     // a root object is present so the list is always n+1
     data_column_t *columns=0;
@@ -644,7 +643,6 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
             case TOKEN_REAL:
             case TOKEN_NULL: 
                                     value=copy_token_value_at(tokens,*index);
-                                    //printf("--- ? %s\n",value);
                                     ++*index;
                                     alias=process_alias(tokens,index);
                                     columns=add_data_column(columns,token->type,value,alias,ordinal);
@@ -971,8 +969,6 @@ int validate_select(cursor_t * cursor,select_t *select){
         printf("ERROR NO COLUMNS");
         return 0;
     }
-
-
 
     // FIXUP create target name in alias if missing
     tmp_ptr=select->columns;
