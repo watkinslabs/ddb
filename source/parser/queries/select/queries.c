@@ -605,13 +605,17 @@ int add_data_column(data_column_t *column,unsigned int type,void *item,char *ali
     new_column->object=item;
     new_column->type=type;
 
-    if(column->next==0){
-        column->next=new_column;
-        column->next_tail=new_column;
-        return 1;
+    if(column==0) {
+        column=new_column;
     } else {
-        column->next_tail->next=new_column;
-        column->next_tail=new_column;
+        if(column->next==0){
+            column->next=new_column;
+            column->next_tail=new_column;
+            return 1;
+        } else {
+            column->next_tail->next=new_column;
+            column->next_tail=new_column;
+        }
     }
     return 1;
 }
@@ -619,7 +623,7 @@ int add_data_column(data_column_t *column,unsigned int type,void *item,char *ali
 
 data_column_t *process_select_list(token_array_t *tokens,int *index){
     // a root object is present so the list is always n+1
-    data_column_t *columns=safe_malloc(sizeof(data_column_t),1);
+    data_column_t *columns;
     columns->type=TOKEN_BLANK;
 
     int            loop   =1;
