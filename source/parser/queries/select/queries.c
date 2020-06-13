@@ -985,15 +985,11 @@ int validate_select(cursor_t * cursor,select_t *select){
             case TOKEN_BINARY:        
             case TOKEN_REAL:          
             case TOKEN_NULL: 
-                            if(tmp_ptr->object) {
-                                printf( "-?%s\n",(char*)tmp_ptr->object);
-                        //tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
-                            } else {
-                                printf ("\nNO OBJ? %s %s - %d\n",(char *)tmp_ptr->object,token_type(tmp_ptr->type),tmp_ptr->ordinal);
-                            }
-                             
-                             if (!tmp_ptr->alias) {
-                             }
+                            if(tmp_ptr->alias==0) {
+                                if(tmp_ptr->object) {
+                                    tmp_ptr->alias=string_duplicate((char *)tmp_ptr->object);
+                                }
+                            }                             
                              break;
             case TOKEN_IDENTIFIER:    
                              if (tmp_ptr->alias==0) {
