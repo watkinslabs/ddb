@@ -598,7 +598,7 @@ expression_t * process_order_column_list(token_array_t *tokens,int *index){
  *             data_column_t
  *          returns zero (NULL) otherwise
  */
-int add_data_column(data_column_t *column,unsigned int type,void *item,char *alias,int ordinal){
+int add_data_column(data_column_t column,unsigned int type,void *item,char *alias,int ordinal){
     data_column_t *new_column=safe_malloc(sizeof(data_column_t),1);
     new_column->alias=alias;
     new_column->ordinal=ordinal;
