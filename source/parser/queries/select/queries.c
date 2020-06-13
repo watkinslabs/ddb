@@ -598,7 +598,7 @@ expression_t * process_order_column_list(token_array_t *tokens,int *index){
  *             data_column_t
  *          returns zero (NULL) otherwise
  */
-int add_data_column(data_column_t *column,unsigned int type,void *item,char *alias,int ordinal){
+data_column_t *add_data_column(data_column_t *column,unsigned int type,void *item,char *alias,int ordinal){
     data_column_t *new_column=safe_malloc(sizeof(data_column_t),1);
     new_column->alias=alias;
     new_column->ordinal=ordinal;
@@ -606,18 +606,18 @@ int add_data_column(data_column_t *column,unsigned int type,void *item,char *ali
     new_column->type=type;
 
     if(column==0) {
-        column=&new_column;
+        column=new_column;
     } else {
         if(column->next==0){
             column->next=new_column;
             column->next_tail=new_column;
-            return 1;
+            return column;
         } else {
             column->next_tail->next=new_column;
             column->next_tail=new_column;
         }
     }
-    return 1;
+    return column;
 }
 
 
@@ -646,19 +646,19 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
                                     value=copy_token_value_at(tokens,*index);
                                     ++*index;
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,token->type,value,alias,ordinal);
+                                    columns=add_data_column(columns,token->type,value,alias,ordinal);
                                     ++ordinal;
                                     break;
 
             case TOKEN_QUALIFIER:   ident=process_identifier(tokens,index);
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
+                                    columns=add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
 
             case TOKEN_SOURCE:      ident=process_identifier(tokens,index);
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
+                                    columns=add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
             default: loop=0; break;
