@@ -646,7 +646,7 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
                                     value=copy_token_value_at(tokens,*index);
                                     ++*index;
                                     alias=process_alias(tokens,index);
-                                    columns=add_data_column(columns,token->type,value,alias,ordinal);
+                                    columns=add_data_column(columns,token->type,"BPOB",alias,ordinal);
                                     ++ordinal;
                                     break;
 
