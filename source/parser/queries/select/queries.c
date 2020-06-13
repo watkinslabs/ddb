@@ -647,7 +647,7 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
                                     printf("--- ? %s\n",value);
                                     ++*index;
                                     alias=process_alias(tokens,index);
-                                    columns=add_data_column(columns,token->type,value,alias,ordinal);
+                                    columns=add_data_column(columns,token->type,&%55555555value,alias,ordinal);
                                     ++ordinal;
                                     break;
 
