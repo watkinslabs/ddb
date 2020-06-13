@@ -979,6 +979,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             case TOKEN_BINARY:        
             case TOKEN_REAL:          
             case TOKEN_NULL: 
+                             tmp_ptr->alias="BOB";
                              if (tmp_ptr->alias==0) {
                                 tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
                              }
