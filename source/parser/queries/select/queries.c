@@ -985,8 +985,12 @@ int validate_select(cursor_t * cursor,select_t *select){
             case TOKEN_NULL: 
                              
                              if (!tmp_ptr->alias) {
+                                 if(!tmp_ptr->object) {
                                  printf( "-?%s\n",((token_t *)tmp_ptr->object)->value);
                                 //tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
+                                 } else {
+                                     printf ("\nNO OBJ?\n");
+                                 }
                              }
                              break;
             case TOKEN_IDENTIFIER:    
