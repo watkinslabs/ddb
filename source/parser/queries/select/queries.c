@@ -997,10 +997,10 @@ int validate_select(cursor_t * cursor,select_t *select){
             break;
             //default:
                 
-                printf("UNKNOWN COLUMN TYPE IN SELECT: %s\n",token_type(tmp_ptr->type));
                 //return 0;
         }
-        printf("COLUMN TYPE IN SELECT FIXUP: %d-%s \n",tmp_ptr->ordinal,token_type(tmp_ptr->type));
+
+        //printf("COLUMN TYPE IN SELECT FIXUP: %d-%s \n",tmp_ptr->ordinal,token_type(tmp_ptr->type));
 
         tmp_ptr=tmp_ptr->next;
     }
