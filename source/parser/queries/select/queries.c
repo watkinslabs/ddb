@@ -646,19 +646,19 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
                                     value=copy_token_value_at(tokens,*index);
                                     ++*index;
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,token->type,value,alias,ordinal);
+                                    add_data_column(&columns,token->type,value,alias,ordinal);
                                     ++ordinal;
                                     break;
 
             case TOKEN_QUALIFIER:   ident=process_identifier(tokens,index);
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
+                                    add_data_column(&columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
 
             case TOKEN_SOURCE:      ident=process_identifier(tokens,index);
                                     alias=process_alias(tokens,index);
-                                    add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
+                                    add_data_column(&columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
             default: loop=0; break;
