@@ -23,7 +23,7 @@ int free_data_columns(data_column_t *columns){
             case TOKEN_IDENTIFIER: free_ident(ptr->object); 
             break;
         }
-        if(ptr->alias) free(ptr->alias);
+        //if(ptr->alias) free(ptr->alias);
         tmp_ptr=ptr;
         ptr=ptr->next;
         free(tmp_ptr);
