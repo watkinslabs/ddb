@@ -644,9 +644,6 @@ data_column_t *process_select_list(token_array_t *tokens,int *index){
             case TOKEN_REAL:
             case TOKEN_NULL: 
                                     value=copy_token_value_at(tokens,*index);
-                                    if(!value) {
-                                        printf("%s %d\n",token_type(token->type),ordinal);
-                                    }
                                     ++*index;
                                     alias=process_alias(tokens,index);
                                     columns=add_data_column(columns,token->type,value,alias,ordinal);
@@ -990,7 +987,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                              
                              if (!tmp_ptr->alias) {
                                  if(!tmp_ptr->object) {
-                                 printf( "-?%s\n",tmp_ptr->object);
+                                 printf( "-?%s\n",(char*)tmp_ptr->object);
                                 //tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
                                  } else {
                                      printf ("\nNO OBJ? %s - %d\n",token_type(tmp_ptr->type),tmp_ptr->ordinal);
