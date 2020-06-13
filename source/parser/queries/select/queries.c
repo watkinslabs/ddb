@@ -624,7 +624,7 @@ int add_data_column(data_column_t *column,unsigned int type,void *item,char *ali
 data_column_t *process_select_list(token_array_t *tokens,int *index){
     // a root object is present so the list is always n+1
     data_column_t *columns;
-    columns->type=TOKEN_BLANK;
+    
 
     int            loop   =1;
     int            ordinal=0;
