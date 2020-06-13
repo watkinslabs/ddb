@@ -989,7 +989,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                                  printf( "-?%s\n",((token_t *)tmp_ptr->object)->value);
                                 //tmp_ptr->alias=string_duplicate(((token_t *)tmp_ptr->object)->value);
                                  } else {
-                                     printf ("\nNO OBJ?\n");
+                                     printf ("\nNO OBJ? %s\n",token_type(tmp_ptr->type));
                                  }
                              }
                              break;
