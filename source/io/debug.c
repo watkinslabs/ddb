@@ -377,6 +377,6 @@ void debug_use(use_t *use){
 
     if(use==0) return;
     debug_header("Use");
-    if (use->database) printf(" - database: %s",use->database);
+    if (use->database) printf(" - database: %s\n",use->database);
 
 }

@@ -24,8 +24,8 @@ int validate_use(cursor_t *cursor,use_t *use);
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
-    if (cursor->active_table==0) return DEFAULT_DATABASE_NAME;
-    return cursor->active_table->identifier->qualifier;
+    if (cursor->active_database==0) return DEFAULT_DATABASE_NAME;
+    return cursor->active_database;
 }
 
 void set_error(cursor_t *cursor,int error_no,char *msg){
