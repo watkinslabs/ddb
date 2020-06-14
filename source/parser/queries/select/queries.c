@@ -1336,6 +1336,10 @@ int validate_use(cursor_t *cursor,use_t *use){
             sprintf(err_msg,"database not specified");
             set_error(cursor,ERR_INVALID_DATABASE,err_msg);
         }
+        // cleanup prior name
+        if(cursor->active_database) free_string(cursor->active_database);
+        // set curent name
+        cursor->active_database=string_duplicate(use->database);
     }
     return 1;
 }

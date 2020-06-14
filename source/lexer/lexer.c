@@ -569,7 +569,7 @@ int process_queries(cursor_t *cursor,char *queries){
 
 
 
-    // validate/fixup;
+    // validate/fixup/ execute too... yea.. gotta rename..;
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
     //doing this while no errors exist
@@ -605,7 +605,7 @@ int process_queries(cursor_t *cursor,char *queries){
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
-   // token_print(tokens);
+    // token_print(tokens);
     // cleanup
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
