@@ -37,8 +37,9 @@ void set_error(cursor_t *cursor,int error_no,char *msg){
 
 int compare_identifiers(identifier_t *source,identifier_t *dest){
     if(source==0) return 0;
-    if(dest==0) return 0;
-    
+    if(dest  ==0) return 0;
+    if(source->qualifier==0) return 0;
+    if(dest  ->qualifier==0) return 0;
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
         strcmp(source->source,dest->source)==0) return 1;
     return 0;
