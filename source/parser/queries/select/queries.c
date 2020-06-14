@@ -1019,12 +1019,25 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
+    // validate data set from and join sources
     
-
-    // ambiguious column check
-    // does the column have a name or alias. if not self assign
     // name must be unique in selection "from/join" or an expression/function
 
+    
+    // validate identity columns exist in dataset
+    tmp_ptr=select->columns;
+    while(tmp_ptr){
+    
+    
+
+        tmp_ptr=tmp_ptr->next;
+    }
+    
+    // validate function columns are real functions? Should be handled through parsing
+    
+    
+    // does the column have a name or alias. if not self assign
+    
     
     
     // qualifier check
