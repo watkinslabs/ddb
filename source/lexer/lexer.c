@@ -128,6 +128,7 @@ token_array_t *lex(char * query){
                         if (0==strncasecmp(new_token,"NULL"      ,4 ) ) { t=TOKEN_NULL;             } else
                         if (0==strncasecmp(new_token,"TRUE"      ,4 ) ) { t=TOKEN_TRUE;             } else
                         if (0==strncasecmp(new_token,"AND"       ,3 ) ) { t=TOKEN_AND;              } else
+                        if (0==strncasecmp(new_token,"USE"       ,3 ) ) { t=TOKEN_USE;              } else
                         if (0==strncasecmp(new_token,"ASC"       ,3 ) ) { t=TOKEN_ASC;              } else
                         if (0==strncasecmp(new_token,"NOT"       ,3 ) ) { t=TOKEN_NOT;              } else
                         if (0==strncasecmp(new_token,"BY"        ,2 ) ) { t=TOKEN_BY;               } else
