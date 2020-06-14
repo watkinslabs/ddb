@@ -3,7 +3,7 @@ CREATE TABLE test.mock ('id','first','last') file='/home/nd/repos/wlddb/test/tes
 
 SELECT 
     DISTINCT 
-    res.col0, --identfier
+    res.col00, --identfier
     x as x, --identifier
     f1.col0 as ID1_A1, --identfier with alias
     'col0', --litteral 
