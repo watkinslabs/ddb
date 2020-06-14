@@ -18,8 +18,8 @@ SELECT
     
     FROM    
         test.mock as f1
-    LEFT  JOIN test2 as f1 ON -a-1*5+5=b and -c=sc-1
-    RIGHT JOIN test3 as t3 ON a=b and c=sc
+    LEFT  JOIN test2 as t1 ON -a-1*5+5=b and -c=sc-1
+    RIGHT JOIN test3 as f3 ON a=b and c=sc
     JOIN test4 as t4 ON a=b and c=sc
     FULL OUTER JOIN test5 as t5 ON a=b and c=sc
     INNER JOIN test6 as t6 ON a=b and c=sc
