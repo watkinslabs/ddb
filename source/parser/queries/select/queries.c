@@ -1023,7 +1023,6 @@ int validate_select(cursor_t * cursor,select_t *select){
     // fixup join/from alias
     if(select->from) {
         if(select->alias==0) select->alias=string_duplicate((char *)select->from->source);
-        tmp_ptr=select->join;
         join_t *join_ptr=0;
         for(int i=0;i<select->join_length;i++) {
             join_ptr=&select->join[i];
