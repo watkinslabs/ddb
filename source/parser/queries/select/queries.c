@@ -976,7 +976,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     while(tmp_ptr){
         switch(tmp_ptr->type){
             case TOKEN_STRING:        
-            case TOKENb_NUMERIC:       
+            case TOKEN_NUMERIC:       
             case TOKEN_HEX:           
             case TOKEN_BINARY:        
             case TOKEN_REAL:          
