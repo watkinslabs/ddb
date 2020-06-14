@@ -996,6 +996,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             break;
             default: return 0;
         }
+        tmp_ptr=tmp_ptr->next;
     }
 
     
