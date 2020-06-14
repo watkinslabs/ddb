@@ -29,6 +29,8 @@
     void debug_cursor      (cursor_t *cursor);
     void debug_select      (select_t *select);
     void debug_create_table(table_def_t *table);
+    void debug_use         (use_t *use);
+
 
  
 #endif

@@ -365,3 +365,17 @@ void debug_select(select_t *select){
     if (select->has_limit_length) printf("LIMIT_LENGTH : %d\n",select->limit_length);
 }
 
+/* Function: debug_use
+ * -----------------------
+ * visibly print the use_t data structure
+ * 
+ * returns: nothing. All output is via stdio
+ */
+void debug_use(use_t *use){
+    // DEBUGGING INFORMATION
+
+    if(use==0) return;
+    debug_header("Use");
+    if (use->database) debug_identifier(use->database);
+
+}

@@ -11,5 +11,5 @@
     int free_litteral       (token_t *token);
     int free_table_def      (table_def_t *table_def);
     int free_cursor         (cursor_t *cursor);
-
+    int free_use            (use_t *use);
 #endif

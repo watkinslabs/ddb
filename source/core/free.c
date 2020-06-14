@@ -168,3 +168,18 @@ int free_cursor(cursor_t *cursor){
     if(cursor) free(cursor);
     return 1;
 }
+
+/* Function: free_use
+ * -----------------------
+ * free the uset_t structure, the 
+ *   changes the active database
+ * 
+ * returns: 1 for success or 0 (NULL) for failure
+ */
+int free_use(use_t *use){
+    if(use){
+        if(use->database) free_ident(use->database);
+        free(use);
+    }
+    return 1;
+}
