@@ -18,7 +18,7 @@ void set_error(cursor_t *cursor,int error_no,char *msg);
 identifier_t *duplicate_identifier(identifier_t *ident);
 expression_t * duplicate_columns(expression_t *columns);
 table_def_t *duplicate_table(table_def_t *table);
-table_def_t *get_table_by_identity(cursor_t *cursor,identifier_t *ident);
+table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident);
 
 
 char *get_current_database(cursor_t *cursor){
