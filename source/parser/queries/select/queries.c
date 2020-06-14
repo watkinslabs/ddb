@@ -1076,7 +1076,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     // validate from and join sources exist
     if(select->from) {
         table_def_t *table_ptr=0;
-        table_ptr=get_table_by_identity(cursor,select->from);
+        table_ptr=get_table_by_identifier(cursor,select->from);
         if(table_ptr==0) {
             err_msg=malloc(1024);
             sprintf(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
@@ -1086,7 +1086,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         join_t *join_ptr=0;
         for(int i=0;i<select->join_length;i++) {
             join_ptr=&select->join[i];
-            table_ptr=get_table_by_identity(cursor,join_ptr);
+            table_ptr=get_table_by_identifier(cursor,join_ptr->identifier);
             if(table_ptr==0) {
                 err_msg=malloc(1024);
                 sprintf(err_msg,"invalid JOIN table: %s.%s",select->from->qualifier,select->from->source);
@@ -1139,7 +1139,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     return 0;
 }
 
-table_def_t *get_table_by_identity(cursor_t *cursor,identifier_t *ident) {
+table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident) {
     table_def_t *tmp_table=cursor->tables;
     while (tmp_table) {
         if(compare_identifiers(ident,tmp_table)){
