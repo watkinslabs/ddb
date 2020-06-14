@@ -957,6 +957,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     .. JOB 1 determine available source (data) columns and identity conflicts within...
     */
     printf("***IN FIXUP \n");
+    // TODO add ERROR OUTPUT.... TO CURSOR....
    // count columns and create an array
     data_column_t *tmp_ptr=select->columns;
     int column_length=0;
@@ -1019,8 +1020,47 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
-    // validate data set from and join sources
+    // fixup join/from alias
+    if(select->from) {
+        if(select->alias==0) select->alias=string_duplicate((char *)select->from->source);
+        tmp_ptr=select->join;
+        join_t *join_ptr=0;
+        for(int i=0;i<select->join_length;i++) {
+            join_ptr=&select->join[i];
+            if(join_ptr->alias==0) join_ptr->alias=string_duplicate((char *)join_ptr->identifier->source);
+        }
+    }
     
+    // validate join/from ambiguity
+    if(select->from) {
+        tmp_ptr=select->join;
+        join_t *join_ptr=0;
+        join_t *join_ptr2=0;
+        for(int i=0;i<select->join_length;i++) {
+            join_ptr=&select->join[i];
+            
+            // join and from ambiguity validation
+            if(strcmp(join_ptr->alias,select->alias)==0) {
+                printf ("Ambiguious join: %s",join_ptr->alias);
+                return 0;
+            }
+
+            for(int j=0;j<select->join_length;j++) {
+                // skip self match
+                if(j==i) continue;
+                join_ptr2=&select->join[j];
+                // unique match
+                if(strcmp(join_ptr->alias,join_ptr2->alias)==0) {
+                    printf ("Ambiguious join: %s",join_ptr->alias);
+                    return 0;
+                }
+            
+            }
+            
+        }
+    }
+
+    // validate data set from and join sources
     // name must be unique in selection "from/join" or an expression/function
 
     
