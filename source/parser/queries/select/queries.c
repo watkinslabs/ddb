@@ -1007,7 +1007,6 @@ int validate_select(cursor_t * cursor,select_t *select){
             }
             tmp_ptr2=tmp_ptr2->next;
         }
-        return tmp_ptr;
     }
 
     
