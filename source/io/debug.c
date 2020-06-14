@@ -277,8 +277,6 @@ void debug_select(select_t *select){
     if (select->distinct) debug_sub_header("HAS DISTINCT");
     if (select->columns){
         data_column_t * next=select->columns;
-        // skip root element;
-        if(next) next=next->next;
         
         while(next){
             if(next->object==0) debug_sub_header("Missing object in datacolumn");
