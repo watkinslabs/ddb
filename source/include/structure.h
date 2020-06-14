@@ -100,17 +100,18 @@ typedef struct command_t{
 
 typedef struct cursor_t{
     //struct * variables;
-    struct table_def_t *active_table;
-    struct table_def_t *tables;
-    char              * requested_query;
-    char              * executed_query;
-    int                 error;
-    char              * error_message;
-    int                 status;
-    struct timespec     created;
-    struct timespec     ended;
-    //data_set_t        * data;
-    int                 data_length;
+    struct table_def_t  * active_table;
+    struct table_def_t  * tables;
+    char                * active_database;
+    char                * requested_query;
+    char                * executed_query;
+    int                   error;
+    char                * error_message;
+    int                   status;
+    struct timespec       created;
+    struct timespec       ended;
+    //data_set_t          * data;
+    int                   data_length;
 }cursor_t;
 
 /****

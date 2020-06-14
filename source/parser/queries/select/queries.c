@@ -18,6 +18,7 @@ void set_error(cursor_t *cursor,int error_no,char *msg);
 identifier_t *duplicate_identifier(identifier_t *ident);
 expression_t * duplicate_columns(expression_t *columns);
 table_def_t *duplicate_table(table_def_t *table);
+table_def_t *get_table_by_identity(cursor_t *cursor,identifier_t *ident);
 
 
 char *get_current_database(cursor_t *cursor){
@@ -1030,7 +1031,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
-    // fixup join/from alias
+    // fixup join/from alias 
     if(select->from) {
         if(select->alias==0) select->alias=string_duplicate((char *)select->from->source);
         join_t *join_ptr=0;
@@ -1072,8 +1073,29 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
-    // validate data set from and join sources
-    // name must be unique in selection "from/join" or an expression/function
+    // validate from and join sources exist
+    if(select->from) {
+        table_def_t *table_ptr=0;
+        table_ptr=get_table_by_identity(cursor,select->from);
+        if(table_ptr==0) {
+            err_msg=malloc(1024);
+            sprintf(err_msg,"invalid FROM table: %s",select->from->qualifier,select->from->source);
+            set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
+            return 0;
+        }
+        join_t *join_ptr=0;
+        for(int i=0;i<select->join_length;i++) {
+            join_ptr=&select->join[i];
+            table_ptr=get_table_by_identity(cursor,join_ptr);
+            if(table_ptr==0) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"invalid JOIN table: %s",select->from->qualifier,select->from->source);
+                set_error(cursor,ERR_INVALID_JOIN_TABLE,err_msg);
+                return 0;
+            }
+        }
+    }
+
 
     
     // validate identity columns exist in dataset
@@ -1117,6 +1139,16 @@ int validate_select(cursor_t * cursor,select_t *select){
     return 0;
 }
 
+table_def_t *get_table_by_identity(cursor_t *cursor,identifier_t *ident) {
+    table_def_t *tmp_table=cursor->tables;
+    while (tmp_table) {
+        if(compare_identifiers(ident,tmp_table)){
+            return tmp_table;
+        }
+        tmp_table=tmp_table->next;
+    }
+    return 0;
+}
 
 data_column_t * match_data_column(data_column_t *data,char *name,int ignore_ordinal) {
     data_column_t *tmp_ptr=data;
@@ -1129,8 +1161,6 @@ data_column_t * match_data_column(data_column_t *data,char *name,int ignore_ordi
     }
     return tmp_ptr;
 }
-
-
 
 /* Function: validate_create_table
  * -----------------------
@@ -1250,6 +1280,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 cursor_t * init_cursor(){
     cursor_t * cursor=safe_malloc(sizeof(cursor_t),1);
     cursor->data_length=0;
+    cursor->active_database=get_current_database(cursor);
     clock_gettime(CLOCK_REALTIME,&cursor->created);
     return cursor;
 }
