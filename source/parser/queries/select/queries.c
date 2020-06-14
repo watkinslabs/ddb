@@ -996,11 +996,23 @@ int validate_select(cursor_t * cursor,select_t *select){
             break;
             default: return 0;
         }
-        tmp_ptr=tmp_ptr->next;
+        data_column_t *tmp_ptr2=select->columns;
+        
+        while(tmp_ptr2){
+            if(tmp_ptr->ordinal!=tmp_ptr2->object) {
+                if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
+                    printf("Ambuguious column in select expression: "%s"",tmp_ptr->alias);
+                    return 0;
+                }
+            }
+            tmp_ptr2=tmp_ptr2->next;
+        }
+        return tmp_ptr;
     }
 
     
     // VALIDATE UNIQUE COLUMNS
+    char *alias=0;
     tmp_ptr=select->columns;
     while(tmp_ptr){
         switch(tmp_ptr->type){
@@ -1010,21 +1022,10 @@ int validate_select(cursor_t * cursor,select_t *select){
             case TOKEN_BINARY:        
             case TOKEN_REAL:          
             case TOKEN_NULL: 
-                            if(tmp_ptr->alias==0) {
-                                if(tmp_ptr->object) {
-                                    tmp_ptr->alias=string_duplicate((char *)tmp_ptr->object);
-                                }
-                            }                             
-                             break;
-            case TOKEN_IDENTIFIER:    
-                             if (tmp_ptr->alias==0) {
-                                tmp_ptr->alias=string_duplicate(((identifier_t *)tmp_ptr->object)->source);
-                             }
-                             break;
-            
-            break;
+            case TOKEN_IDENTIFIER: alias=tmp_ptr->alias; break;
             default: return 0;
         }
+
         tmp_ptr=tmp_ptr->next;
     }
 
