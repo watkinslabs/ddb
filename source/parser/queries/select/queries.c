@@ -12,6 +12,7 @@
 #define DEFAULT_DATABASE_NAME "this"
 
 
+
 int compare_literals(token_t *source,token_t *dest);
 void set_error(cursor_t *cursor,int error_no,char *msg);
 identifier_t *duplicate_identifier(identifier_t *ident);
@@ -995,7 +996,11 @@ int validate_select(cursor_t * cursor,select_t *select){
                              break;
             
             break;
-            default: return 0;
+            default: 
+                            char *err_msg=malloc(1024);
+                            sprintf(err_msg,"Unknown Select token in select list: %s",token_type(tmp_ptr->type));
+                            set_error(cursor,ERR_SELECT_LIST_UNKNOWN_TOKEN,err_msg);
+                            return 0;
         }
         tmp_ptr=tmp_ptr->next;
     }
@@ -1010,7 +1015,9 @@ int validate_select(cursor_t * cursor,select_t *select){
           
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
-                    printf("Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
+                    char *err_msg=malloc(1024);
+                    sprintf(err_msg,"Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
+                    set_error(cursor,ERR_AMBIGUIOUS_COLUMN_IN_SELECT_LIST,err_msg);
                     return 0;
                 }
             }
@@ -1039,7 +1046,9 @@ int validate_select(cursor_t * cursor,select_t *select){
             
             // join and from ambiguity validation
             if(strcmp(join_ptr->alias,select->alias)==0) {
-                printf ("Ambiguious join: %s",join_ptr->alias);
+                char *err_msg=malloc(1024);
+                sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
+                set_error(cursor,ERR_AMBIGUIOUS_JOIN,err_msg);
                 return 0;
             }
 
@@ -1049,7 +1058,9 @@ int validate_select(cursor_t * cursor,select_t *select){
                 join_ptr2=&select->join[j];
                 // unique match
                 if(strcmp(join_ptr->alias,join_ptr2->alias)==0) {
-                    printf ("Ambiguious join: %s",join_ptr->alias);
+                    char *err_msg=malloc(1024);
+                    sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
+                    set_error(cursor,ERR_AMBIGUIOUS_JOIN,err_msg);
                     return 0;
                 }
             
