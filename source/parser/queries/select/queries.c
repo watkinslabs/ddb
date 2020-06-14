@@ -19,6 +19,7 @@ identifier_t *duplicate_identifier(identifier_t *ident);
 expression_t * duplicate_columns(expression_t *columns);
 table_def_t *duplicate_table(table_def_t *table);
 table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident);
+int valiadate_use(cursor_t *cursor,use_t *use);
 
 
 char *get_current_database(cursor_t *cursor){
@@ -1311,3 +1312,22 @@ cursor_t * init_cursor(){
     return cursor;
 }
 
+/* Function: validate_use
+ * -----------------------
+ * validate a use_t structures logic
+ *
+ * fail if:  
+ *   never... any database name is valid.. for now.
+ * returns: 1 for success
+ *          zero or null otherwise
+ */
+int valiadate_use(cursor_t *cursor,use_t *use){
+    if(use){
+        if(!use->database){
+            char *err_msg=malloc(1024);
+            sprintf(err_msg,"database not specified");
+            set_error(cursor,ERR_INVALID_DATABASE,err_msg);
+        }
+    }
+    return 1;
+}

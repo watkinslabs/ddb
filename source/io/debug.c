@@ -71,6 +71,7 @@ char * vomit(int err_no){
         case ERR_MISSING_COLUMNS                 : msg="missing columns in select"; break;
         case ERR_INVALID_FROM_TABLE              : msg="invalid 'FROM' table"; break;
         case ERR_INVALID_JOIN_TABLE              : msg="invalid 'JOIN' table"; break;
+        case ERR_INVALID_DATABASE                : msg="invalid database"; break;
         
         default: msg="NO CLUE";
     }
