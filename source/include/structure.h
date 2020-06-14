@@ -99,7 +99,7 @@ typedef struct command_t{
 }command_t;
 
 typedef struct use_t{
-    identifier_t *database;
+    char *database;
 } use_t;
 
 
