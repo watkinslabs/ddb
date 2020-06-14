@@ -1006,12 +1006,11 @@ int validate_select(cursor_t * cursor,select_t *select){
         data_column_t *tmp_ptr2=select->columns;
         
         while(tmp_ptr2){
-                    printf("Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
-
+          
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
-//                    printf("Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
-                   // return 0;
+                    printf("Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
+                    return 0;
                 }
             }
             tmp_ptr2=tmp_ptr2->next;
