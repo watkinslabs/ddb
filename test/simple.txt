@@ -1,7 +1,7 @@
 CREATE TABLE test.mock1 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 CREATE TABLE test.mock2 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 CREATE TABLE test.mock3 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
-
+USE test;
 
 SELECT 
     DISTINCT 
