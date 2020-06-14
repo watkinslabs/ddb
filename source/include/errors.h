@@ -36,6 +36,7 @@
     #define ERR_AMBIGUOUS_JOIN                      31
     #define ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST     32
     #define ERR_SELECT_LIST_UNKNOWN_TOKEN           33
+    #define ERR_MISSING_COLUMNS                     34
 
 #endif
 

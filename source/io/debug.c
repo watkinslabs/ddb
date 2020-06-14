@@ -68,6 +68,7 @@ char * vomit(int err_no){
         case ERR_AMBIGUOUS_JOIN                  : msg="ambiguous join"; break;
         case ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST : msg="ambiguous column in select list"; break;
         case ERR_SELECT_LIST_UNKNOWN_TOKEN       : msg="unknown token in select list"; break;
+        case ERR_MISSING_COLUMNS                 : msg="missing columns in select"; break;
 
         
         default: msg="NO CLUE";

@@ -969,7 +969,9 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
 
     if(column_length==0) {
-        printf("ERROR NO COLUMNS");
+        err_msg=malloc(1024);
+        sprintf(err_msg,"Select missing select list/columns");
+        set_error(cursor,ERR_MISSING_COLUMNS,err_msg);
         return 0;
     }
 
@@ -1017,7 +1019,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
                     err_msg=malloc(1024);
-                    sprintf(err_msg,"Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
+                    sprintf(err_msg,"Ambiguous column in select expression: %s at ordinal %d\n",tmp_ptr->alias,tmp_ptr2->ordinal);
                     set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
                     return 0;
                 }
@@ -1048,7 +1050,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             // join and from ambiguity validation
             if(strcmp(join_ptr->alias,select->alias)==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
+                sprintf(err_msg,"ambiguous join: %s",join_ptr->alias);
                 set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                 return 0;
             }
@@ -1060,7 +1062,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 // unique match
                 if(strcmp(join_ptr->alias,join_ptr2->alias)==0) {
                     err_msg=malloc(1024);
-                    sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
+                    sprintf(err_msg,"ambiguous join: %s",join_ptr->alias);
                     set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                     return 0;
                 }
