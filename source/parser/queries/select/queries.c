@@ -1066,6 +1066,17 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
+    // fixup join/from qualifier
+    // if the database isn't set.. use the active database as the qualifier 
+    if(select->from) {
+        if(select->from->qualifier==0) select->from->qualifier=get_current_database(cursor);
+        join_t *join_ptr=0;
+        for(int i=0;i<select->join_length;i++) {
+            join_ptr=&select->join[i];
+            if(join_ptr->identifier->qualifier==0) join_ptr->identifier->qualifier=get_current_database(cursor);
+        }
+    }
+
     // fixup join/from alias 
     if(select->from) {
         if(select->alias==0) select->alias=string_duplicate((char *)select->from->source);
