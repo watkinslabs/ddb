@@ -970,9 +970,38 @@ int validate_select(cursor_t * cursor,select_t *select){
         return 0;
     }
 
-    // FIXUP create target name in alias if missing
+    // FIXUP populate column alias if missing.
     tmp_ptr=select->columns;
     
+    while(tmp_ptr){
+        switch(tmp_ptr->type){
+            case TOKEN_STRING:        
+            case TOKENb_NUMERIC:       
+            case TOKEN_HEX:           
+            case TOKEN_BINARY:        
+            case TOKEN_REAL:          
+            case TOKEN_NULL: 
+                            if(tmp_ptr->alias==0) {
+                                if(tmp_ptr->object) {
+                                    tmp_ptr->alias=string_duplicate((char *)tmp_ptr->object);
+                                }
+                            }                             
+                             break;
+            case TOKEN_IDENTIFIER:    
+                             if (tmp_ptr->alias==0) {
+                                tmp_ptr->alias=string_duplicate(((identifier_t *)tmp_ptr->object)->source);
+                             }
+                             break;
+            
+            break;
+            default: return 0;
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+
+    
+    // VALIDATE UNIQUE COLUMNS
+    tmp_ptr=select->columns;
     while(tmp_ptr){
         switch(tmp_ptr->type){
             case TOKEN_STRING:        
@@ -994,17 +1023,13 @@ int validate_select(cursor_t * cursor,select_t *select){
                              break;
             
             break;
-            //default:
-                
-                //return 0;
+            default: return 0;
         }
-
-        //printf("COLUMN TYPE IN SELECT FIXUP: %d-%s \n",tmp_ptr->ordinal,token_type(tmp_ptr->type));
-
         tmp_ptr=tmp_ptr->next;
     }
 
     
+
     // ambiguious column check
     // does the column have a name or alias. if not self assign
     // name must be unique in selection "from/join" or an expression/function

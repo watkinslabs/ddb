@@ -32,6 +32,7 @@ int free_data_columns(data_column_t *columns){
     }
     return 1;
 }
+
 /* Function: select_free
  * -----------------------------
  * free the data structure of a select_t
