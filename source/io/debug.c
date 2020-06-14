@@ -220,7 +220,7 @@ void debug_cursor(cursor_t *cursor){
 
     printf("\n# Cursor\n");
 
-    printf("- Database: %s\n", get_current_database(cursor) );
+    printf("- Database: %s\n", cursor->active_database );
     printf("- Created : %lld.%.9ld\n", (long long)cursor->created.tv_sec, cursor->created.tv_nsec);
     printf("- Ended   : %lld.%.9ld\n", (long long)cursor->ended.tv_sec, cursor->ended.tv_nsec);
     printf("- Data Len: %d\n", cursor->data_length);
