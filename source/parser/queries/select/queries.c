@@ -970,6 +970,7 @@ use_t *process_use(token_array_t *tokens,int *start){
         free_use(use); 
         return 0;
     }
+    return 1;
 }
 
 
