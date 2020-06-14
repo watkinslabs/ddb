@@ -1008,7 +1008,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         while(tmp_ptr2){
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
-                    printf("Ambuguious column in select expression: %s",tmp_ptr->alias);
+                    printf("Ambuguious column in select expression: %s at ordinal %d\n",tmp_ptr->alias,tmp_ptr->ordinal);
                     return 0;
                 }
             }
