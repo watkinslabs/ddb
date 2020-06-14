@@ -1033,7 +1033,6 @@ int validate_select(cursor_t * cursor,select_t *select){
     
     // validate join/from ambiguity
     if(select->from) {
-        tmp_ptr=select->join;
         join_t *join_ptr=0;
         join_t *join_ptr2=0;
         for(int i=0;i<select->join_length;i++) {
