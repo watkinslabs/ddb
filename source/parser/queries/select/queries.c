@@ -959,8 +959,8 @@ use_t *process_use(token_array_t *tokens,int *start){
     }//end switch                
 
     // required
-    use->identifier=process_identifier(tokens,start);
-    if(table_def->identifier==0) {
+    use->database=process_identifier(tokens,start);
+    if(use->database==0) {
         free_use(use); 
         return 0;
     }
