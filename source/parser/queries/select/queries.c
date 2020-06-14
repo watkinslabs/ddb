@@ -1017,7 +1017,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
                     char *err_msg=malloc(1024);
                     sprintf(err_msg,"Ambuguious column in select expression: %s - %s at ordinal %d- %d\n",tmp_ptr->alias,tmp_ptr2->alias,tmp_ptr->ordinal,tmp_ptr2->ordinal);
-                    set_error(cursor,ERR_AMBIGUIOUS_COLUMN_IN_SELECT_LIST,err_msg);
+                    set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
                     return 0;
                 }
             }
@@ -1048,7 +1048,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if(strcmp(join_ptr->alias,select->alias)==0) {
                 char *err_msg=malloc(1024);
                 sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
-                set_error(cursor,ERR_AMBIGUIOUS_JOIN,err_msg);
+                set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                 return 0;
             }
 
@@ -1060,7 +1060,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 if(strcmp(join_ptr->alias,join_ptr2->alias)==0) {
                     char *err_msg=malloc(1024);
                     sprintf(err_msg,"Ambiguious join: %s",join_ptr->alias);
-                    set_error(cursor,ERR_AMBIGUIOUS_JOIN,err_msg);
+                    set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                     return 0;
                 }
             
