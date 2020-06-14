@@ -996,6 +996,12 @@ int validate_select(cursor_t * cursor,select_t *select){
             break;
             default: return 0;
         }
+    }
+
+    
+    // VALIDATE UNIQUE COLUMNS
+    tmp_ptr=select->columns;
+    while(tmp_ptr){
         data_column_t *tmp_ptr2=select->columns;
         
         while(tmp_ptr2){
@@ -1006,23 +1012,6 @@ int validate_select(cursor_t * cursor,select_t *select){
                 }
             }
             tmp_ptr2=tmp_ptr2->next;
-        }
-    }
-
-    
-    // VALIDATE UNIQUE COLUMNS
-    char *alias=0;
-    tmp_ptr=select->columns;
-    while(tmp_ptr){
-        switch(tmp_ptr->type){
-            case TOKEN_STRING:        
-            case TOKEN_NUMERIC:       
-            case TOKEN_HEX:           
-            case TOKEN_BINARY:        
-            case TOKEN_REAL:          
-            case TOKEN_NULL: 
-            case TOKEN_IDENTIFIER: alias=tmp_ptr->alias; break;
-            default: return 0;
         }
 
         tmp_ptr=tmp_ptr->next;
