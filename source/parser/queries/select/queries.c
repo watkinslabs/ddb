@@ -999,7 +999,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         data_column_t *tmp_ptr2=select->columns;
         
         while(tmp_ptr2){
-            if(tmp_ptr->ordinal!=tmp_ptr2->object) {
+            if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
                     printf("Ambuguious column in select expression: %s",tmp_ptr->alias);
                     return 0;
