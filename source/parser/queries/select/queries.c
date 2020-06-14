@@ -947,6 +947,26 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
     return table_def;
 }
 
+use_t *process_use(token_array_t *tokens,int *start){
+    use_t *use=0;
+   
+    // required
+    switch(token_at(tokens,*start)->type){
+        case TOKEN_USE: ++*start; 
+                                 use=safe_malloc(sizeof(use_t),1);
+                                 break;
+        default: return 0;
+    }//end switch                
+
+    // required
+    use->identifier=process_identifier(tokens,start);
+    if(table_def->identifier==0) {
+        free_use(use); 
+        return 0;
+    }
+}
+
+
 /* Function: validate_select
  * -----------------------
  * validate a select structures logic

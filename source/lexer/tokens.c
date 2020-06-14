@@ -129,6 +129,7 @@ char *token_type(unsigned int t){
         case  TOKEN_REPO_BASE:        return "REPO_BASE";
         case  TOKEN_PUSH_ON_COMMIT:   return "PUSH_ON_COMMIT";
         case  TOKEN_PULL_ON_COMMIT:   return "PULL_ON_COMMIT";
+        case  TOKEN_USE:              return "USE";
     }
     char *token_id=calloc(1,20);
     sprintf(token_id,"UNKNOWN: %d",(unsigned int)t);

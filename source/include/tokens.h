@@ -127,6 +127,7 @@
      #define TOKEN_REPO_BASE        136  // calculated;  
      #define TOKEN_PUSH_ON_COMMIT   137  // calculated;  
      #define TOKEN_PULL_ON_COMMIT   138  // calculated;  
+     #define TOKEN_USE              139
 
     
 

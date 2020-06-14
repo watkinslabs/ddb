@@ -537,6 +537,17 @@ int process_queries(cursor_t *cursor,char *queries){
             }
         }
 
+        position=tokens->position;
+        use_t *use=process_use(tokens,&tokens->position);
+        if(use) {
+            add_command(commands,use,TOKEN_USE);
+        } else {
+            if(position!=tokens->position) {
+                break;
+            }
+        }
+
+
         if(!compare_token(tokens,0,TOKEN_DELIMITER)){
             loop=0;
         } 
@@ -566,6 +577,7 @@ int process_queries(cursor_t *cursor,char *queries){
         switch(tmp_ptr->type){
             case TOKEN_CREATE_TABLE: validate_create_table(cursor,(table_def_t*)tmp_ptr->command); break;
             case TOKEN_SELECT      : validate_select(cursor,(select_t*)tmp_ptr->command);          break;
+            case TOKEN_USE         : validate_use(cursor,(use_t*)tmp_ptr->command);                break;
         }
         tmp_ptr=tmp_ptr->next;
     }
@@ -576,6 +588,9 @@ int process_queries(cursor_t *cursor,char *queries){
         switch(tmp_ptr->type){
             case TOKEN_SELECT:       debug_select((select_t*)tmp_ptr->command);
                                      free_select((select_t*)tmp_ptr->command); 
+                                     break;
+            case TOKEN_USE:          debug_use((use_t*)tmp_ptr->command);
+                                     free_use((use_t*)tmp_ptr->command); 
                                      break;
             case TOKEN_CREATE_TABLE: debug_create_table((table_def_t*)tmp_ptr->command);
                                      free_table_def((table_def_t*)tmp_ptr->command); 
