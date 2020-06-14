@@ -1142,7 +1142,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident) {
     table_def_t *tmp_table=cursor->tables;
     while (tmp_table) {
-        if(compare_identifiers(ident,tmp_table)){
+        if(compare_identifiers(ident,tmp_table->identifier)){
             return tmp_table;
         }
         tmp_table=tmp_table->next;
