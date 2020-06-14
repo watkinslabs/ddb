@@ -961,8 +961,10 @@ use_t *process_use(token_array_t *tokens,int *start){
 
     // required
 
+    // SOURCE is a reqwite by the lexer. while not perfect its always accurate. 
+    // it should be qualifier...
     switch(token_at(tokens,*start)->type) {
-        case TOKEN_ALPHA:   use->database=copy_token_value_at(tokens,*start);
+        case TOKEN_SOURCE:  use->database=copy_token_value_at(tokens,*start);
                             ++*start;
                             break;
     }
