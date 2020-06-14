@@ -178,7 +178,7 @@ int free_cursor(cursor_t *cursor){
  */
 int free_use(use_t *use){
     if(use){
-        if(use->database) free_ident(use->database);
+        if(use->database) free(use->database);
         free(use);
     }
     return 1;

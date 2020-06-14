@@ -960,7 +960,12 @@ use_t *process_use(token_array_t *tokens,int *start){
     }//end switch                
 
     // required
-    use->database=process_identifier(tokens,start);
+
+    switch(token_at(tokens,*start)->type) {
+        case TOKEN_ALPHA:   use->database=copy_token_value_at(tokens,*start);
+                            ++*start;
+                            break;
+    }
     if(use->database==0) {
         free_use(use); 
         return 0;
