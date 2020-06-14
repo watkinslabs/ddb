@@ -1079,7 +1079,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         table_ptr=get_table_by_identity(cursor,select->from);
         if(table_ptr==0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"invalid FROM table: %s",select->from->qualifier,select->from->source);
+            sprintf(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
             set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
             return 0;
         }
@@ -1089,7 +1089,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             table_ptr=get_table_by_identity(cursor,join_ptr);
             if(table_ptr==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid JOIN table: %s",select->from->qualifier,select->from->source);
+                sprintf(err_msg,"invalid JOIN table: %s.%s",select->from->qualifier,select->from->source);
                 set_error(cursor,ERR_INVALID_JOIN_TABLE,err_msg);
                 return 0;
             }
