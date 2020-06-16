@@ -1153,10 +1153,10 @@ int validate_select(cursor_t * cursor,select_t *select){
                     if(strcmp(temp_ident->qualifier,select->alias)) {
                             table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                             tmp_ptr=temp_table->columns;
-                            while(tmp_ptr){
+                           /*while(tmp_ptr){
                                 if()
                                 tmp_ptr=tmp_ptr->next;
-                            }
+                            }*/
                     } else {
                     // ok its in the join.....
 
