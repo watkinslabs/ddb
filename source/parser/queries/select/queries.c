@@ -1012,8 +1012,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
 
     // FIXUP populate column alias if missing.
-    tmp_ptr=select->columns;
-    
+    tmp_ptr=select->columns;   
     while(tmp_ptr){
         switch(tmp_ptr->type){
             case TOKEN_STRING:        
@@ -1043,15 +1042,12 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
         tmp_ptr=tmp_ptr->next;
     }
-
-    
+   
     // VALIDATE UNIQUE COLUMNS
     tmp_ptr=select->columns;
     while(tmp_ptr){
         data_column_t *tmp_ptr2=select->columns;
-        
         while(tmp_ptr2){
-          
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
                     err_msg=malloc(1024);
@@ -1062,7 +1058,6 @@ int validate_select(cursor_t * cursor,select_t *select){
             }
             tmp_ptr2=tmp_ptr2->next;
         }
-
         tmp_ptr=tmp_ptr->next;
     }
 
@@ -1142,8 +1137,42 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
+    // at this point. 
+    // all FROM/JOIN sources exist and are unique
+    // all select columns are UNIQUE
+    // now we validate that all SELECT identifiers exist in the FROM/JOIN
+    if(select->from) {
+        tmp_ptr=select->columns;
+        while(tmp_ptr){
+            // we only care about data sourced from tables
+            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
+                // ok we know exactly where we are getting this data from... validate column.
+                if(temp_ident->qualifier) {
+                    // is it in the from?
+                    if(strcmp(temp_ident->qualifier,select->alias)) {
+                            table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
+                            tmp_ptr=temp_table->columns;
+                            while(tmp_ptr){
+                                if()
+                                tmp_ptr=tmp_ptr->next;
+                            }
+                    } else {
+                    // ok its in the join.....
 
-    
+                    }
+
+                } else {
+                // lets search all the sources for this column... and make sure its unique
+
+                }
+
+            }
+            tmp_ptr=tmp_ptr->next;
+        }
+    }
+
+
     // validate identity columns exist in dataset
     tmp_ptr=select->columns;
     while(tmp_ptr){
