@@ -1155,6 +1155,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                             tmp_ptr=temp_table->columns;
                            /*while(tmp_ptr){
                                 if()
+                                
                                 tmp_ptr=tmp_ptr->next;
                             }*/
                     } else {
