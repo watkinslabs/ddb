@@ -31,9 +31,9 @@
     select_t       * process_select           (token_array_t *tokens,int *start);
     expression_t   * process_column_list      (token_array_t *tokens,int *index);
     table_def_t    * process_create_table     (token_array_t *tokens,int *start);
-    use_t            process_use              (token_array_t *tokens,int *start);
+    use_t          * process_use              (token_array_t *tokens,int *start);
     int              validate_select          (cursor_t * cursor,select_t *select);
-    table_def_t      get_table_by_identifier  (cursor_t *cursor,identifier_t *ident) ;
+    table_def_t    * get_table_by_identifier  (cursor_t *cursor,identifier_t *ident) ;
     data_column_t  * match_data_column        (data_column_t *data,char *name,int ignore_ordinal) ;
     int              validate_create_table    (cursor_t * cursor,table_def_t *table);
     cursor_t       * init_cursor              ();
