@@ -9,9 +9,9 @@
     int              compare_identifiers      (identifier_t *source,identifier_t *dest);
     int              compare_literals         (token_t *source,token_t *dest);
     token_t        * duplicate_token          (token_t *src);
-    identifier_t     duplicate_identifier     (identifier_t *ident);
+    identifier_t   * duplicate_identifier     (identifier_t *ident);
     expression_t   * duplicate_columns        (expression_t *columns);
-    table_def_t      duplicate_table          (table_def_t *table);
+    table_def_t    * duplicate_table          (table_def_t *table);
     token_t        * token_at                 (token_array_t *tokens,int index);
     char           * copy_token_value_at      (token_array_t *tokens,int index);
     int              add_expr                 (expression_t *expression,expression_t *item);
