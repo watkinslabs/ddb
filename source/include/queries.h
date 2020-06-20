@@ -4,7 +4,7 @@
 #if !defined(_QUERIES_EXPR_H_)
     #define _QUERIES_EXPR_H_ 1
     
-    char             get_current_database     (cursor_t *cursor);
+    char           * get_current_database     (cursor_t *cursor);
     void             set_error                (cursor_t *cursor,int error_no,char *msg);
     int              compare_identifiers      (identifier_t *source,identifier_t *dest);
     int              compare_literals         (token_t *source,token_t *dest);
