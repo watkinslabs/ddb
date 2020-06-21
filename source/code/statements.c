@@ -91,17 +91,12 @@ select_t * process_select(token_array_t *tokens,int *start){
                                                            join->expression=process_expression(tokens,start);
                                                            break;
                                         }//end switch                
-
-                                        
-                                        
-
                                         break;
 
             default: loop=0; 
                      break;
         }
     }
-
 
     // where
     loop=1;
@@ -213,7 +208,6 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
         if(t1->type==TOKEN_TRUE)  { table_def->strict=1; ++*start; }
         else if(t1->type==TOKEN_FALSE) { table_def->strict=0; ++*start; } 
     }
-    
         
     return table_def;
 }
