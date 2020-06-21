@@ -819,7 +819,7 @@ select_t * process_select(token_array_t *tokens,int *start){
 data_column_t * process_column_list(token_array_t *tokens,int *index){
 
     data_column_t * col=0;
-
+    int ordinal=0;
     switch(token_at(tokens,*index)->type) {
         case TOKEN_PAREN_LEFT: ++*index; 
                                break;
@@ -835,8 +835,8 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
         }
         if(column) {
             
-            col=add_data_column(col,column->type,column->value,column->value,index);
-
+            col=add_data_column(col,column->type,column->value,column->value,ordinal);
+            ++ordinal;
             if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
                 loop=0;
             } else {
