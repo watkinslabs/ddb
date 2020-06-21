@@ -18,7 +18,7 @@ int free_data_columns(data_column_t *columns){
             case TOKEN_HEX:
             case TOKEN_BINARY:
             case TOKEN_REAL:
-            case TOKEN_NULL: if(ptr->object) free(ptr->object); 
+            case TOKEN_NULL:// if(ptr->object) free(ptr->object); 
                              break;
             case TOKEN_IDENTIFIER: free_ident(ptr->object); 
             break;
