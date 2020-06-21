@@ -1287,18 +1287,18 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         set_error(cursor,ERR_TABLE_HAS_NO_COLUMNS,msg);
         return 1;
     }
-    expression_t *outer_tmp=table->columns;
-    expression_t *inner_tmp;
+    data_column_t *outer_tmp=table->columns;
+        data_column_t *inner_tmp;
     int outer_index=0;
     int inner_index=0;
     while(outer_tmp){
-        if(outer_tmp->literal) {
+        if(outer_tmp->type!=TOKEN_IDENTIFIER) {
             inner_tmp=table->columns;
             inner_index=0;
             while(inner_tmp){
                 // skip itself
                 if(inner_index!=outer_index) {
-                    if(compare_literals(outer_tmp->literal,inner_tmp->literal)) {
+                    if(compare_literals(outer_tmp->object,inner_tmp->object)) {
                         msg=safe_malloc(1000,1);      
                         sprintf(msg,"Column must be a unique literal %s",inner_tmp->literal->value);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
@@ -1306,7 +1306,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                     }
                 }
                 ++inner_index;
-                inner_tmp=inner_tmp->expression;
+                inner_tmp=inner_tmp->next;
             }
 
         } else {
