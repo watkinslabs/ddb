@@ -14,15 +14,6 @@
 
 
 
-int compare_literals(token_t *source,token_t *dest);
-void set_error(cursor_t *cursor,int error_no,char *msg);
-identifier_t *duplicate_identifier(identifier_t *ident);
-expression_t * duplicate_columns(expression_t *columns);
-table_def_t *duplicate_table(table_def_t *table);
-table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident);
-int validate_use(cursor_t *cursor,use_t *use);
-
-
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
     if (cursor->active_database==0) return strdup(DEFAULT_DATABASE_NAME);
@@ -81,35 +72,41 @@ identifier_t *duplicate_identifier(identifier_t *ident){
     return new_ident;
 }
 
-expression_t * duplicate_columns(expression_t *columns){
-    expression_t *new_columns=0;
-    expression_t *tmp_ptr=columns;
+data_column_t * duplicate_columns(data_column_t *columns){
+    data_column_t *new_columns=0;
+    data_column_t *tmp_ptr=columns;
 
     if(columns) {
         while(tmp_ptr) {
-            expression_t *new_column=safe_malloc(sizeof(expression_t),1);
-            new_column->positive     =tmp_ptr->positive;
-            new_column->operator     =tmp_ptr->operator;
-            new_column->not_in       =tmp_ptr->not_in;
-            new_column->not          =tmp_ptr->not;
-            new_column->negative     =tmp_ptr->negative;
-            new_column->mode         =tmp_ptr->mode;
-            new_column->list         =tmp_ptr->list;
-            new_column->in           =tmp_ptr->in;
+            data_column_t *new_column=safe_malloc(sizeof(data_column_t),1);
+
+            ypedef struct  data_column_t{
+    int    type;
+    int    ordinal;
+    void * object;
+    char * alias;
+    struct  data_column_t *next;
+    struct  data_column_t *next_tail;
+
+            new_column->type         =tmp_ptr->type;
+            new_column->ordinal      =tmp_ptr->ordinal;
+            new_column->alias        =strdup(tmp_ptr->alias)
             new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);;
-            new_column->identifier   =duplicate_identifier(tmp_ptr->identifier);
+            if(tmp_ptr->type==TOKEN_IDENTIFIER)
+                new_column->object   =duplicate_identifier(tmp_ptr->identifier);
+            else
+                new_column->object   =strdup(tmp_ptd->object);
 
             // attach list
             if(new_columns==0){
                 new_columns=new_column;
-                new_columns->expression_tail=new_column;
+                new_columns->next_tail=new_column;
             } else {
-                new_columns->expression_tail->expression=new_column;
-                new_columns->expression_tail=new_column;
+                new_columns->next_tail->next=new_column;
+                new_columns->next_tail=new_column;
             }
-            tmp_ptr=tmp_ptr->expression;
+            tmp_ptr=tmp_ptr->next;
         }
-
     }
     return new_columns;
 }
