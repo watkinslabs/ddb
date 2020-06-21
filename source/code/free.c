@@ -24,7 +24,7 @@ int free_data_columns(data_column_t *columns){
             break;
         }
         if(ptr->alias) {
-            //free(ptr->alias);
+            free(ptr->alias);
         }
         tmp_ptr=ptr;
         ptr=ptr->next;
