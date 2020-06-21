@@ -849,7 +849,7 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
     switch(token_at(tokens,*index)->type) {
         case TOKEN_PAREN_RIGHT: ++*index; 
                                 break;
-        default: free_data_column(col); 
+        default: free_data_columns(col); 
                  return 0;
     }
     
