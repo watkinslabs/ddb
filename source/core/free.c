@@ -133,7 +133,7 @@ int free_litteral(token_t *token){
  */
 int free_table_def(table_def_t *table_def){
     if(table_def){
-        if(table_def->columns   ) free_expression(table_def->columns);
+        if(table_def->columns   ) free_data_columns(table_def->columns);
         if(table_def->column    ) free_string(table_def->column);
         if(table_def->identifier) free_ident(table_def->identifier);
         /*
