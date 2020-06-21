@@ -190,7 +190,9 @@ void debug_create_table(table_def_t *table) {
     
     while(temp_ptr){
         // TODO column value identifier string etc...
-        printf(" - Column Alias: %s\n",temp_ptr->alias);
+        if(temp_ptr->alias) {
+            printf(" - Column Alias: %s\n",temp_ptr->alias);
+        }
         printf(" - Column Type: %s\n",token_type(temp_ptr->type));
         if(temp_ptr->type==TOKEN_IDENTIFIER) {
             debug_identifier((identifier_t *)temp_ptr->object);
