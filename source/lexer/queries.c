@@ -82,8 +82,8 @@ data_column_t * duplicate_columns(data_column_t *columns){
 
             new_column->type         =tmp_ptr->type;
             new_column->ordinal      =tmp_ptr->ordinal;
-            new_column->alias        =strdup(tmp_ptr->alias)
-            new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);;
+            new_column->alias        =strdup(tmp_ptr->alias);
+            new_column->literal      =duplicate_token((token_t*)tmp_ptr->literal);
             if(tmp_ptr->type==TOKEN_IDENTIFIER)
                 new_column->object   =duplicate_identifier(tmp_ptr->identifier);
             else
