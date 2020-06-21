@@ -82,11 +82,11 @@ data_column_t * duplicate_columns(data_column_t *columns){
 
             new_column->type         =tmp_ptr->type;
             new_column->ordinal      =tmp_ptr->ordinal;
-            new_column->alias        =strdup(tmp_ptr->alias);
+            new_column->alias        =strdup((char*)tmp_ptr->alias);
             if(tmp_ptr->type==TOKEN_IDENTIFIER)
                 new_column->object   =duplicate_identifier((identifier_t *)tmp_ptr->object);
             else
-                new_column->object   =strdup(tmp_ptd->object);
+                new_column->object   =strdup((char*)tmp_ptd->object);
 
             // attach list
             if(new_columns==0){
