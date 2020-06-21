@@ -12,4 +12,6 @@
     int free_table_def      (table_def_t *table_def);
     int free_cursor         (cursor_t *cursor);
     int free_use            (use_t *use);
+    int free_token          (token_t *token);
+
 #endif

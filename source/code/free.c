@@ -184,3 +184,10 @@ int free_use(use_t *use){
     }
     return 1;
 }
+
+int free_token(token_t *token){
+    if(token) {
+        if(token->value) free (token->value);
+        free(token);
+    }
+}
