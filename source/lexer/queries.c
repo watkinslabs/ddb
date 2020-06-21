@@ -1315,7 +1315,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
             return 0;
         }
-        outer_tmp=outer_tmp->expression;
+        outer_tmp=outer_tmp->next;
         ++outer_index;
     }
 
