@@ -501,6 +501,7 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
         if(column) {
             
             col=add_data_column(col,column->type,column->value,0,ordinal);
+            //freeing the wrapper but keeping the value... freed later by other func
             free(column);
             ++ordinal;
             if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {

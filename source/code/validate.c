@@ -5,6 +5,121 @@
 #include "../include/free.h"
 #include <time.h>
 
+/* Function: validate_create_table
+ * -----------------------
+ * validate a create_table structures logic
+ *
+ * fail if:  
+ *   if the table exists in the curent global memory
+ * returns: 1 for success
+ *          zero or null otherwise
+ */
+int validate_create_table(cursor_t * cursor,table_def_t *table){
+    /*
+    table->column;
+    table->columns;
+    table->file;
+    table->identifier;
+    table->strict;
+    */
+
+    char *msg=0;    
+    table_def_t *next=cursor->tables;
+    // the source will always be available. this is caught in the parsing phase
+    // the db may not be set.
+    if(table->identifier->qualifier==0) {
+        table->identifier->qualifier=get_current_database(cursor);
+    }
+    // check to see if table exists
+    while(next){
+        if(next->identifier) {
+            if(compare_identifiers(next->identifier,table->identifier)){
+                msg=safe_malloc(1000,1);
+                sprintf(msg,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
+                set_error(cursor,ERR_TABLE_ALREADY_EXISTS,msg);
+                return 0;
+            }
+        }
+        next=next->next;
+    }
+    // check to see if file is accessable
+    if( access( table->file, F_OK) != -1 ) {
+        if( access( table->file, R_OK) != -1 ) {
+            if( access( table->file, W_OK) != -1 ) {
+            } else {
+                msg=safe_malloc(1000,1);
+                sprintf(msg,"Cant write to file %s",table->file);
+                set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg);
+                return 0;
+            }
+        } else {
+            msg=safe_malloc(1000,1);
+            sprintf(msg,"Cant read from file %s",table->file);
+            set_error(cursor,ERR_FILE_READ_PERMISSION,msg);
+            return 0;
+        }
+    } else {
+        msg=safe_malloc(1000,1);      
+        sprintf(msg,"Cant find file %s",table->file);
+        set_error(cursor,ERR_FILE_NOT_FOUND,msg);
+        return 0;
+    }
+    //check to see if table has columns and they are uniquely named
+
+    if(table->columns==0) {
+        msg=safe_malloc(1000,1);      
+        sprintf(msg,"no columns in %s.%s",table->identifier->qualifier,table->identifier->source);
+        set_error(cursor,ERR_TABLE_HAS_NO_COLUMNS,msg);
+        return 1;
+    }
+    data_column_t *outer_tmp=table->columns;
+        data_column_t *inner_tmp;
+    int outer_index=0;
+    int inner_index=0;
+    while(outer_tmp){
+        if(outer_tmp->type!=TOKEN_IDENTIFIER) {
+            inner_tmp=table->columns;
+            inner_index=0;
+            while(inner_tmp){
+                // skip itself
+                if(inner_index!=outer_index) {
+                    // if you find a duplicate column error out
+                    if(outer_tmp->type==inner_tmp->type && strcmp(outer_tmp->object,inner_tmp->object)==0) {
+                        msg=safe_malloc(1000,1);      
+                        sprintf(msg,"Column must be a unique literal %s",(char*)inner_tmp->object);
+                        set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
+                        return 0;
+                    }
+                }
+                ++inner_index;
+                inner_tmp=inner_tmp->next;
+            }
+
+        } else {
+            msg=safe_malloc(1000,1);      
+            sprintf(msg,"Column must be a unique literal");
+            set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
+            return 0;
+        }
+        outer_tmp=outer_tmp->next;
+        ++outer_index;
+    }
+
+
+    // set most recent addition to active. append to end of list. update next and tail
+    table_def_t *new_table=duplicate_table(table);
+    if(cursor->tables==0)  {
+        cursor->tables=new_table;
+        cursor->tables->tail=new_table;
+        cursor->active_table=new_table;
+    } else {
+        cursor->tables->tail->next=new_table;
+        cursor->tables->tail=new_table;
+        cursor->active_table=new_table;
+    }
+
+    return 1;
+}
 
 /* Function: validate_use
  * -----------------------
@@ -271,117 +386,3 @@ int validate_select(cursor_t * cursor,select_t *select){
     return 0;
 }
 
-/* Function: validate_create_table
- * -----------------------
- * validate a create_table structures logic
- *
- * fail if:  
- *   if the table exists in the curent global memory
- * returns: 1 for success
- *          zero or null otherwise
- */
-int validate_create_table(cursor_t * cursor,table_def_t *table){
-    /*
-    table->column;
-    table->columns;
-    table->file;
-    table->identifier;
-    table->strict;
-    */
-
-    char *msg=0;    
-    table_def_t *next=cursor->tables;
-    // the source will always be available. this is caught in the parsing phase
-    // the db may not be set.
-    if(table->identifier->qualifier==0) {
-        table->identifier->qualifier=get_current_database(cursor);
-    }
-    // check to see if table exists
-    while(next){
-        if(next->identifier) {
-            if(compare_identifiers(next->identifier,table->identifier)){
-                msg=safe_malloc(1000,1);
-                sprintf(msg,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
-                set_error(cursor,ERR_TABLE_ALREADY_EXISTS,msg);
-                return 0;
-            }
-        }
-        next=next->next;
-    }
-    // check to see if file is accessable
-    if( access( table->file, F_OK) != -1 ) {
-        if( access( table->file, R_OK) != -1 ) {
-            if( access( table->file, W_OK) != -1 ) {
-            } else {
-                msg=safe_malloc(1000,1);
-                sprintf(msg,"Cant write to file %s",table->file);
-                set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg);
-                return 0;
-            }
-        } else {
-            msg=safe_malloc(1000,1);
-            sprintf(msg,"Cant read from file %s",table->file);
-            set_error(cursor,ERR_FILE_READ_PERMISSION,msg);
-            return 0;
-        }
-    } else {
-        msg=safe_malloc(1000,1);      
-        sprintf(msg,"Cant find file %s",table->file);
-        set_error(cursor,ERR_FILE_NOT_FOUND,msg);
-        return 0;
-    }
-    //check to see if table has columns and they are uniquely named
-
-    if(table->columns==0) {
-        msg=safe_malloc(1000,1);      
-        sprintf(msg,"no columns in %s.%s",table->identifier->qualifier,table->identifier->source);
-        set_error(cursor,ERR_TABLE_HAS_NO_COLUMNS,msg);
-        return 1;
-    }
-    data_column_t *outer_tmp=table->columns;
-        data_column_t *inner_tmp;
-    int outer_index=0;
-    int inner_index=0;
-    while(outer_tmp){
-        if(outer_tmp->type!=TOKEN_IDENTIFIER) {
-            inner_tmp=table->columns;
-            inner_index=0;
-            while(inner_tmp){
-                // skip itself
-                if(inner_index!=outer_index) {
-                    if(outer_tmp->type!=inner_tmp->type || strcmp(outer_tmp->object,inner_tmp->object)!=0) {
-                        msg=safe_malloc(1000,1);      
-                        sprintf(msg,"Column must be a unique literal %s",(char*)inner_tmp->object);
-                        set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
-                        return 0;
-                    }
-                }
-                ++inner_index;
-                inner_tmp=inner_tmp->next;
-            }
-
-        } else {
-            msg=safe_malloc(1000,1);      
-            sprintf(msg,"Column must be a unique literal");
-            set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
-            return 0;
-        }
-        outer_tmp=outer_tmp->next;
-        ++outer_index;
-    }
-
-
-    // set most recent addition to active. append to end of list. update next and tail
-    table_def_t *new_table=duplicate_table(table);
-    if(cursor->tables==0)  {
-        cursor->tables=new_table;
-        cursor->tables->tail=new_table;
-        cursor->active_table=new_table;
-    } else {
-        cursor->tables->tail->next=new_table;
-        cursor->tables->tail=new_table;
-        cursor->active_table=new_table;
-    }
-
-    return 1;
-}
