@@ -1,5 +1,4 @@
 #include "../include/errors.h"
-#include "../include/tokens.h"
 #include "../include/structure.h"
 #include "../include/debug.h"
 #include "../include/queries.h"
@@ -350,7 +349,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
             while(inner_tmp){
                 // skip itself
                 if(inner_index!=outer_index) {
-                    if(compare_literals(outer_tmp->object,inner_tmp->object)) {
+                    if(outer_tmp->type!=inner_tmp->type || strcmp(outer_tmp->object,inner_tmp->object)!=0) {
                         msg=safe_malloc(1000,1);      
                         sprintf(msg,"Column must be a unique literal %s",(char*)inner_tmp->object);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);

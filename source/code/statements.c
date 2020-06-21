@@ -1,5 +1,4 @@
 #include "../include/errors.h"
-#include "../include/tokens.h"
 #include "../include/structure.h"
 #include "../include/debug.h"
 #include "../include/queries.h"
@@ -212,6 +211,13 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
     return table_def;
 }
 
+/* Function: process_use
+ * -----------------------
+ * parse sql for database selection return a data structure
+ * 
+ * returns: use_t data structure
+ *          0 (NULL) for failure
+ */
 use_t *process_use(token_array_t *tokens,int *start){
     use_t *use=0;
    

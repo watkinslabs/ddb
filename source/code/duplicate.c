@@ -1,3 +1,10 @@
+#include "../include/errors.h"
+#include "../include/structure.h"
+#include "../include/debug.h"
+#include "../include/queries.h"
+#include "../include/free.h"
+
+
 /* Function: duplicate_token
  * -----------------------
  * returns a copy of a token_t from an token_array_t
