@@ -185,12 +185,13 @@ void debug_create_table(table_def_t *table) {
         printf ("Cant debug create table. Null\n");
     } 
     printf (" -- CREATE_TABLE DEBUG -------------\n");
-    expression_t *temp_ptr=table->columns;
+    data_column_t *temp_ptr=table->columns;
     debug_identifier(table->identifier);
     
     while(temp_ptr){
-        printf("  Column : %s\n",temp_ptr->literal->value);
-        temp_ptr=temp_ptr->expression;
+        // TODO column value identifier string etc...
+        printf("  Column Alias: %s\n",temp_ptr->alias);
+        temp_ptr=temp_ptr->next;
     } 
 
     /*printf("base:          %s \n",table->base);
