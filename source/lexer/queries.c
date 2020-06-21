@@ -80,14 +80,6 @@ data_column_t * duplicate_columns(data_column_t *columns){
         while(tmp_ptr) {
             data_column_t *new_column=safe_malloc(sizeof(data_column_t),1);
 
-            ypedef struct  data_column_t{
-    int    type;
-    int    ordinal;
-    void * object;
-    char * alias;
-    struct  data_column_t *next;
-    struct  data_column_t *next_tail;
-
             new_column->type         =tmp_ptr->type;
             new_column->ordinal      =tmp_ptr->ordinal;
             new_column->alias        =strdup(tmp_ptr->alias)
