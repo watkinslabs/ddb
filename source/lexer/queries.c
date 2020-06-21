@@ -847,7 +847,7 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
         }
         if(column) {
             
-            col=add_data_column(col,column->type,column,"",index);
+            col=add_data_column(col,column->type,column->value,column->value,index);
 
             if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
                 loop=0;
