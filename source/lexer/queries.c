@@ -1300,7 +1300,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                 if(inner_index!=outer_index) {
                     if(compare_literals(outer_tmp->object,inner_tmp->object)) {
                         msg=safe_malloc(1000,1);      
-                        sprintf(msg,"Column must be a unique literal %s",inner_tmp->literal->value);
+                        sprintf(msg,"Column must be a unique literal %s",inner_tmp->object);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
                         return 0;
                     }
