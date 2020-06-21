@@ -29,7 +29,7 @@
     data_column_t  * add_data_column          (data_column_t *column,unsigned int type,void *item,char *alias,int ordinal);
     data_column_t  * process_select_list      (token_array_t *tokens,int *index);
     select_t       * process_select           (token_array_t *tokens,int *start);
-    expression_t   * process_column_list      (token_array_t *tokens,int *index);
+    data_column_t  * process_column_list      (token_array_t *tokens,int *index);
     table_def_t    * process_create_table     (token_array_t *tokens,int *start);
     use_t          * process_use              (token_array_t *tokens,int *start);
     int              validate_select          (cursor_t * cursor,select_t *select);

@@ -66,7 +66,7 @@ typedef struct join_t {
 
 typedef struct table_def_t{
     identifier_t *identifier;
-    expression_t *columns;
+    data_column_t *columns;
     char *file;
     /*
     char *base;

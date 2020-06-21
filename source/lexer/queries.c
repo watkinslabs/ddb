@@ -3,6 +3,7 @@
 #include "../../../include/structure.h"
 #include "../../../include/debug.h"
 #include "../../../include/queries.h"
+#include "../../../include/free.h"
 #include <time.h>
 
 #define EXPRESSION_GROUP_BY 3
@@ -822,15 +823,14 @@ select_t * process_select(token_array_t *tokens,int *start){
 
 /* Function: process_column_list
  * -----------------------
- * process table column definitions list (for group by)
+ * process table column definitions list for create table
  * 
  * returns: a nested set of expression_t
  *          0 or (NULL) on failure
  */
-expression_t * process_column_list(token_array_t *tokens,int *index){
+data_column_t * process_column_list(token_array_t *tokens,int *index){
 
-    expression_t *expr=0;
-    expression_t *expr2=0;
+    data_column_t * col=0;
 
     switch(token_at(tokens,*index)->type) {
         case TOKEN_PAREN_LEFT: ++*index; 
@@ -846,15 +846,8 @@ expression_t * process_column_list(token_array_t *tokens,int *index){
             ++*index;
         }
         if(column) {
-            expr2=safe_malloc(sizeof(expression_t),1); 
-            expr2->literal=column;
-            expr2->mode=EXPRESSION_COLUMN;
-            if(expr==0) {
-                expr=expr2;
-            } 
-            else {
-                add_expr(expr,expr2);
-            }
+            
+            col=add_data_column(col,column->type,column,"",index);
 
             if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
                 loop=0;
@@ -868,11 +861,11 @@ expression_t * process_column_list(token_array_t *tokens,int *index){
     switch(token_at(tokens,*index)->type) {
         case TOKEN_PAREN_RIGHT: ++*index; 
                                 break;
-        default: free_expression(expr); 
+        default: free_data_column(col); 
                  return 0;
     }
     
-    return expr;
+    return col;
 }
 
 /* Function: process_create_table
@@ -1153,7 +1146,8 @@ int validate_select(cursor_t * cursor,select_t *select){
                     if(strcmp(temp_ident->qualifier,select->alias)) {
                             table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                             tmp_ptr=temp_table->columns;
-                           /*while(tmp_ptr){
+                           /*while(tmp_ptr){                            tmp_ptr=temp_table->columns;
+
                                 if()
                                 
                                 tmp_ptr=tmp_ptr->next;
