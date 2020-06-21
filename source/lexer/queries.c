@@ -1366,3 +1366,9 @@ int validate_use(cursor_t *cursor,use_t *use){
     }
     return 1;
 }
+
+
+
+// TODO create dable validate table
+
+ //Expression to data_column_t
