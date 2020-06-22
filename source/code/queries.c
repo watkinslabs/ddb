@@ -113,7 +113,7 @@ data_column_t *add_data_column(data_column_t *column,unsigned int type,void *ite
 table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident) {
     table_def_t *tmp_table=cursor->tables;
     while (tmp_table) {
-        printf(" - GET TABLE \n");
+        //printf(" - GET TABLE \n");
         if(compare_identifiers(ident,tmp_table->identifier)){
             return tmp_table;
         }
