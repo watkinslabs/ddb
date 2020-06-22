@@ -326,7 +326,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                     table_def_t *temp_table=0;
                     
                     if(strcmp(temp_ident->qualifier,select->alias)==0) {
-                        printf("CHECK FROM---QUALIFIER %s : FROM %s\n",temp_ident->qualifier,select.alias);
+                        printf("CHECK FROM---QUALIFIER %s : FROM %s\n",temp_ident->qualifier,select->alias);
                         temp_table=get_table_by_identifier(cursor,select->from);
                     } else {
                         join_t *tmp_join=select->join;
