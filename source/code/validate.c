@@ -321,28 +321,45 @@ int validate_select(cursor_t * cursor,select_t *select){
                 // ok we know exactly where we are getting this data from... validate column.
                 if(temp_ident->qualifier) {
                     // is it in the from?
-                    if(strcmp(temp_ident->qualifier,select->alias)) {
-                            table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
-                            data_column_t* tmp_ptr2=temp_table->columns;
-                            found=0;
-                            // loop from the found table columns
-                            while(tmp_ptr2){                            
-                                if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr->object)==0){
-                                    found=1;
-                                    break;
-                                }
-                                tmp_ptr2=tmp_ptr2->next;
-                            }
-                            if(found==0) {
-                                err_msg=malloc(1024);
-                                sprintf(err_msg,"invalid column `%s` in table table: `%s`.`%s`",tmp_ptr->alias,temp_table->identifier->qualifier,temp_table->identifier->source);
-                                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
-                            }
+                    table_def_t *temp_table=0;
+                    if(strcmp(temp_ident->qualifier,select->alias)==0) {
+                        temp_table=get_table_by_identifier(cursor,select->from);
                     } else {
-                    // ok its in the join.....
-
+                        join_t *tmp_join=select->join;
+                        int len=select->join_length;
+                        for(int i=0;i<len;i++){
+                            if(strcmp(tmp_join[i].alias,temp_ident->qualifier)==0){
+                                temp_table=get_table_by_identifier(cursor,select->from);
+                                break;
+                            }
+                        }// end for
+                    }// end else
+                    
+                    // we didnt find the referenced qualifier as a source 
+                    if (temp_table==0) {
+                        err_msg=malloc(1024);
+                        sprintf(err_msg,"invalid qualifier in SELECT: %s",temp_ident->qualifier);
+                        set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
+                        return 0;
                     }
 
+
+                    data_column_t* tmp_ptr2=temp_table->columns;
+                    found=0;
+                    // loop from the found table columns
+                    while(tmp_ptr2){                            
+                        if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr->object)==0){
+                            found=1;
+                            break;
+                        }
+                        tmp_ptr2=tmp_ptr2->next;
+                    }
+                    if(found==0) {
+                        err_msg=malloc(1024);
+                        sprintf(err_msg,"invalid column `%s` in table table: `%s`.`%s`",tmp_ptr->alias,temp_table->identifier->qualifier,temp_table->identifier->source);
+                        set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                    }
+                   
                 } else {
                 // lets search all the sources for this column... and make sure its unique
 
