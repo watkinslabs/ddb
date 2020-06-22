@@ -348,7 +348,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                     found=0;
                     // loop from the found table columns
                     while(tmp_ptr2){                            
-                        if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr->object)==0){
+                        if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr2->object)==0){
                             found=1;
                             break;
                         }
