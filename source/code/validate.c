@@ -331,10 +331,10 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
                 //printf("LOOKING FOR\n");
-                debug_identifier(temp_ident);
+                //debug_identifier(temp_ident);
                 // ok we know exactly where we are getting this data from... validate column.
                 if(temp_ident->qualifier) {
-                    printf("QUALIFIER \n");
+                    //printf("QUALIFIER \n");
                     // is it in the from?
                     table_def_t *temp_table=0;
                     
@@ -370,11 +370,12 @@ int validate_select(cursor_t * cursor,select_t *select){
                         err_msg=malloc(1024);
                         sprintf(err_msg,"invalid column `%s` in table table: `%s`.`%s`",tmp_ptr->alias,temp_table->identifier->qualifier,temp_table->identifier->source);
                         set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                        return 0;
                     }
                    
                 } else {
                 // lets search all the sources for this column... and make sure its unique
-                    printf("NO QUALIFIER \n");
+                    //printf("NO QUALIFIER \n");
                     table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                     found=0;
                     found+=table_has_column(temp_table,temp_ident->source);
@@ -385,16 +386,18 @@ int validate_select(cursor_t * cursor,select_t *select){
                         temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                         found+=table_has_column(temp_table,temp_ident->source);
                     }
-                    printf("%d\n",found);
+                    //printf("%d\n",found);
                     if(found==0) {
                         err_msg=malloc(1024);
                         sprintf(err_msg,"invalid column `%s` in select",temp_ident->source);
                         set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                        return 0;
                     }
                     if(found>1) {
                         err_msg=malloc(1024);
                         sprintf(err_msg,"ambiguious column `%s` in select",temp_ident->source);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
+                        return 0;
                     }
                 }
             }
