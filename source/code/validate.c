@@ -405,23 +405,10 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
+    // At this point the select list, from and join sources have 
+    // been validated to be legal, and non ambiguious.
 
     
-    // validate function columns are real functions? Should be handled through parsing
-    
-    
-    // does the column have a name or alias. if not self assign
-    
-    
-    
-    // qualifier check
-    // qualifiers muse exist in from/join
-
-    // from source check 
-    // table must exist
-    
-    // join source check
-    // table must exist
 
     // where check
     // identifier must be in from/target
