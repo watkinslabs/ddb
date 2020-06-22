@@ -6,7 +6,7 @@ USE test;
 SELECT 
     DISTINCT 
     t1.id, --identfier
-    t1.id, --identifier
+    t1.id as id2, --identifier
     f1.col0 as ID1_A1, --identfier with alias
     'col0', --litteral 
     'col0' as LIT1_A1, --litteral 
