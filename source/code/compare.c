@@ -5,7 +5,7 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     if(dest  ->qualifier==0) return 0;
     if(source->source   ==0) return 0;
     if(dest  ->source   ==0) return 0;
-    printf("\n - COMPARE IDENTIFIER \n");
+    //printf("\n - COMPARE IDENTIFIER \n");
     debug_identifier(source);
     debug_identifier(dest);
 
