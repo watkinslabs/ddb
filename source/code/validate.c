@@ -318,6 +318,8 @@ int validate_select(cursor_t * cursor,select_t *select){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
+                printf("LOOKING FOR\n");
+                debug_identifier(temp_ident);
                 // ok we know exactly where we are getting this data from... validate column.
                 if(temp_ident->qualifier) {
                     // is it in the from?
