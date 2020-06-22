@@ -5,6 +5,18 @@
 #include "../include/free.h"
 #include <time.h>
 
+
+int table_has_column(table_def_t *table,char *column){
+    data_column_t *tmp_ptr=table->columns;
+    while(tmp_ptr){                            
+        if(strcmp(tmp_ptr->object,column)==0){
+            return 1;
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+    return 0;
+}
+
 /* Function: validate_create_table
  * -----------------------
  * validate a create_table structures logic
@@ -318,7 +330,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
-                printf("LOOKING FOR\n");
+                //printf("LOOKING FOR\n");
                 debug_identifier(temp_ident);
                 // ok we know exactly where we are getting this data from... validate column.
                 if(temp_ident->qualifier) {
@@ -326,14 +338,14 @@ int validate_select(cursor_t * cursor,select_t *select){
                     table_def_t *temp_table=0;
                     
                     if(strcmp(temp_ident->qualifier,select->alias)==0) {
-                        printf("CHECK FROM---QUALIFIER %s : FROM %s\n",temp_ident->qualifier,select->alias);
+                        //printf("CHECK FROM---QUALIFIER %s : FROM %s\n",temp_ident->qualifier,select->alias);
                         temp_table=get_table_by_identifier(cursor,select->from);
                     } else {
                         join_t *tmp_join=select->join;
                         int len=select->join_length;
                         for(int i=0;i<len;i++){
                             if(strcmp(tmp_join[i].alias,temp_ident->qualifier)==0){
-                                printf("CHECK JOIN---QUALIFIER %s : JOIN %s\n",temp_ident->qualifier,tmp_join[i].alias);
+                                //printf("CHECK JOIN---QUALIFIER %s : JOIN %s\n",temp_ident->qualifier,tmp_join[i].alias);
                                 temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                                 break;
                             }
@@ -350,15 +362,9 @@ int validate_select(cursor_t * cursor,select_t *select){
 
 
                     data_column_t* tmp_ptr2=temp_table->columns;
-                    found=0;
+                    found=table_has_column(temp_table,temp_ident->source);
                     // loop from the found table columns
-                    while(tmp_ptr2){                            
-                        if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr2->object)==0){
-                            found=1;
-                            break;
-                        }
-                        tmp_ptr2=tmp_ptr2->next;
-                    }
+
                     if(found==0) {
                         err_msg=malloc(1024);
                         sprintf(err_msg,"invalid column `%s` in table table: `%s`.`%s`",tmp_ptr->alias,temp_table->identifier->qualifier,temp_table->identifier->source);
@@ -368,8 +374,26 @@ int validate_select(cursor_t * cursor,select_t *select){
                 } else {
                 // lets search all the sources for this column... and make sure its unique
 
+                    table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
+                    found=0;
+                    found+=table_has_column(temp_table,temp_ident->source);
+                    
+                    join_t *tmp_join=select->join;
+                    int len=select->join_length;
+                    for(int i=0;i<len;i++){
+                        found+=table_has_column(temp_table,tmp_join[i].identifier->source);
+                    }
+                    if(found==0) {
+                        err_msg=malloc(1024);
+                        sprintf(err_msg,"invalid column `%s` in select",temp_ident->source);
+                        set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                    }
+                    if(found>1) {
+                        err_msg=malloc(1024);
+                        sprintf(err_msg,"ambiguious column `%s` in select",temp_ident->source);
+                        set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
+                    }
                 }
-
             }
             tmp_ptr=tmp_ptr->next;
         }
