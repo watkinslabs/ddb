@@ -6,8 +6,8 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     if(source->source   ==0) return 0;
     if(dest  ->source   ==0) return 0;
     //printf("\n - COMPARE IDENTIFIER \n");
-    debug_identifier(source);
-    debug_identifier(dest);
+    //debug_identifier(source);
+    //debug_identifier(dest);
 
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
         strcmp(source->source,dest->source)==0) return 1;
