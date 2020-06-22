@@ -607,9 +607,9 @@ int process_queries(cursor_t *cursor,char *queries){
     }
     // token_print(tokens);
     // cleanup
+    cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
-    cursor->parse_position=tokens->position;
 
     return return_code;
 }
