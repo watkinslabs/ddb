@@ -331,9 +331,10 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
                 //printf("LOOKING FOR\n");
-                //debug_identifier(temp_ident);
+                debug_identifier(temp_ident);
                 // ok we know exactly where we are getting this data from... validate column.
                 if(temp_ident->qualifier) {
+                    printf("QUALIFIER \n");
                     // is it in the from?
                     table_def_t *temp_table=0;
                     
@@ -373,7 +374,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                    
                 } else {
                 // lets search all the sources for this column... and make sure its unique
-
+                    printf("NO QUALIFIER \n");
                     table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                     found=0;
                     found+=table_has_column(temp_table,temp_ident->source);
