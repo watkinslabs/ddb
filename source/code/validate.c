@@ -381,7 +381,8 @@ int validate_select(cursor_t * cursor,select_t *select){
                     join_t *tmp_join=select->join;
                     int len=select->join_length;
                     for(int i=0;i<len;i++){
-                        found+=table_has_column(temp_table,tmp_join[i].identifier->source);
+                        temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
+                        found+=table_has_column(temp_table,temp_ident->source);
                     }
                     if(found==0) {
                         err_msg=malloc(1024);
@@ -400,14 +401,6 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
 
 
-    // validate identity columns exist in dataset
-    tmp_ptr=select->columns;
-    while(tmp_ptr){
-    
-    
-
-        tmp_ptr=tmp_ptr->next;
-    }
     
     // validate function columns are real functions? Should be handled through parsing
     
