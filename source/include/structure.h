@@ -110,6 +110,7 @@ typedef struct cursor_t{
     char                * active_database;
     char                * requested_query;
     char                * executed_query;
+    int                   parse_position;
     int                   error;
     char                * error_message;
     int                   status;

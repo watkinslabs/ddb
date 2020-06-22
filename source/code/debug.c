@@ -254,6 +254,7 @@ void debug_cursor(cursor_t *cursor){
     if(cursor->error) {
         printf("- ERROR NUM: %d %s\n",cursor->error,vomit(cursor->error));
         printf("- ERROR: %s\n",cursor->error_message);
+        printf("- POS: %s\n",cursor->error_message);
     }
 
 }

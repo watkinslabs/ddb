@@ -609,7 +609,7 @@ int process_queries(cursor_t *cursor,char *queries){
     // cleanup
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
-
+    cursor->parse_position=tokens->position;
 
     return return_code;
 }

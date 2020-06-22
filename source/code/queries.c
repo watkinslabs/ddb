@@ -124,6 +124,7 @@ table_def_t *get_table_by_identifier(cursor_t *cursor,identifier_t *ident) {
 cursor_t * init_cursor(){
     cursor_t * cursor=safe_malloc(sizeof(cursor_t),1);
     cursor->data_length=0;
+    cursor->parse_position=0;
     cursor->active_database=get_current_database(cursor);
     clock_gettime(CLOCK_REALTIME,&cursor->created);
     return cursor;
