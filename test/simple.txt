@@ -5,7 +5,7 @@ USE test;
 
 SELECT 
     DISTINCT 
-    cid, --identfier
+    resr.cid, --identfier
     x as x, --identifier
     f1.col0 as ID1_A1, --identfier with alias
     'col0', --litteral 
