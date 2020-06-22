@@ -335,7 +335,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                             }
                             if(found==0) {
                                 err_msg=malloc(1024);
-                                sprintf(err_msg,"invalid column in table table: %s.%s",temp_table->identifier->qualifier,temp_table->identifier->source);
+                                sprintf(err_msg,"invalid column `%s` in table table: `%s`.`%s`",tmp_ptr->alias,temp_table->identifier->qualifier,temp_table->identifier->source);
                                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                             }
                     } else {
