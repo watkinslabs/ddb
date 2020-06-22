@@ -329,11 +329,11 @@ int validate_select(cursor_t * cursor,select_t *select){
                         printf("CHECK FROM---\n");
                         temp_table=get_table_by_identifier(cursor,select->from);
                     } else {
-                        printf("CHECK JOIN---\n");
                         join_t *tmp_join=select->join;
                         int len=select->join_length;
                         for(int i=0;i<len;i++){
                             if(strcmp(tmp_join[i].alias,temp_ident->qualifier)==0){
+                                printf("CHECK JOIN---\n");
                                 temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                                 break;
                             }
