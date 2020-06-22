@@ -336,7 +336,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                             if(found==0) {
                                 err_msg=malloc(1024);
                                 sprintf(err_msg,"invalid column in table table: %s.%s",temp_table->identifier->qualifier,temp_table->identifier->source);
-                                set_err(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                             }
                     } else {
                     // ok its in the join.....
