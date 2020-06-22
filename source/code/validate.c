@@ -333,7 +333,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         int len=select->join_length;
                         for(int i=0;i<len;i++){
                             if(strcmp(tmp_join[i].alias,temp_ident->qualifier)==0){
-                                printf("CHECK JOIN---\n");
+                                printf("CHECK JOIN--- %s\n",tmp_join[i].alias);
                                 temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                                 break;
                             }
