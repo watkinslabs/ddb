@@ -313,6 +313,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     // now we validate that all SELECT identifiers exist in the FROM/JOIN
     if(select->from) {
         tmp_ptr=select->columns;
+        int found=0;
         while(tmp_ptr){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
@@ -322,13 +323,21 @@ int validate_select(cursor_t * cursor,select_t *select){
                     // is it in the from?
                     if(strcmp(temp_ident->qualifier,select->alias)) {
                             table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
-                            tmp_ptr=temp_table->columns;
-                           /*while(tmp_ptr){                            tmp_ptr=temp_table->columns;
-
-                                if()
-                                
-                                tmp_ptr=tmp_ptr->next;
-                            }*/
+                            data_column_t* tmp_ptr2=temp_table->columns;
+                            found=0;
+                            // loop from the found table columns
+                            while(tmp_ptr2){                            
+                                if(tmp_ptr2->type==tmp_ptr->type && strcmp(tmp_ptr->object,tmp_ptr->object)==0){
+                                    found=1;
+                                    break;
+                                }
+                                tmp_ptr2=tmp_ptr2->next;
+                            }
+                            if(found==0) {
+                                err_msg=malloc(1024);
+                                sprintf(err_msg,"invalid column in table table: %s.%s",temp_table->identifier->qualifier,temp_table->identifier->source);
+                                set_err(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                            }
                     } else {
                     // ok its in the join.....
 

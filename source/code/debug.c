@@ -72,6 +72,7 @@ char * vomit(int err_no){
         case ERR_INVALID_FROM_TABLE              : msg="invalid 'FROM' table"; break;
         case ERR_INVALID_JOIN_TABLE              : msg="invalid 'JOIN' table"; break;
         case ERR_INVALID_DATABASE                : msg="invalid database"; break;
+        case ERR_COLUMN_NOT_FOUND                : msg="Column not found in source table"; break;
         
         default: msg="NO CLUE";
     }

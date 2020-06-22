@@ -40,6 +40,7 @@
     #define ERR_INVALID_FROM_TABLE                  35
     #define ERR_INVALID_JOIN_TABLE                  36
     #define ERR_INVALID_DATABASE                    37
+    #define ERR_COLUMN_NOT_FOUND                    38
 
 
 #endif
