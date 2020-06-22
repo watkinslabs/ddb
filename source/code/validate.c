@@ -326,14 +326,14 @@ int validate_select(cursor_t * cursor,select_t *select){
                     table_def_t *temp_table=0;
                     
                     if(strcmp(temp_ident->qualifier,select->alias)==0) {
-                        printf("CHECK FROM---\n");
+                        printf("CHECK FROM---QUALIFIER %s : FROM %s\n",temp_ident->qualifier,select.alias);
                         temp_table=get_table_by_identifier(cursor,select->from);
                     } else {
                         join_t *tmp_join=select->join;
                         int len=select->join_length;
                         for(int i=0;i<len;i++){
                             if(strcmp(tmp_join[i].alias,temp_ident->qualifier)==0){
-                                printf("CHECK JOIN--- %s\n",tmp_join[i].alias);
+                                printf("CHECK JOIN---QUALIFIER %s : JOIN %s\n",temp_ident->qualifier,tmp_join[i].alias);
                                 temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                                 break;
                             }
