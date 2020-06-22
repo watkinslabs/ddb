@@ -385,6 +385,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                         found+=table_has_column(temp_table,temp_ident->source);
                     }
+                    printf("$d\n",found);
                     if(found==0) {
                         err_msg=malloc(1024);
                         sprintf(err_msg,"invalid column `%s` in select",temp_ident->source);
