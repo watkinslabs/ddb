@@ -7,7 +7,7 @@
 
 
 
-int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
+int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,char *section){
     char *err_msg=0;
     // at this point. 
     // all FROM/JOIN sources exist and are unique
@@ -40,7 +40,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
             // we didnt find the referenced qualifier as a source 
             if (temp_table==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid qualifier: %s",ident->qualifier);
+                sprintf(err_msg,"%s: invalid qualifier: %s",section,ident->qualifier);
                 set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
                 return 0;
             }
@@ -51,7 +51,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
 
             if(found==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid column `%s`.`%s` in table: `%s`.`%s`",ident->qualifier,ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
+                sprintf(err_msg,"%s: invalid column `%s`.`%s` in table: `%s`.`%s`",section,ident->qualifier,ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
             } 
@@ -76,13 +76,13 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
             //printf("%d\n",found);
             if(found==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid column `%s`",ident->source);
+                sprintf(err_msg,"%s: invalid column `%s`",section,ident->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
             }
             if(found>1) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"ambiguious column `%s`, %d found",ident->source,found);
+                sprintf(err_msg,"%s: ambiguious column `%s`, %d found",section,ident->source,found);
                 set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,err_msg);
                 return 0;
             }
@@ -460,7 +460,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             int index2=0;
             while(tmp_expr2){
                 if(index1!=index2) {
-                    if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier)) {
+                    if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier),"group by") {
                         err_msg=malloc(1024);
                         sprintf(err_msg,"duplicate group by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
                         set_error(cursor,ERR_DUPLICATE_GROUP_BY_COLUMN,err_msg);
@@ -478,7 +478,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     if(select->order) {
         expression_t *tmp_expr=select->order;
         while(tmp_expr){
-            int res=is_identifier_valid(cursor,select,tmp_expr->identifier);
+            int res=is_identifier_valid(cursor,select,tmp_expr->identifier,"order by");
             if(res==0) return 0;
             tmp_expr=tmp_expr->expression;
         }
@@ -493,7 +493,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 if(index1!=index2) {
                     if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier)) {
                         err_msg=malloc(1024);
-                        sprintf(err_msg,"duplicate group by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
+                        sprintf(err_msg,"duplicate order by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
                         set_error(cursor,ERR_DUPLICATE_GROUP_BY_COLUMN,err_msg);
                         return 0;
                     }
