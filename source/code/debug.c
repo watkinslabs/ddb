@@ -243,9 +243,10 @@ void debug_cursor(cursor_t *cursor){
         cursor->ended.tv_nsec - cursor->created.tv_nsec);
         
     int                 data_length;
-    if(cursor->status){
+    if(cursor->status==EXIT_SUCCESS){
         printf("- Status  : SUCCESS\n");
-    } else {
+    }
+    if(cursor->status==EXIT_FAILURE) {
         printf("- Status  : FAILURE\n");
     }
 
