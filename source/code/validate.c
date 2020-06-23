@@ -331,10 +331,60 @@ int validate_select(cursor_t * cursor,select_t *select){
         while(tmp_ptr){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                printf("HELLO\n");
                  int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object);
                  if(res==0) return 0;
             }
-            /* if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+           
+            tmp_ptr=tmp_ptr->next;
+        }
+    }
+
+
+
+    // At this point the select list, from and join sources have 
+    // been validated to be legal, and non ambiguious.
+
+    
+
+    // where check
+    // identifier must be in from/target
+    // expression must validate
+
+    // group check
+    // columns must exist in select
+    // columns must be unique
+
+    // order check
+    // columns must exist in select
+    // columns must be unique
+   /*
+    expression_t *tmp_expr=select->group;
+    while(tmp_expr){
+        data_column_t *temp_dc=select->columns;
+        while(temp_dc){
+            // if there is a qualifier.. its the local identifier
+
+            if(tmp_expr->identifier->qualifier) {
+
+            } else {
+            // else its just a colu
+            }
+            
+        }
+
+        tmp_expr=tmp_expr->expression;
+    }
+*/
+    return 0;
+}
+
+
+
+
+
+
+ /* if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 identifier_t *temp_ident=(identifier_t*)tmp_ptr->object;
                 //printf("LOOKING FOR\n");
                 //debug_identifier(temp_ident);
@@ -414,55 +464,6 @@ int validate_select(cursor_t * cursor,select_t *select){
                     }
                 }//end else
             }*/
-            tmp_ptr=tmp_ptr->next;
-        }
-    }
-
-
-
-    // At this point the select list, from and join sources have 
-    // been validated to be legal, and non ambiguious.
-
-    
-
-    // where check
-    // identifier must be in from/target
-    // expression must validate
-
-    // group check
-    // columns must exist in select
-    // columns must be unique
-
-    // order check
-    // columns must exist in select
-    // columns must be unique
-   /*
-    expression_t *tmp_expr=select->group;
-    while(tmp_expr){
-        data_column_t *temp_dc=select->columns;
-        while(temp_dc){
-            // if there is a qualifier.. its the local identifier
-
-            if(tmp_expr->identifier->qualifier) {
-
-            } else {
-            // else its just a colu
-            }
-            
-        }
-
-        tmp_expr=tmp_expr->expression;
-    }
-*/
-    return 0;
-}
-
-
-
-
-
-
-
 
 
 
