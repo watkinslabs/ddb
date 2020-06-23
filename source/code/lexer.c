@@ -622,10 +622,13 @@ int process_queries(cursor_t *cursor,char *queries){
        // free_table_def(cursor->tables);
        // cursor->tables=temp_cursor->tables;
        // temp_cursor->tables=0;
+       // free_cursor(temp_cursor);
+        cursor->status=EXIT_FAILURE;
        return 0;
+    } else {
+        cursor->status=EXIT_SUCCESS;
+        return 1;
     }
-    //free_cursor(temp_cursor);
-    return 1;
 }
 
 
