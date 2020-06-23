@@ -377,15 +377,17 @@ int validate_select(cursor_t * cursor,select_t *select){
                 // lets search all the sources for this column... and make sure its unique
                     //printf("NO QUALIFIER \n");
                     table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
-                    found=0;
-                    found+=table_has_column(temp_table,temp_ident->source);
+                    found=table_has_column(temp_table,temp_ident->source);
+                    if(found==1) printf ("in from\n");
                     char *qualifier=select->alias;
 
                     join_t *tmp_join=select->join;
                     int len=select->join_length;
                     for(int i=0;i<len;i++){
                         temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
-                        found+=table_has_column(temp_table,temp_ident->source);
+                        int res=table_has_column(temp_table,temp_ident->source);
+                        if(res==1) printf("INM JOIN \n");
+                        found+=res;
                         if(found==1) qualifier=tmp_join[i].alias;
                     }
                     //printf("%d\n",found);
