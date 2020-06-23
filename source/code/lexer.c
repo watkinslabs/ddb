@@ -475,7 +475,7 @@ void consolidate_tokens(token_array_t *tokens){
 
 }//end funciton
 
-int add_command(command_t *command,void* item,int type){
+command_t * add_command(command_t *command,void* item,int type){
     if(item==0) {
         printf ("ERR\n");
         return 0;
@@ -486,7 +486,7 @@ int add_command(command_t *command,void* item,int type){
     //empty list crete it
     if(command==0) {
         command=next;
-        return 1;
+        return command;
     }
 
     if(command->next==0) {
@@ -496,7 +496,7 @@ int add_command(command_t *command,void* item,int type){
         command->next_tail->next=next;
         command->next_tail=next;
     }
-    return 1;
+    return command;
 }
 
 int process_queries(cursor_t *cursor,char *queries){
@@ -509,7 +509,7 @@ int process_queries(cursor_t *cursor,char *queries){
     token_array_t *tokens=lex(queries);
     int loop=1;
 
-    command_t *commands=safe_malloc(sizeof(command_t),1);
+    command_t *commands=0;
     commands->type=TOKEN_BLANK;
 
     int position=0;
@@ -518,7 +518,7 @@ int process_queries(cursor_t *cursor,char *queries){
         position=tokens->position;
         select_t *select=process_select(tokens,&tokens->position);
         if(select) {
-            add_command(commands,select,TOKEN_SELECT);
+            commands=add_command(commands,select,TOKEN_SELECT);
         } else {
             if(position!=tokens->position) {
                 break;
@@ -528,7 +528,7 @@ int process_queries(cursor_t *cursor,char *queries){
         position=tokens->position;
         table_def_t *table_def=process_create_table(tokens,&tokens->position);
         if(table_def) {
-            add_command(commands,table_def,TOKEN_CREATE_TABLE);
+            commands=add_command(commands,table_def,TOKEN_CREATE_TABLE);
         } else {
             if(position!=tokens->position) {
                 break;
@@ -538,7 +538,7 @@ int process_queries(cursor_t *cursor,char *queries){
         position=tokens->position;
         use_t *use=process_use(tokens,&tokens->position);
         if(use) {
-            add_command(commands,use,TOKEN_USE);
+            commands=add_command(commands,use,TOKEN_USE);
         } else {
             if(position!=tokens->position) {
                 break;
