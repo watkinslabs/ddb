@@ -40,13 +40,12 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
             // we didnt find the referenced qualifier as a source 
             if (temp_table==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid qualifier in SELECT: %s",ident->qualifier);
+                sprintf(err_msg,"invalid qualifier: %s",ident->qualifier);
                 set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
                 return 0;
             }
 
 
-            data_column_t* tmp_ptr2=temp_table->columns;
             found=table_has_column(temp_table,ident->source);
             // loop from the found table columns
 
