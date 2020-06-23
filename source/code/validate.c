@@ -399,7 +399,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                     }
                     if(found>1) {
                         err_msg=malloc(1024);
-                        sprintf(err_msg,"ambiguious column `%s` in select",temp_ident->source);
+                        sprintf(err_msg,"ambiguious column `%s` in select. %d found",temp_ident->source,found);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
                         return 0;
                     }
