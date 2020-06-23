@@ -13,7 +13,7 @@
  * returns: nothing. All output is via stdio
  */
 select_t * process_select(token_array_t *tokens,int *start){
-    if(valid_token_index(tokens,start)==0) return 0;
+    if(valid_token_index(tokens,*start)==0) return 0;
 
     //if(*start>=tokens->top) return;
     int limit_length=0;
@@ -149,7 +149,7 @@ select_t * process_select(token_array_t *tokens,int *start){
  *          0 (NULL) for failure
  */
 table_def_t * process_create_table(token_array_t *tokens,int *start){
-    if(valid_token_index(tokens,start)==0) return 0;
+    if(valid_token_index(tokens,*start)==0) return 0;
    table_def_t *table_def=0;
    
     // required
@@ -222,7 +222,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
  *          0 (NULL) for failure
  */
 use_t *process_use(token_array_t *tokens,int *start){
-    if(valid_token_index(tokens,start)==0) return 0;
+    if(valid_token_index(tokens,*start)==0) return 0;
     use_t *use=0;
    
     // required
