@@ -554,7 +554,7 @@ int process_queries(cursor_t *cursor,char *queries){
             loop=0;
         } 
     }
-    printf("\nToken Count:%d of %d\n",tokens->position,tokens->top);
+    //printf("\nToken Count:%d of %d\n",tokens->position,tokens->top);
     
     // if the text isnt totally parsed.. then something is wrong....
     if(tokens->position<tokens->top){
@@ -563,15 +563,14 @@ int process_queries(cursor_t *cursor,char *queries){
         char *message=safe_malloc(message_len,1);
         sprintf(message,"error: unknown text at position :%d %s >>> %s  <<< \n",tokens->position,token_type(token->type),token->value);
         error(cursor,ERR_UNKNOWN_SQL,message);
-        //token_print(tokens);
-        return_code=0;
-        return return_code;
+        return 0;
     }
 
 
     // if you'vve gotten this far the syntax is correct... 
     // validate / fixup data
     if(cursor->error==0) {
+        printf("HI\n");
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         //doing this while no errors exist
@@ -589,6 +588,7 @@ int process_queries(cursor_t *cursor,char *queries){
 
     // execute commands... everything has been normalized and vetted
     if(cursor->error==0) {
+        printf("HfffI\n");
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         while(tmp_ptr){
