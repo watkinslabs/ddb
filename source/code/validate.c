@@ -6,7 +6,96 @@
 #include <time.h>
 
 
-int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident);
+
+int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
+    char *err_msg=0;
+    // at this point. 
+    // all FROM/JOIN sources exist and are unique
+    // all select columns are UNIQUE
+    // now we can validate that all identifiers exist in the FROM/JOIN
+    
+    // skip null idents
+    if(ident==0)  return 0;
+    
+    if(select->from) {
+        int found=0;
+        // we only care about data sourced from tables
+        if(ident->qualifier) {
+            // is it in the from?
+            table_def_t *temp_table=0;
+            
+            if(strcmp(ident->qualifier,select->alias)==0) {
+                temp_table=get_table_by_identifier(cursor,select->from);
+            } else {
+                join_t *tmp_join=select->join;
+                int len=select->join_length;
+                for(int i=0;i<len;i++){
+                    if(strcmp(tmp_join[i].alias,ident->qualifier)==0){
+                        temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
+                        break;
+                    }
+                }// end for
+            }// end else
+            
+            // we didnt find the referenced qualifier as a source 
+            if (temp_table==0) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"invalid qualifier in SELECT: %s",ident->qualifier);
+                set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
+                return 0;
+            }
+
+
+            data_column_t* tmp_ptr2=temp_table->columns;
+            found=table_has_column(temp_table,ident->source);
+            // loop from the found table columns
+
+            if(found==0) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"invalid column `%s` in table: `%s`.`%s`",ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
+                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                return 0;
+            } 
+            if(found==1) {
+                return 1;
+            }
+        } else {
+        // lets search all the sources for this column... and make sure its unique
+            //printf("NO QUALIFIER \n");
+            table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
+            found=table_has_column(temp_table,ident->source);
+            char *qualifier=select->alias;
+
+            join_t *tmp_join=select->join;
+            int len=select->join_length;
+            for(int i=0;i<len;i++){
+                temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
+                int res=table_has_column(temp_table,ident->source);
+                found+=res;
+                if(found==1) qualifier=tmp_join[i].alias;
+            }
+            //printf("%d\n",found);
+            if(found==0) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"invalid column `%s`",ident->source);
+                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
+                return 0;
+            }
+            if(found>1) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"ambiguious column `%s`, %d found",ident->source,found);
+                set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,err_msg);
+                return 0;
+            }
+            if(found==1) {
+                ident->qualifier=strdup(qualifier);
+                return 1;
+            }
+        }// end else
+
+    }// end if for
+    return 0;
+}// end func
 
 int table_has_column(table_def_t *table,char *column){
     data_column_t *tmp_ptr=table->columns;
@@ -490,93 +579,3 @@ int validate_select(cursor_t * cursor,select_t *select){
 
 
 
-
-int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
-    char *err_msg=0;
-    // at this point. 
-    // all FROM/JOIN sources exist and are unique
-    // all select columns are UNIQUE
-    // now we can validate that all identifiers exist in the FROM/JOIN
-    
-    // skip null idents
-    if(ident==0)  return 0;
-    
-    if(select->from) {
-        int found=0;
-        // we only care about data sourced from tables
-        if(ident->qualifier) {
-            // is it in the from?
-            table_def_t *temp_table=0;
-            
-            if(strcmp(ident->qualifier,select->alias)==0) {
-                temp_table=get_table_by_identifier(cursor,select->from);
-            } else {
-                join_t *tmp_join=select->join;
-                int len=select->join_length;
-                for(int i=0;i<len;i++){
-                    if(strcmp(tmp_join[i].alias,ident->qualifier)==0){
-                        temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
-                        break;
-                    }
-                }// end for
-            }// end else
-            
-            // we didnt find the referenced qualifier as a source 
-            if (temp_table==0) {
-                err_msg=malloc(1024);
-                sprintf(err_msg,"invalid qualifier in SELECT: %s",ident->qualifier);
-                set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
-                return 0;
-            }
-
-
-            data_column_t* tmp_ptr2=temp_table->columns;
-            found=table_has_column(temp_table,ident->source);
-            // loop from the found table columns
-
-            if(found==0) {
-                err_msg=malloc(1024);
-                sprintf(err_msg,"invalid column `%s` in table: `%s`.`%s`",ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
-                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
-                return 0;
-            } 
-            if(found==1) {
-                return 1;
-            }
-        } else {
-        // lets search all the sources for this column... and make sure its unique
-            //printf("NO QUALIFIER \n");
-            table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
-            found=table_has_column(temp_table,ident->source);
-            char *qualifier=select->alias;
-
-            join_t *tmp_join=select->join;
-            int len=select->join_length;
-            for(int i=0;i<len;i++){
-                temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
-                int res=table_has_column(temp_table,ident->source);
-                found+=res;
-                if(found==1) qualifier=tmp_join[i].alias;
-            }
-            //printf("%d\n",found);
-            if(found==0) {
-                err_msg=malloc(1024);
-                sprintf(err_msg,"invalid column `%s`",ident->source);
-                set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
-                return 0;
-            }
-            if(found>1) {
-                err_msg=malloc(1024);
-                sprintf(err_msg,"ambiguious column `%s`, %d found",ident->source,found);
-                set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,err_msg);
-                return 0;
-            }
-            if(found==1) {
-                ident->qualifier=strdup(qualifier);
-                return 1;
-            }
-        }// end else
-
-    }// end if for
-    return 0;
-}// end func
