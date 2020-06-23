@@ -20,7 +20,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
     if(select->from) {
         int found=0;
         // we only care about data sourced from tables
-        if(ident->qualifier!-0) {
+        if(ident->qualifier!=0) {
             // is it in the from?
             table_def_t *temp_table=0;
             
