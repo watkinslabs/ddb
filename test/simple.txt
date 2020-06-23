@@ -17,12 +17,12 @@ SELECT
     JOIN                 mock3 as t3 ON -a-1*5+5=b and -c=sc-1
     
     WHERE 
-        t1.first='bob'
-        or 1  or 2
-        or id=1.54
-        and  id=0x04F 
-        or id=0x04A
-        or id =-1-1
+             t1.first='bob'
+        or   1  or 2
+        or   t1.id=1.54
+        and  t2.id=0x04F 
+        or   t1.id=0x04A
+        or   t2id =-1-1
         
     GROUP BY t2.id,t1.id,iid
     ORDER BY t1.id,iid,t2.id
