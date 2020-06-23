@@ -633,7 +633,13 @@ int process_queries(cursor_t *cursor,char *queries){
     temp_cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
-
+    
+    if(cursor->error) {
+        free_tables(cursor->tables);
+        cursor->tables=temp_cursor->tables;
+        temp_cursor->tables=0;
+    }
+    free_cursor(temp_cursor);
     return return_code;
 }
 
