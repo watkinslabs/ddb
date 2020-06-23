@@ -22,7 +22,7 @@ SELECT
         or   t1.id=1.54
         and  t2.id=0x04F 
         or   t1.id=0x04A
-        or   t2id =-1-1
+        or   t2.id =-1-1
         
     GROUP BY t2.id,t1.id,iid
     ORDER BY t1.id,iid,t2.id
