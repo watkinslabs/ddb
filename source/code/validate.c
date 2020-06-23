@@ -476,7 +476,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
 
     if(select->order) {
-        expression_t *tmp_expr=select->group;
+        expression_t *tmp_expr=select->order;
         while(tmp_expr){
             int res=is_identifier_valid(cursor,select,tmp_expr->identifier);
             if(res==0) return 0;
@@ -484,10 +484,10 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
         
         // columns must be unique
-        tmp_expr=select->group;
+        tmp_expr=select->order;
         int index1=0;
         while(tmp_expr){
-            expression_t *tmp_expr2=select->group;
+            expression_t *tmp_expr2=select->order;
             int index2=0;
             while(tmp_expr2){
                 if(index1!=index2) {
