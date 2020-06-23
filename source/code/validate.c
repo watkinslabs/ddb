@@ -225,6 +225,7 @@ int validate_use(cursor_t *cursor,use_t *use){
             char *err_msg=malloc(1024);
             sprintf(err_msg,"database not specified");
             set_error(cursor,ERR_INVALID_DATABASE,err_msg);
+            return 0;
         }
 
         // check to make sure the table exists.. a table must contain that qualifier/db name
@@ -233,10 +234,12 @@ int validate_use(cursor_t *cursor,use_t *use){
             if(strcmp(temp_table->identifier->qualifier,use->database)==0) {
                 return 1;
             }
-            char *err_msg=malloc(1024);
-            sprintf(err_msg,"database not found %s",use->database);
-            set_error(cursor,ERR_INVALID_DATABASE,err_msg);
+            temp_table=temp_table->next;
         }
+        char *err_msg=malloc(1024);
+        sprintf(err_msg,"database not found %s",use->database);
+        set_error(cursor,ERR_INVALID_DATABASE,err_msg);
+        return 0;
     }
     return 0;
 }
