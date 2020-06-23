@@ -575,13 +575,13 @@ int process_queries(cursor_t *cursor,char *queries){
         command_t * tmp_ptr2;
         //doing this while no errors exist
         while(tmp_ptr){
-            if(cursor->error) break;
             int res=0;
             switch(tmp_ptr->type){
                 case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
                 case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
                 case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
             }
+            if(cursor->error || res==0) break;
             tmp_ptr=tmp_ptr->next;
         }
     }
@@ -591,13 +591,13 @@ int process_queries(cursor_t *cursor,char *queries){
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         while(tmp_ptr){
-            if(cursor->error) break;
             int res=0;
             switch(tmp_ptr->type){
                 case TOKEN_CREATE_TABLE: res=execute_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
                 case TOKEN_SELECT      : res=execute_select      (cursor,(select_t    * )tmp_ptr->command); break;
                 case TOKEN_USE         : res=execute_use         (cursor,(use_t       * )tmp_ptr->command); break;
             }
+            if(cursor->error || res==0) break;
             tmp_ptr=tmp_ptr->next;
         }
     }
