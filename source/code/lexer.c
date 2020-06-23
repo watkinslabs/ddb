@@ -564,13 +564,11 @@ int process_queries(cursor_t *cursor,char *queries){
     // if you'vve gotten this far the syntax is correct... 
     // validate / fixup data
     if(cursor->error==0) {
-        printf("HI\n");
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         //doing this while no errors exist
         while(tmp_ptr){
             int res=0;
-            printf("%s\n",token_type(tmp_ptr->type));
             switch(tmp_ptr->type){
                 case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
                 case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
