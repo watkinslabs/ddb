@@ -516,7 +516,7 @@ int process_queries(cursor_t *cursor,char *queries){
     commands->type=TOKEN_BLANK;
 
     int position=0;
-    // Process queries and build data structure
+    // process queries and build data structure
     while(loop){
         position=tokens->position;
         select_t *select=process_select(tokens,&tokens->position);
@@ -567,40 +567,47 @@ int process_queries(cursor_t *cursor,char *queries){
         return return_code;
     }
 
-    //If you'vve gotten this fat the syntax is correct... 
-    // validate/fixup/ execute too... yea.. gotta rename..;
-    command_t * tmp_ptr=commands;
-    command_t * tmp_ptr2;
-    //doing this while no errors exist
-    while(tmp_ptr){
-        if(cursor->error) break;
-        int res=0;
-        switch(tmp_ptr->type){
-            case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
-            case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
-            case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
+
+    // if you'vve gotten this far the syntax is correct... 
+    // validate / fixup data
+    if(cursor->error==0) {
+        command_t * tmp_ptr=commands;
+        command_t * tmp_ptr2;
+        //doing this while no errors exist
+        while(tmp_ptr){
+            if(cursor->error) break;
+            int res=0;
+            switch(tmp_ptr->type){
+                case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+                case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
+                case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
+            }
+            tmp_ptr=tmp_ptr->next;
         }
-        tmp_ptr=tmp_ptr->next;
+    }
+
+    // execute commands... everything has been normalized and vetted
+    if(cursor->error==0) {
+        command_t * tmp_ptr=commands;
+        command_t * tmp_ptr2;
+        while(tmp_ptr){
+            if(cursor->error) break;
+            int res=0;
+            switch(tmp_ptr->type){
+                case TOKEN_CREATE_TABLE: res=execute_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+                case TOKEN_SELECT      : res=execute_select      (cursor,(select_t    * )tmp_ptr->command); break;
+                case TOKEN_USE         : res=execute_use         (cursor,(use_t       * )tmp_ptr->command); break;
+            }
+            tmp_ptr=tmp_ptr->next;
+        }
     }
 
 
+
+    // this happens no matter what
+    // free all data structures
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
-    //doing this while no errors exist
-    while(tmp_ptr){
-        if(cursor->error) break;
-        int res=0;
-        switch(tmp_ptr->type){
-            case TOKEN_CREATE_TABLE: res=execute_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
-            case TOKEN_SELECT      : res=execute_select      (cursor,(select_t    * )tmp_ptr->command); break;
-            case TOKEN_USE         : res=execute_use         (cursor,(use_t       * )tmp_ptr->command); break;
-        }
-        tmp_ptr=tmp_ptr->next;
-    }
-
-
-
-    tmp_ptr=commands;
     // free resources;
     while(tmp_ptr){
         switch(tmp_ptr->type){
@@ -622,8 +629,6 @@ int process_queries(cursor_t *cursor,char *queries){
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
-    // token_print(tokens);
-    // cleanup
     cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
