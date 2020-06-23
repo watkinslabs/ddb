@@ -43,7 +43,8 @@
     #define ERR_COLUMN_NOT_FOUND                    38
     #define ERR_INVALID_QUALIFIER                   40
     #define ERR_DUPLICATE_GROUP_BY_COLUMN           41
-
+    #define ERR_LIMIT_START_NEGATIVE                42
+    #define ERR_LIMIT_LENGTH_NEGATIVE               43
 
 #endif
 
