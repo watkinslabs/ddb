@@ -1,7 +1,8 @@
-#include "structure.h"
 
 #if !defined(_DUP_H_)
     #define _DUP_H_ 1
+    
+    #include "structure.h"
     token_t       * duplicate_token     (token_t *src);
     identifier_t  * duplicate_identifier(identifier_t *ident);
     data_column_t * duplicate_columns   (data_column_t *columns);
