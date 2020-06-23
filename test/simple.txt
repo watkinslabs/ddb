@@ -14,7 +14,7 @@ SELECT
     
     FROM            test.mock1 as t1
     JOIN                 mock1 as t2 ON t2.id=1 
-    JOIN                 mock3 as t3 ON t3.id=1 
+    JOIN                 mock3 as t3 ON t3.iid=1 
     
     WHERE 
              t1.first='bob'
