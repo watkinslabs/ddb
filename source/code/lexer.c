@@ -574,7 +574,7 @@ int process_queries(cursor_t *cursor,char *queries){
             int res=0;
             switch(tmp_ptr->type){
                 case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
-                case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
+                case TOKEN_SELECT      : printf ("GUI\n"); res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
                 case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
             }
             if(cursor->error || res==0) break;
