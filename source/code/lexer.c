@@ -562,7 +562,7 @@ int process_queries(cursor_t *cursor,char *queries){
         int message_len=strlen(token->value)+100;
         char *message=safe_malloc(message_len,1);
         sprintf(message,"error: unknown text at position :%d %s >>> %s  <<< \n",tokens->position,token_type(token->type),token->value);
-        error(temp_cursor,ERR_UNKNOWN_SQL,message);
+        error(cursor,ERR_UNKNOWN_SQL,message);
         //token_print(tokens);
         return_code=0;
         return return_code;
@@ -571,34 +571,34 @@ int process_queries(cursor_t *cursor,char *queries){
 
     // if you'vve gotten this far the syntax is correct... 
     // validate / fixup data
-    if(temp_cursor->error==0) {
+    if(cursor->error==0) {
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         //doing this while no errors exist
         while(tmp_ptr){
             int res=0;
             switch(tmp_ptr->type){
-                case TOKEN_CREATE_TABLE: res=validate_create_table(temp_cursor,(table_def_t * )tmp_ptr->command); break;
-                case TOKEN_SELECT      : res=validate_select      (temp_cursor,(select_t    * )tmp_ptr->command); break;
-                case TOKEN_USE         : res=validate_use         (temp_cursor,(use_t       * )tmp_ptr->command); break;
+                case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+                case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
+                case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
             }
-            if(temp_cursor->error || res==0) break;
+            if(cursor->error || res==0) break;
             tmp_ptr=tmp_ptr->next;
         }
     }
 
     // execute commands... everything has been normalized and vetted
-    if(temp_cursor->error==0) {
+    if(cursor->error==0) {
         command_t * tmp_ptr=commands;
         command_t * tmp_ptr2;
         while(tmp_ptr){
             int res=0;
             switch(tmp_ptr->type){
-                case TOKEN_CREATE_TABLE: res=execute_create_table(temp_cursor,(table_def_t * )tmp_ptr->command); break;
-                case TOKEN_SELECT      : res=execute_select      (temp_cursor,(select_t    * )tmp_ptr->command); break;
-                case TOKEN_USE         : res=execute_use         (temp_cursor,(use_t       * )tmp_ptr->command); break;
+                case TOKEN_CREATE_TABLE: res=execute_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+                case TOKEN_SELECT      : res=execute_select      (cursor,(select_t    * )tmp_ptr->command); break;
+                case TOKEN_USE         : res=execute_use         (cursor,(use_t       * )tmp_ptr->command); break;
             }
-            if(temp_cursor->error || res==0) break;
+            if(cursor->error || res==0) break;
             tmp_ptr=tmp_ptr->next;
         }
     }
