@@ -544,7 +544,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 
