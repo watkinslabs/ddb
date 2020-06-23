@@ -500,7 +500,7 @@ int add_command(command_t *command,void* item,int type){
 }
 
 int process_queries(cursor_t *cursor,char *queries){
-    cursor_t * temp_cursor=duplcate_cursor(cursor);
+    cursor_t * temp_cursor=duplicate_cursor(cursor);
     // this tokenizes...
     //clear any error in this cursor. 
     if (cursor->error_message) free (cursor->error_message);
