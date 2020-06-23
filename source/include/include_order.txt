@@ -9,5 +9,7 @@ source/include/lexer.h
 source/include/warp_gate.h
 source/include/duplicate.h
 source/include/queries.h
+source/include/process.h
+source/include/validate.h
 source/include/execute.h
 

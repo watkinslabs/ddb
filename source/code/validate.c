@@ -7,7 +7,8 @@
 
 
 int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,char *section){
-    char *err_msg=0;
+    
+     char *err_msg=0;
     // at this point. 
     // all FROM/JOIN sources exist and are unique
     // all select columns are UNIQUE

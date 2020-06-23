@@ -5,11 +5,6 @@
 #include "../include/free.h"
 #include <time.h>
 
-#define EXPRESSION_GROUP_BY 3
-#define EXPRESSION_ORDER_BY 4
-#define EXPRESSION_COLUMN   5
-
-#define DEFAULT_DATABASE_NAME "this"
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
