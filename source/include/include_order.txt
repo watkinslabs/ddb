@@ -7,6 +7,7 @@ source/include/debug.h
 source/include/teleprompter.h
 source/include/lexer.h
 source/include/warp_gate.h
+source/include/duplicate.h
 source/include/queries.h
 source/include/execute.h
 

@@ -79,3 +79,47 @@ table_def_t *duplicate_table(table_def_t *table){
     }
     return new_table;
 }
+
+
+cursor_t *duplicate_cursor(cursor_t *cursor){
+    cursor_t *new_cursor=0;
+    if (cursor){
+        new_cursor=safe_malloc(sizeof(cursor_t),1);
+        
+        if(cursor->active_table) 
+            new_cursor->active_table     =duplicate_table(cursor->active_table);
+        
+        if(cursor->tables) {
+            table_def_t *temp_table=cursor->tables;
+            table_def_t *new_table=0;
+            while(temp_table){
+                if(new_table==0) {
+                    new_table=duplicate_table(temp_table);
+                } else {
+                    new_table->next=duplicate_table(temp_table);
+                }
+                temp_table=temp_table->next;
+            }
+            new_cursor->tables           =new_table;
+        }
+        if(cursor->active_database)
+            new_cursor->active_database  =strdup(cursor->active_database);       
+        if(cursor->requested_query)
+            new_cursor->requested_query  =strdup(cursor->requested_query);       
+        if(cursor->executed_query)
+            new_cursor->executed_query   =strdup(cursor->executed_query);       
+        if(cursor->error_message)
+            new_cursor->error_message    =strdup(cursor->error_message);
+
+        new_cursor->parse_position   =cursor->parse_position;       
+        new_cursor->error            =cursor->error;       
+        new_cursor->status           =cursor->status;       
+        new_cursor->created.tv_nsec  =cursor->created.tv_nsec;       
+        new_cursor->created.tv_sec   =cursor->created.tv_sec;       
+        new_cursor->ended.tv_nsec    =cursor->ended.tv_nsec;       
+        new_cursor->ended.tv_sec     =cursor->ended.tv_sec;       
+        new_cursor->data_length      =cursor->data_length;;       
+
+    }
+    return new_cursor;
+}
