@@ -26,5 +26,5 @@ SELECT
         
     GROUP BY id1,id2,id3
     ORDER BY id1,id2,id3
-    LIMIT 1, 11
+    LIMIT 1, 11;
         
