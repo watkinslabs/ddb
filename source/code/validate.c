@@ -379,7 +379,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                     table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                     found=0;
                     found+=table_has_column(temp_table,temp_ident->source);
-                    
+
                     join_t *tmp_join=select->join;
                     int len=select->join_length;
                     for(int i=0;i<len;i++){
@@ -421,8 +421,24 @@ int validate_select(cursor_t * cursor,select_t *select){
     // order check
     // columns must exist in select
     // columns must be unique
+   /*
+    expression_t *tmp_expr=select->group;
+    while(tmp_expr){
+        data_column_t *temp_dc=select->columns;
+        while(temp_dc){
+            // if there is a qualifier.. its the local identifier
 
+            if(tmp_expr->identifier->qualifier) {
 
+            } else {
+            // else its just a colu
+            }
+            
+        }
+
+        tmp_expr=tmp_expr->expression;
+    }
+*/
     return 0;
 }
 
