@@ -506,12 +506,8 @@ int process_queries(cursor_t *cursor,char *queries){
     if (cursor->error_message) free (cursor->error_message);
     cursor->error=0;
     cursor->error_message=0;
-
     token_array_t *tokens=lex(queries);
-    
-
     int loop=1;
-    int return_code=1;
 
     command_t *commands=safe_malloc(sizeof(command_t),1);
     commands->type=TOKEN_BLANK;
@@ -638,9 +634,10 @@ int process_queries(cursor_t *cursor,char *queries){
        // free_table_def(cursor->tables);
        // cursor->tables=temp_cursor->tables;
        // temp_cursor->tables=0;
+       return 0;
     }
     //free_cursor(temp_cursor);
-    return return_code;
+    return 1;
 }
 
 
