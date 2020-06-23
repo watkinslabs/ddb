@@ -635,7 +635,7 @@ int process_queries(cursor_t *cursor,char *queries){
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
     
     if(cursor->error) {
-        free_tables(cursor->tables);
+        free_table_def(cursor->tables);
         cursor->tables=temp_cursor->tables;
         temp_cursor->tables=0;
     }
