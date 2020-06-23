@@ -445,15 +445,34 @@ int validate_select(cursor_t * cursor,select_t *select){
     // columns must be unique
 
     // order check
-    // columns must exist in select
-    // columns must be unique
+    // columns must exist in from/join
     expression_t *tmp_expr=select->group;
     while(tmp_expr){
-
         int res=is_identifier_valid(cursor,select,tmp_expr->identifier);
         if(res==0) return 0;
-        
         tmp_expr=tmp_expr->expression;
+    }
+    
+    // columns must be unique
+    tmp_expr=select->group;
+    int index1=0;
+    while(tmp_expr){
+        expression_t *tmp_expr2=select->group;
+        int index2=0;
+        while(tmp_expr2){
+            if(index1!=index2) {
+                if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier)) {
+                    err_msg=malloc(1024);
+                    sprintf(err_msg,"duplicate group by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
+                    set_error(cursor,ERR_DUPLICATE_GROUP_BY_COLUMN,err_msg);
+                    return 0;
+                }
+            }
+            tmp_expr2=tmp_expr2->expression;
+            ++index2;
+        }
+        tmp_expr=tmp_expr->expression;
+        ++index1;
     }
     return 0;
 }
