@@ -386,7 +386,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                     for(int i=0;i<len;i++){
                         temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                         int res=table_has_column(temp_table,temp_ident->source);
-                        if(res==1) printf("INM JOIN \n");
+                        if(res==1) printf("IN JOIN \n");
                         found+=res;
                         if(found==1) qualifier=tmp_join[i].alias;
                     }

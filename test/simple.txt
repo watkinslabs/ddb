@@ -23,7 +23,7 @@ SELECT
     LEFT  JOIN mock1 as t1 ON -a-1*5+5=b and -c=sc-1
     RIGHT JOIN test.mock2 as t2 ON a=b and c=sc
     JOIN mock3 as t4 ON a=b and c=sc
-    FULL OUTER JOIN mock3 as t5 ON a=b and c=sc
+    FULL OUTER JOIN mock2 as t5 ON a=b and c=sc
     INNER JOIN mock1 as t6 ON a=b and c=sc
     
     
