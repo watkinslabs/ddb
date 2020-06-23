@@ -16,7 +16,6 @@ SELECT
     JOIN                 mock1 as t2 ON -a-1*5+5=b and -c=sc-1
     JOIN                 mock3 as t3 ON -a-1*5+5=b and -c=sc-1
     
-    
     WHERE 
         res.first_name='bob'
         or 1  or 2
@@ -27,5 +26,5 @@ SELECT
         
     GROUP BY t2.id,t1.id,iid
     ORDER BY t1.id,iid,t2.id
-    LIMIT 1, 0;
+    LIMIT 1, 10;
         

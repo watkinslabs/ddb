@@ -439,6 +439,19 @@ int validate_select(cursor_t * cursor,select_t *select){
 
     // where check
     // identifier must be in from/target
+    if(select->where){
+        expression_t *temp_expr=select->where;
+
+        while(temp_expr){
+            if(temp_expr->mode==TOKEN_IDENTIFIER) {
+                int res=is_identifier_valid(cursor,select,temp_expr->identifier,"where");
+                if(res==0) {
+                    return 0;                    
+                }
+            }
+            temp_expr=temp_expr->expression;
+        }
+    }
     // expression must validate
 
 
