@@ -5,25 +5,15 @@ USE test;
 
 SELECT 
     DISTINCT 
-    t1.id as id1, --identfier
-    t2.id as id2, --identifier
-    t3.id as id3, --identfier with alias
-    'col0', --litteral 
-    'col0' as LIT1_A1, --litteral 
-    4, --litteral 
-    4 as LIT2_A2, --litteral 
-    col1 as ACOL,
-    col2 as BCOL,
-    col3 as CCOL,
-    col1,col2,
-    col3 as COL3
+    t1.id as id1,       --identifier
+    t2.id as id2,       --identifier
+    t3.id as id3,       --identifier
+    t1.first as first1, --identifier
+    t2.first as first2, --identifier
+    t3.first as first3  --identifier
     
-    FROM            test.mock1 as f1
-    LEFT  JOIN      mock1 as t1 ON -a-1*5+5=b and -c=sc-1
-    RIGHT JOIN      test.mock2 as t2 ON a=b and c=sc
-    JOIN            mock3 as t3 ON a=b and c=sc
-    FULL OUTER JOIN mock2 as t4 ON a=b and c=sc
-    INNER JOIN      mock1 as t5 ON a=b and c=sc
+    FROM            test.mock1 as t1
+    JOIN                 mock1 as t2 ON -a-1*5+5=b and -c=sc-1
     
     
     WHERE 
@@ -34,9 +24,7 @@ SELECT
         or id=0x04A
         or x =-1-1
         
-    GROUP BY col3,f1.col2
-    ORDER BY COL3,LIT2_A2 DESC,LIT1_A1 ASC,res.col0,f1.col1 desc
-    LIMIT 
-        1
-        , 11;
-        Select this
+    GROUP BY id1,id2,id3
+    ORDER BY id1,id2,id3
+    LIMIT 1,11
+        
