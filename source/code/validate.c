@@ -539,8 +539,10 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
                 sprintf(err_msg,"invalid column `%s` in table: `%s`.`%s`",ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
+            } 
+            if(found==1) {
+                return 1;
             }
-            
         } else {
         // lets search all the sources for this column... and make sure its unique
             //printf("NO QUALIFIER \n");
