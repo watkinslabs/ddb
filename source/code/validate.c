@@ -3,7 +3,6 @@
 #include "../include/debug.h"
 #include "../include/queries.h"
 #include "../include/free.h"
-#include <time.h>
 
 
 
@@ -207,19 +206,6 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         ++outer_index;
     }
 
-
-    // set most recent addition to active. append to end of list. update next and tail
-    table_def_t *new_table=duplicate_table(table);
-    if(cursor->tables==0)  {
-        cursor->tables=new_table;
-        cursor->tables->tail=new_table;
-        cursor->active_table=new_table;
-    } else {
-        cursor->tables->tail->next=new_table;
-        cursor->tables->tail=new_table;
-        cursor->active_table=new_table;
-    }
-
     return 1;
 }
 
@@ -239,14 +225,20 @@ int validate_use(cursor_t *cursor,use_t *use){
             sprintf(err_msg,"database not specified");
             set_error(cursor,ERR_INVALID_DATABASE,err_msg);
         }
-        // cleanup prior name
-        if(cursor->active_database) free_string(cursor->active_database);
-        // set curent name
-        cursor->active_database=string_duplicate(use->database);
-    }
-    return 1;
-}
 
+        // check to make sure the table exists.. a table must contain that qualifier/db name
+        table_def_t *temp_table=cursor->tables;
+        while(temp_table){
+            if(strcmp(temp_table->identifier->qualifier,use->database)==0) {
+                return 1;
+            }
+            char *err_msg=malloc(1024);
+            sprintf(err_msg,"database not found %s",use->database);
+            set_error(cursor,ERR_INVALID_DATABASE,err_msg);
+        }
+    }
+    return 0;
+}
 
 /* Function: validate_select
  * -----------------------
@@ -550,3 +542,6 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
     return 0;
 }
+
+
+

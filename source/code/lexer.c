@@ -555,6 +555,7 @@ int process_queries(cursor_t *cursor,char *queries){
     }
     printf("\nToken Count:%d of %d\n",tokens->position,tokens->top);
     
+    // if the text isnt totally parsed.. then something is wrong....
     if(tokens->position<tokens->top){
         token_t *token=&tokens->array[tokens->position];
         int message_len=strlen(token->value)+100;
@@ -563,25 +564,41 @@ int process_queries(cursor_t *cursor,char *queries){
         error(cursor,ERR_UNKNOWN_SQL,message);
         //token_print(tokens);
         return_code=0;
+        return return_code;
     }
 
-
-
-
-
+    //If you'vve gotten this fat the syntax is correct... 
     // validate/fixup/ execute too... yea.. gotta rename..;
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
     //doing this while no errors exist
     while(tmp_ptr){
         if(cursor->error) break;
+        int res=0;
         switch(tmp_ptr->type){
-            case TOKEN_CREATE_TABLE: validate_create_table(cursor,(table_def_t*)tmp_ptr->command); break;
-            case TOKEN_SELECT      : validate_select(cursor,(select_t*)tmp_ptr->command);          break;
-            case TOKEN_USE         : validate_use(cursor,(use_t*)tmp_ptr->command);                break;
+            case TOKEN_CREATE_TABLE: res=validate_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+            case TOKEN_SELECT      : res=validate_select      (cursor,(select_t    * )tmp_ptr->command); break;
+            case TOKEN_USE         : res=validate_use         (cursor,(use_t       * )tmp_ptr->command); break;
         }
         tmp_ptr=tmp_ptr->next;
     }
+
+
+    command_t * tmp_ptr=commands;
+    command_t * tmp_ptr2;
+    //doing this while no errors exist
+    while(tmp_ptr){
+        if(cursor->error) break;
+        int res=0;
+        switch(tmp_ptr->type){
+            case TOKEN_CREATE_TABLE: res=execute_create_table(cursor,(table_def_t * )tmp_ptr->command); break;
+            case TOKEN_SELECT      : res=execute_select      (cursor,(select_t    * )tmp_ptr->command); break;
+            case TOKEN_USE         : res=execute_use         (cursor,(use_t       * )tmp_ptr->command); break;
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+
+
 
     tmp_ptr=commands;
     // free resources;
