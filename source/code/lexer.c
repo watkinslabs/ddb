@@ -500,7 +500,7 @@ int add_command(command_t *command,void* item,int type){
 }
 
 int process_queries(cursor_t *cursor,char *queries){
-    cursor_t * temp_cursor=duplicate_cursor(cursor);
+    //cursor_t * temp_cursor=duplicate_cursor(cursor);
     // this tokenizes...
     //clear any error in this cursor. 
     if (cursor->error_message) free (cursor->error_message);
@@ -630,7 +630,7 @@ int process_queries(cursor_t *cursor,char *queries){
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
-    temp_cursor->parse_position=tokens->position;
+    cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
     
@@ -639,7 +639,7 @@ int process_queries(cursor_t *cursor,char *queries){
        // cursor->tables=temp_cursor->tables;
        // temp_cursor->tables=0;
     }
-    free_cursor(temp_cursor);
+    //free_cursor(temp_cursor);
     return return_code;
 }
 
