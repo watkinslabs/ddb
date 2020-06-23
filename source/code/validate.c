@@ -402,7 +402,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         return 0;
                     }
                     if(found==1) {
-                        *temp_ident->qualifier="BOB";//strdup(qualifier);
+                        *temp_ident->qualifier=strdup(qualifier);
                     }
                 }//end else
             }
