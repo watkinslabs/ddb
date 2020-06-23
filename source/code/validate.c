@@ -237,7 +237,7 @@ int validate_use(cursor_t *cursor,use_t *use){
             temp_table=temp_table->next;
         }
         char *err_msg=malloc(1024);
-        sprintf(err_msg,"database not found %s",use->database);
+        sprintf(err_msg,"database not found `%s`",use->database);
         set_error(cursor,ERR_INVALID_DATABASE,err_msg);
         return 0;
     }
