@@ -430,14 +430,10 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
-
-
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
 
-    
-
-    // where check
+    // where identifier check
     // identifier must be in from/target
     if(select->where){
         expression_t *temp_expr=select->where;
@@ -453,6 +449,8 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
+    //join identifire check
+    // identifier must be in from/target
     if(select->join) {
          for(int i=0;i<select->join_length;i++) {
             join_t *join_ptr=&select->join[i];
