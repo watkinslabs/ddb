@@ -5,9 +5,9 @@ USE test;
 
 SELECT 
     DISTINCT 
-    t1.id,      --identfier
-    t2.id, --identifier
-    t3.id, --identfier with alias
+    t1.id as id1, --identfier
+    t2.id as id2, --identifier
+    t3.id as id3, --identfier with alias
     'col0', --litteral 
     'col0' as LIT1_A1, --litteral 
     4, --litteral 
