@@ -485,8 +485,7 @@ command_t * add_command(command_t *command,void* item,int type){
     next->type=type;
     //empty list crete it
     if(command==0) {
-        command=next;
-        return command;
+        return next;
     }
 
     if(command->next==0) {
@@ -510,7 +509,6 @@ int process_queries(cursor_t *cursor,char *queries){
     int loop=1;
 
     command_t *commands=0;
-    commands->type=TOKEN_BLANK;
 
     int position=0;
     // process queries and build data structure
