@@ -26,6 +26,6 @@ SELECT
         or x =-1-1
         
     GROUP BY t2.id,t1.id,iid
-    ORDER BY t1.id,id2,id3
+    ORDER BY t1.id,iid,t2.id
     LIMIT 1, 11;
         
