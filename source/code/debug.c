@@ -73,7 +73,7 @@ char * vomit(int err_no){
         case ERR_INVALID_JOIN_TABLE              : msg="invalid 'JOIN' table"; break;
         case ERR_INVALID_DATABASE                : msg="invalid database"; break;
         case ERR_COLUMN_NOT_FOUND                : msg="column not found in source table"; break;
-        case ERR_INVALID_QUALIFIER               : msg="invalid qualifier in select"; break;
+        case ERR_INVALID_QUALIFIER               : msg="invalid qualifier"; break;
         case ERR_DUPLICATE_GROUP_BY_COLUMN       : msg="duplicate column in group by"; break;
         case ERR_LIMIT_START_NEGATIVE            : msg="limit start negative"; break;
         case ERR_LIMIT_LENGTH_NEGATIVE           : msg="limit length negative"; break;
