@@ -379,12 +379,14 @@ int validate_select(cursor_t * cursor,select_t *select){
                     table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
                     found=0;
                     found+=table_has_column(temp_table,temp_ident->source);
+                    char *qualifier=select->alias;
 
                     join_t *tmp_join=select->join;
                     int len=select->join_length;
                     for(int i=0;i<len;i++){
                         temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                         found+=table_has_column(temp_table,temp_ident->source);
+                        if(found==1) qualifier=tmp_join[i].alias;
                     }
                     //printf("%d\n",found);
                     if(found==0) {
@@ -398,6 +400,9 @@ int validate_select(cursor_t * cursor,select_t *select){
                         sprintf(err_msg,"ambiguious column `%s` in select",temp_ident->source);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
                         return 0;
+                    }
+                    if(found==1) {
+                        temp_ident->qualifier=strdup(qualifier);
                     }
                 }
             }
