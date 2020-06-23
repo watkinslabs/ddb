@@ -25,7 +25,7 @@ SELECT
         or id=0x04A
         or x =-1-1
         
-    GROUP BY id1,id2,id3
-    ORDER BY id1,id2,id3
+    GROUP BY t1.id,id2,id3
+    ORDER BY t1.id,id2,id3
     LIMIT 1, 11;
         
