@@ -443,7 +443,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         expression_t *temp_expr=select->where;
 
         while(temp_expr){
-            if(temp_expr->mode==TOKEN_IDENTIFIER) {
+            if(temp_expr->mode==1) {
                 int res=is_identifier_valid(cursor,select,temp_expr->identifier,"where");
                 if(res==0) {
                     return 0;                    
