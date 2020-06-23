@@ -452,6 +452,23 @@ int validate_select(cursor_t * cursor,select_t *select){
             temp_expr=temp_expr->expression;
         }
     }
+
+    if(select->join) {
+         for(int i=0;i<select->join_length;i++) {
+            join_t *join_ptr=&select->join[i];
+            expression_t *temp_expr=join_ptr->expression;
+
+            while(temp_expr){
+                if(temp_expr->mode==1) {
+                    int res=is_identifier_valid(cursor,select,temp_expr->identifier,"join");
+                    if(res==0) {
+                        return 0;                    
+                    }
+                }
+                temp_expr=temp_expr->expression;
+            }
+         }
+    }
     // expression must validate
 
 
