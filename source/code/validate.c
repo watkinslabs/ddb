@@ -51,7 +51,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident){
 
             if(found==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid column `%s` in table: `%s`.`%s`",ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
+                sprintf(err_msg,"invalid column `%s`f in table: `%s`.`%s`",ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
             } 
