@@ -1,13 +1,13 @@
 CREATE TABLE test.mock1 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 CREATE TABLE test.mock2 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
-CREATE TABLE test.mock3 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
+CREATE TABLE test.mock3 ('iid','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 USE test;
 
 SELECT 
     DISTINCT 
     t1.id as id1,       --identifier
     t2.id as id2,       --identifier
-    t3.id as id3,       --identifier
+    t3.iid as id3,       --identifier
     t1.first as first1, --identifier
     t2.first as first2, --identifier
     t3.first as first3  --identifier
@@ -25,7 +25,7 @@ SELECT
         or id=0x04A
         or x =-1-1
         
-    GROUP BY t1.id,t2.id,t3.id
+    GROUP BY t1.id,t2.id,iid
     ORDER BY t1.id,id2,id3
     LIMIT 1, 11;
         
