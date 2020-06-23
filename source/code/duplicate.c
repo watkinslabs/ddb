@@ -81,7 +81,7 @@ table_def_t *duplicate_table(table_def_t *table){
 }
 
 
-cursor_t *duplicate_cursor(cursor_t *cursor){
+cursor_t * duplicate_cursor(cursor_t *cursor){
     cursor_t *new_cursor=0;
     if (cursor){
         new_cursor=safe_malloc(sizeof(cursor_t),1);
