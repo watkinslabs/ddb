@@ -420,6 +420,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 printf("HELLO\n");
+                debug_identifier((identifier_t*)tmp_ptr->object);
                  int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object);
                  if(res==0) return 0;
             }
