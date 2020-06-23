@@ -422,7 +422,10 @@ int validate_select(cursor_t * cursor,select_t *select){
                 printf("HELLO\n");
                 debug_identifier((identifier_t*)tmp_ptr->object);
                  int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object);
-                 if(res==0) return 0;
+                 if(res==0) {
+                     printf("NO\n");
+                     return 0;
+                 }
             }
            
             tmp_ptr=tmp_ptr->next;
