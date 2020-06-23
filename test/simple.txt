@@ -24,7 +24,7 @@ SELECT
         or   t1.id=0x04A
         or   t2.id =-1-1
         
-    GROUP BY t2.id,t1.id,iid
+    GROUP BY t2.id,t1.id,iidf
     ORDER BY t1.id,iid,t2.id
     LIMIT 1, 10;
         
