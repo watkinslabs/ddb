@@ -530,13 +530,13 @@ int validate_select(cursor_t * cursor,select_t *select){
     if(select->limit_start) {
         if(select->has_limit_start && select->limit_start<0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"limit: start index cannot be negative: %s",select->limit_start);
+            sprintf(err_msg,"limit: start index cannot be negative: %d",select->limit_start);
             set_error(cursor,ERR_LIMIT_START_NEGATIVE,err_msg);
             return 0;
         }
         if(select->has_limit_length && select->limit_length<0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"limit: length index cannot be negative: %s",select->limit_length);
+            sprintf(err_msg,"limit: length index cannot be negative: %d",select->limit_length);
             set_error(cursor,ERR_LIMIT_LENGTH_NEGATIVE,err_msg);
             return 0;
         }
