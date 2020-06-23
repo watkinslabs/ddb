@@ -10,7 +10,7 @@ SELECT
     t3.id as id3,       --identifier
     t1.first as first1, --identifier
     t2.first as first2, --identifier
-    t3.first3 as first3  --identifier
+    t3.first as first3  --identifier
     
     FROM            test.mock1 as t1
     JOIN                 mock1 as t2 ON -a-1*5+5=b and -c=sc-1
