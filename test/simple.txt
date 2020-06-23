@@ -1,12 +1,12 @@
 CREATE TABLE test.mock1 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 CREATE TABLE test.mock2 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
-CREATE TABLE test.mock3 ('id','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
+CREATE TABLE test.mock3 ('id3','first','last') file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 USE test;
 
 SELECT 
     DISTINCT 
     t1.id, --identfier
-    id as id2, --identifier
+    id3 as id2, --identifier
     f1.col0 as ID1_A1, --identfier with alias
     'col0', --litteral 
     'col0' as LIT1_A1, --litteral 
