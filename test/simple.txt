@@ -27,5 +27,5 @@ SELECT
         
     GROUP BY t2.id,t1.id,iid
     ORDER BY t1.id,iid,t2.i
-    LIMIT -1, 11;
+    LIMIT 1, 11;
         
