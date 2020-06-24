@@ -203,7 +203,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                         if(len>0) {
                             memcpy(value,&data[start_pos],len);
                         }
-                        &row->columns[ordinal]=value;
+                        row->columns[ordinal]=*value;
                      }
                      ++ordinal;
                      start_pos=i+1;
