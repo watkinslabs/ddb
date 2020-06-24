@@ -78,7 +78,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         // maybe i was just totally wrong.. wth?
        // lock_file(table->file);
 
-        FILE *f = fopen("textfile.txt", "rb");
+        FILE *f = fopen(table->file, "rb");
         if(f) {
             fseek(f, 0, SEEK_END);
             long fsize = ftell(f);
