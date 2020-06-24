@@ -75,7 +75,36 @@ int execute_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
+typedef struct range{
+    int start;
+    int end;
+} range_t;
+
+
+range_t *get_line(char *data,int *position,int fsize) {
+    if(position>=fsize) {
+        return 0;
+    }
+
+    range_t *range=safe_malloc(sizeof(range_t),1);
+    range->end=0;
+    range->start=position;
+    for(int pos=position;pos<fsize;pos++){
+        if(data[pos]==LINE_ENDING) {
+            range->end=pos;
+            break;        
+        }
+    }
+    if(range->end==0) {
+        range->end=fsize;
+    }
+    *position=range->end+1;
+    return range;
+}
+
+
 int load_file(cursor_t *cursor,identifier_t *table_ident){
+
     table_def_t *table=get_table_by_identifier(cursor,table_ident);
     
     // does the table ident exist
@@ -137,19 +166,16 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         long i=0;
         char delimiter=',';
         if(table->column) delimiter=table->column[0];
-        while(i<fsize){
-            // find next line ending
-            int end_pos=0;
-            int start_pos=0;
-            for(int pos=i;pos<fsize;pos++){
-                if(data[pos]==LINE_ENDING) {
-                    end_pos=pos;
-                    break;
-                }
-            }
-            if(end_pos==0) end_pos=fsize;
-            
-            
+        int position=1;
+        
+ 
+        range_t *range=0;
+        
+        while(range=get_line(data,&position,fsize)) {
+            printf("Range %ld-%ld\n",range->start,range->end);
+        }
+
+            /*
             //scan the row and count the columns
             start_pos=i;
             int in_block=0;
@@ -212,7 +238,8 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             }//end row splitter
             ++line;
             i=end_pos+1;
-        }// end main loop
+            */
+     //   }// end main loop
 
         debug_dataset(data_set);
 
