@@ -135,7 +135,8 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         // delimiter
         // array
         long i=0;
-        char delimiter=table->column;
+        char delimiter=',';
+        if(table->column) delimiter=table->column[0];
         while(i<fsize){
             // find next line ending
             int end_pos=0;
