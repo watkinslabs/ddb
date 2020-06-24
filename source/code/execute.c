@@ -5,6 +5,9 @@
 #include "../include/free.h"
 #include "../include/queries.h"
 
+#define LINE_ENDING '\n'
+#define DOUBLE_QUOTE '\"'
+#define SINGLE_QUOTE '\''
 
 
 /* Function: validate_create_table
@@ -73,10 +76,14 @@ int execute_select(cursor_t * cursor,select_t *select){
 
 int load_file(cursor_t *cursor,identifier_t *table_ident){
     table_def_t *table=get_table_by_identifier(cursor,table_ident);
+    
+    // does the table ident exist
     if(table) {
         // does not work at all the same wai in pytho
         // maybe i was just totally wrong.. wth?
        // lock_file(table->file);
+        
+        // read the file into a memory block in 1 chunk
         FILE *f = fopen(table->file, "rb");
         long fsize=0;
         char *data=0;
@@ -96,16 +103,18 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             return 0;
         }
 
+        //if no data abort
         if(data==0) {
             char *err_msg=safe_malloc(1024,1);
             sprintf(err_msg,"returned data empty. '%s'",table->file);
             error(cursor,ERR_DATA_FETCH_ERROR,err_msg);
             return 0;
         }
+        
+        //allocate dataset main container
         data_set_t * data_set=safe_malloc(sizeof(data_set_t),1);
 
-#define LINE_ENDING '\n'
-
+        // count rows of data
         long lines=0;
         long last_line=0;
         for(long i=0;i<fsize;i++){
@@ -114,7 +123,92 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                 last_line=i;
             }
         }
-        if(last_line!=fsize) ++lines;
+        
+        //update data set and allocate row structure
+        data_set->row_length=lines;
+        data_set->rows=safe_malloc(sizeof(row_t),lines);
+
+        int line=0;
+        // quoted
+        // strings
+        // delimiter
+        // array
+        long i=0;
+        char delimiter=table->column;
+        while(i<fsize){
+            // find next line ending
+            int end_pos=0;
+            int start_pos=0;
+            for(int pos=i;pos<fsize;pos++){
+                if(data[pos]==LINE_ENDING) {
+                    end_pos=pos;
+                    break;
+                }
+            }
+            if(end_pos==0) end_pos=fsize;
+            
+            
+            //scan the row and count the columns
+            start_pos=i;
+            int in_block=0;
+            
+            for(int pos=i;pos<end_pos;pos++){
+                 //detect quoted string blocks
+                 if(data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+                     if(in_block==1) {
+                         in_block=0;
+                     } else {
+                         in_block=1;
+                     }
+                     continue;
+                 }
+
+                 if(data[pos]==delimiter) {
+                     ++data_set->rows[line].column_length;
+                 }
+            }//end row splitter
+            
+            // adding start column (off by 1)
+            // ensures empty lines have 0 columns
+            if(end_pos-i>0) {
+                ++data_set->rows[line].column_length;
+            }
+
+            
+            //allocate the correct abbout of column space
+            data_set->rows[line].columns=safe_malloc(sizeof(char*), data_set->rows[line].column_length);
+            
+            //scan the row and duplicate the data into the columns
+            start_pos=i;
+            int in_block=0;
+            int ordinal=0;
+            for(int pos=i;pos<end_pos;pos++){
+                 //detect quoted string blocks
+                 if(data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+                     if(in_block==1) {
+                         in_block=0;
+                     } else {
+                         in_block=1;
+                     }
+                     continue;
+                 }
+
+                 if(data[pos]==delimiter) {
+                     int len=start_pos-pos-1;
+                     if(len>=0) {
+                        char *value=safe_malloc(len+1,1);
+                        if(len>0) {
+                            memcpy(value,data[start_pos],len);
+                        }
+                        data_set->rows[line].columns[ordinal]=value;
+                     }
+                     ++ordinal;
+                     start_pos=i+1;
+                 }
+            }//end row splitter
+            i=end_pos+1;
+        }
+
         printf("Lines found: %ld in %s at %ld\n",lines,table->file,fsize);
 
 /*
