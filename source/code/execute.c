@@ -180,7 +180,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             
             //scan the row and duplicate the data into the columns
             start_pos=i;
-            int in_block=0;
+            in_block=0;
             int ordinal=0;
             for(int pos=i;pos<end_pos;pos++){
                  //detect quoted string blocks
