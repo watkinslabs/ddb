@@ -64,7 +64,7 @@ int execute_select(cursor_t * cursor,select_t *select){
 }
 
 int load_file(cursor_t *cursor,identifier_t *table_ident){
-    table_def_t *table=get_table_by_identifier(table_ident);
+    table_def_t *table=get_table_by_identifier(cursor,table_ident);
     if(table) {
         // does not work at all the same wai in pytho
         // maybe i was just totally wrong.. wth?
