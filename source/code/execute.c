@@ -81,7 +81,7 @@ typedef struct range{
 } range_t;
 
 
-range_t *get_line(char *data,int *position,int fsize) {
+range_t *get_line(char *data,long *position,int fsize) {
     if(position>=fsize) {
         return 0;
     }
@@ -166,7 +166,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         long i=0;
         char delimiter=',';
         if(table->column) delimiter=table->column[0];
-        int position=1;
+        long position=1;
         
  
         range_t *range=0;
