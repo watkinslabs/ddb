@@ -206,8 +206,9 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                      start_pos=i+1;
                  }
             }//end row splitter
+            ++line;
             i=end_pos+1;
-        }
+        }// end main loop
 
         debug_dataset(data_set);
 
