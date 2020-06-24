@@ -57,6 +57,14 @@ int execute_select(cursor_t * cursor,select_t *select){
 
 
 
+    if(select->from){
+        load_file(cursor,select->from);
+        if(select->join) {
+            for(int i=0;i<select->join_length;i++) {
+                load_file(cursor,select->join[i].identifier);
+            }
+        }
+    }
 
 
 
@@ -69,6 +77,22 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         // does not work at all the same wai in pytho
         // maybe i was just totally wrong.. wth?
        // lock_file(table->file);
+
+        FILE *f = fopen("textfile.txt", "rb");
+        if(f) {
+            fseek(f, 0, SEEK_END);
+            long fsize = ftell(f);
+            fseek(f, 0, SEEK_SET);  /* same as rewind(f); */
+
+            char *string = malloc(fsize + 1);
+            fread(string, 1, fsize, f);
+            fclose(f);
+            string[fsize] = 0;
+        } else {
+            char *err_msg=safe_malloc(1024,1);
+            sprintf(err_msg,"cannot open file '%s'",table->file);
+            error(cursor,ERR_FILE_OPEN_ERROR,err_msg);
+        }
     
         return 1;
     }
@@ -101,3 +125,4 @@ int lock_file(char *file){
     }
     return 1;
 }
+
