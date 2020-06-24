@@ -3,6 +3,7 @@
 #include "../include/debug.h"
 #include "../include/queries.h"
 #include "../include/free.h"
+#include "../include/queries.h"
 
 
 
