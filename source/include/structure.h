@@ -125,7 +125,7 @@ typedef struct cursor_t{
 #define COLUMN_WHITESPACE 3
 
 typedef struct row_t{
-    char *columns;
+    void *columns;
     int column_length;
     int column_type;
 } row_t;
