@@ -121,7 +121,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         for(long i=0;i<fsize;i++){
             if(data[i]==LINE_ENDING) {
                 ++lines;
-                last_line=i;
+                //last_line=i;
             }
         }
         
