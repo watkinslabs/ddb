@@ -169,10 +169,12 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         long position=1;
         
  
-        range_t *range=0;
+        range_t *range=get_line(data,&position,fsize);
+;
         
-        while(range=get_line(data,&position,fsize)) {
+        while(range){
             printf("Range %ld-%ld\n",range->start,range->end);
+            range=get_line(data,&position,fsize);
         }
 
             /*
