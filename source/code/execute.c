@@ -76,8 +76,8 @@ int execute_select(cursor_t * cursor,select_t *select){
 }
 
 typedef struct range{
-    int start;
-    int end;
+    long start;
+    long end;
 } range_t;
 
 
