@@ -115,7 +115,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             }
         }
         if(last_line!=fsize) ++lines;
-        printf("Lines found: %d in %s\n",lines,table->file);
+        printf("Lines found: %ld in %s\n",lines,table->file);
 
 /*
 typedef struct row_t{
