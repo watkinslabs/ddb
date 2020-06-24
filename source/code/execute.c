@@ -54,6 +54,49 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 int execute_select(cursor_t * cursor,select_t *select){
 
+
+
+
+
+
     return 1;
 }
 
+int load_file(cursor_t *cursor,identifier_t table_ident){
+    table_def_t *table=get_table_by_identifier(table_ident);
+    if(table) {
+        // does not work at all the same wai in pytho
+        // maybe i was just totally wrong.. wth?
+       // lock_file(table->file);
+    
+        return 1;
+    }
+    return 0;
+}
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+int lock_file(char *file){
+    struct sockaddr_un sun;
+      if(strlen(file)>strlen(sun.sun_path)+1) return 0;
+  
+    int s = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (s < 0) {
+        
+        return 0;
+    }
+    memset(&sun, 0, sizeof(sun));
+    sun.sun_family = AF_UNIX;
+    strcpy(sun.sun_path + 1,file);
+    if (bind(s, (struct sockaddr *) &sun, sizeof(sun))) {
+        perror("bind");
+        return 0;
+    }
+    return 1;
+}

@@ -45,6 +45,7 @@
     #define ERR_DUPLICATE_GROUP_BY_COLUMN           41
     #define ERR_LIMIT_START_NEGATIVE                42
     #define ERR_LIMIT_LENGTH_NEGATIVE               43
+    #define ERR_LOCKING_ERROR                       44
 
 #endif
 

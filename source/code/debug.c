@@ -77,6 +77,7 @@ char * vomit(int err_no){
         case ERR_DUPLICATE_GROUP_BY_COLUMN       : msg="duplicate column in group by"; break;
         case ERR_LIMIT_START_NEGATIVE            : msg="limit start negative"; break;
         case ERR_LIMIT_LENGTH_NEGATIVE           : msg="limit length negative"; break;
+        case ERR_LOCKING_ERROR                   : msg="could not achieve a lock on file"; break;
 
         default: msg="NO CLUE";
     }
