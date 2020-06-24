@@ -120,6 +120,23 @@ typedef struct cursor_t{
     int                   data_length;
 }cursor_t;
 
+#define COLUMN_DATA       1
+#define COLUMN_COMMENT    2
+#define COLUMN_WHITESPACE 3
+
+typedef struct row_t{
+    char *columns;
+    int column_length;
+    int column_type;
+} row_t;
+
+typedef struct data_set_t{
+    data_column_t *columns;
+    int column_length;
+    int row_length;
+    row_t *rows;
+} data_set_t;
+
 /****
 
 identity comparitor expr

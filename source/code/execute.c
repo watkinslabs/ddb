@@ -77,27 +77,68 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         // does not work at all the same wai in pytho
         // maybe i was just totally wrong.. wth?
        // lock_file(table->file);
-
         FILE *f = fopen(table->file, "rb");
+        long fsize=0;
+        char *data=0;
         if(f) {
             fseek(f, 0, SEEK_END);
-            long fsize = ftell(f);
-            fseek(f, 0, SEEK_SET);  /* same as rewind(f); */
+            fsize = ftell(f);
+            fseek(f, 0, SEEK_SET);
 
-            char *string = malloc(fsize + 1);
-            fread(string, 1, fsize, f);
+            data = malloc(fsize + 1);
+            fread(data, 1, fsize, f);
             fclose(f);
-            string[fsize] = 0;
+            data[fsize] = 0;
         } else {
             char *err_msg=safe_malloc(1024,1);
             sprintf(err_msg,"cannot open file '%s'",table->file);
             error(cursor,ERR_FILE_OPEN_ERROR,err_msg);
+            return 0;
         }
+
+        if(data==0) {
+            char *err_msg=safe_malloc(1024,1);
+            sprintf(err_msg,"returned data empty. '%s'",table->file);
+            error(cursor,ERR_DATA_FETCH_ERROR,err_msg);
+            return 0;
+        }
+        data_set_t * data_set=safe_malloc(sizeof(data_set_t),1);
+
+#define LINE_ENDING '\n'
+
+        long lines=0;
+        long last_line=0;
+        for(long i=0;i<fsize;i++){
+            if(data[i]==LINE_ENDING) {
+                lines=0;
+                last_line=i;
+            }
+        }
+        if(last_line!=fsize) ++lines;
+        printf("Lines found: %l in %s\n",lines,table->file);
+
+/*
+typedef struct row_t{
+    char *columns;
+    int column_length;
+    int column_type;
+} row_t;
+
+typedef struct data_set_t{
+    data_column_t *columns;
+    int column_length;
+    int row_length;
+    row_t *rows;
+} data_set_t;
+*/
+
     
         return 1;
     }
     return 0;
 }
+
+
 
 
 #include <stdio.h>
