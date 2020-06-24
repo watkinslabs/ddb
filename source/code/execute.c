@@ -204,7 +204,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                             memcpy(value,&data[start_pos],len);
                             printf (" %s \n",value);
                         }
-                        row->columns[ordinal]=*value;
+                        row->columns[ordinal]=&value;
                      }
                      ++ordinal;
                      start_pos=i+1;
