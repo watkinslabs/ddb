@@ -202,6 +202,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                         char *value=safe_malloc(len+1,1);
                         if(len>0) {
                             memcpy(value,&data[start_pos],len);
+                            printf (" %s \n",value);
                         }
                         row->columns[ordinal]=*value;
                      }
