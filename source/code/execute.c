@@ -241,7 +241,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             */
      //   }// end main loop
 
-        debug_dataset(data_set);
+        //debug_dataset(data_set);
 
     
         return 1;
