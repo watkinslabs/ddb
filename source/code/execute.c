@@ -117,7 +117,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
 
         // count rows of data
         long lines=0;
-        long last_line=0;
+        //long last_line=0;
         for(long i=0;i<fsize;i++){
             if(data[i]==LINE_ENDING) {
                 ++lines;
