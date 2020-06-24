@@ -266,6 +266,26 @@ void debug_cursor(cursor_t *cursor){
 
 }
 
+void debug_dataset(data_set_t *data){
+    debug_header("dataset");
+    printf(" - column length: %d\n",data->column_length);
+    printf(" - row_length: %d\n",data->row_length);
+
+    for(long i=0;i<data->row_length;i++){
+        printf("%d ",i);
+        row_t temp_row=data->rows[i];
+        for(int b=0;temp_row.column_length;b++){
+            if(b!=0) printf(",");
+            printf("%s",temp_row.columns[b]);
+        }
+        printf("\n");
+    }
+
+    
+    return 0;
+}
+
+
 void debug_alias(char *alias) {
     printf ("   - alias: %s\n",alias);
 }

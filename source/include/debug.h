@@ -30,6 +30,7 @@
     void debug_select      (select_t *select);
     void debug_create_table(table_def_t *table);
     void debug_use         (use_t *use);
+    void debug_dataset     (data_set_t *data);
 
 
  

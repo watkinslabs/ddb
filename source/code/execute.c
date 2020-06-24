@@ -209,22 +209,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             i=end_pos+1;
         }
 
-        printf("Lines found: %ld in %s at %ld\n",lines,table->file,fsize);
-
-/*
-typedef struct row_t{
-    char *columns;
-    int column_length;
-    int column_type;
-} row_t;
-
-typedef struct data_set_t{
-    data_column_t *columns;
-    int column_length;
-    int row_length;
-    row_t *rows;
-} data_set_t;
-*/
+        debug_dataset(data_set);
 
     
         return 1;
