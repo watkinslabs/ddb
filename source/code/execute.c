@@ -197,7 +197,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
                  if(data[pos]==delimiter) {
                      int len=start_pos-pos-1;
                      if(len>=0) {
-                        char *value=safe_malloc(len+1,1);
+                        void *value=safe_malloc(len+1,1);
                         if(len>0) {
                             memcpy(value,data[start_pos],len);
                         }
