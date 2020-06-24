@@ -9,6 +9,7 @@
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''
 
+int load_file(cursor_t *cursor,identifier_t *table_ident);
 
 /* Function: validate_create_table
  * -----------------------
