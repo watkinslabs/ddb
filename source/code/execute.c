@@ -83,7 +83,7 @@ typedef struct range{
 
 range_t *get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {
-        printf("OUT OF BOUNDS %ld of %ld\n",*position,fsize);
+        //printf("OUT OF BOUNDS %ld of %ld\n",*position,fsize);
         return 0;
     }
 
@@ -102,6 +102,36 @@ range_t *get_line(char *data,long *position,long fsize) {
     }
     *position=range->end+1;
     return range;
+}
+
+row_t *build_row(char *data,range_t *range,char delimiter){
+    // loop through range and split into columns
+    row_t *row=safe_malloc(sizeof(row_t),1);
+    
+    int in_block=0;
+    for(long pos=range->start;pos<range->end;pos++){
+        //detect quoted string blocks
+        if(data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+            if(in_block==1) {
+                in_block=0;
+            } else {
+                in_block=1;
+            }
+            continue;
+        }
+
+        if(data[pos]==delimiter) {
+            ++row->column_length;
+        }
+    }//end row splitter
+
+    // adding start column (off by 1)
+    // ensures empty lines have 0 columns
+    if(range->end-range->start>0) {
+        ++row->column_length;
+    }
+    printf("%d \n",row->column_length);
+    return row;
 }
 
 
@@ -179,6 +209,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         while(range){
             printf("Range %ld-%ld\n",range->start,range->end);
             range=get_line(data,&position,fsize);
+            row_t row=build_row(data,range);
         }
 
             /*
@@ -186,28 +217,6 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             start_pos=i;
             int in_block=0;
             
-            for(int pos=i;pos<end_pos;pos++){
-                 //detect quoted string blocks
-                 if(data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
-                     if(in_block==1) {
-                         in_block=0;
-                     } else {
-                         in_block=1;
-                     }
-                     continue;
-                 }
-
-                 if(data[pos]==delimiter) {
-                     ++data_set->rows[line].column_length;
-                 }
-            }//end row splitter
-            
-            // adding start column (off by 1)
-            // ensures empty lines have 0 columns
-            if(end_pos-i>0) {
-                ++data_set->rows[line].column_length;
-            }
-
             
             //allocate the correct abbout of column space
             data_set->rows[line].columns=safe_malloc(sizeof(char*), data_set->rows[line].column_length);
