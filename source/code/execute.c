@@ -260,7 +260,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             temp_data_column=temp_data_column->next;
         }
             
-        debug_dataset(data_set);
+        //debug_dataset(data_set);
 
         free(data);
         return data_set;
