@@ -44,7 +44,8 @@ int free_data_set(data_set_t *data_set){
             }
             //free(data_set->rows);
         }
-        //free(data_set);
+        //
+        free(data_set);
     }
     return 1;
 }
