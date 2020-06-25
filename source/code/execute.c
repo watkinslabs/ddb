@@ -238,24 +238,27 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
  
         range_t *range=get_line(data,&position,fsize);
 
-        int index=0;
+        long index=0;
+        long max_columns=0;
         while(range){
             //printf("Range %ld-%ld\n",range->start,range->end);
+
             row_t *row=build_row(data,range,delimiter);
             row->file_row=index;
+            if(row->column_length>max_columns) max_columns=row->column_length;
             data_set->rows[index]=row;
             // TAIL 
             free(range);
             range=get_line(data,&position,fsize);
             ++index;
         }
-        data_set->columns=(char**)safe_malloc(sizeof(char*),data_set->column_length);
+        data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
 
-        //data_column_t * temp_data_column=table->columns;
-        //while(temp_data_column){
-        //    //data_set->columns[temp_data_column->ordinal]=&strdup(temp_data_column->alias);
-        //    temp_data_column=temp_data_column->next;
-        //}
+        data_column_t * temp_data_column=table->columns;
+        while(temp_data_column){
+            data_set->columns[temp_data_column->ordinal]=&strdup(temp_data_column->alias);
+            temp_data_column=temp_data_column->next;
+        }
             
         debug_dataset(data_set);
 
