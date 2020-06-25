@@ -139,8 +139,10 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         //detect quoted string blocks
         if(data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
             if(in_block==1) {
+                printf( " outblock ");
                 in_block=0;
             } else {
+                printf( " inblock ");
                 in_block=1;
             }
             continue;
