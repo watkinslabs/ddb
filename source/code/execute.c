@@ -266,7 +266,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
         while(ordinal<max_columns+1){
             char *col_name=safe_malloc(sizeof(char),20);
             sprintf(col_name,"col_%ld",ordinal);
-            data_set->columns[ordinal]=strdup(temp_data_column->object);
+            data_set->columns[ordinal]=col_name;
             ++ordinal;
         }
             
