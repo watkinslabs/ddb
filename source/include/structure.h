@@ -128,6 +128,7 @@ typedef struct row_t{
     char *columns;
     int column_length;
     int column_type;
+    int file_row;
 } row_t;
 
 typedef struct data_set_t{
