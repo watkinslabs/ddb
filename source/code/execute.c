@@ -83,7 +83,7 @@ typedef struct range{
 
 range_t *get_line(char *data,long *position,long fsize) {
     if(position>=fsize) {
-        printf("OUT OF BOUNDS\n");
+        printf("OUT OF BOUNDS %ld of %ld\n",position,fsize);
         return 0;
     }
     printf("getline\n");
