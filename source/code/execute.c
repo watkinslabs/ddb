@@ -252,10 +252,14 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             range=get_line(data,&position,fsize);
             ++index;
         }
-        printf("%ld\n",max_columns);
+        // free the data that was read        
+        free(data);
+
+        // init the column pointer lookup table
         data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
 
 
+        // copy column names for defined columns
         data_column_t * temp_data_column=table->columns;
         long ordinal=0;
         while(temp_data_column){
@@ -263,16 +267,18 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             temp_data_column=temp_data_column->next;
             ++ordinal;
         }
+        // add default column names for undefined columns with `col_`+ordinal
         while(ordinal<max_columns){
             char *col_name=safe_malloc(sizeof(char),20);
             sprintf(col_name,"col_%ld",ordinal);
             data_set->columns[ordinal]=col_name;
             ++ordinal;
         }
+        // update the max number of columns 
+        // rows will have whatever they find
+        // this refers to mas possible per row
         data_set->column_length=max_columns;
         //debug_dataset(data_set);
-
-        free(data);
         return data_set;
     }
     return 0;
