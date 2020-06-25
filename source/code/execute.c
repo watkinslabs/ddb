@@ -259,7 +259,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             
         debug_dataset(data_set);
 
-        //free(data);
+        free(data);
         return data_set;
     }
     return 0;
