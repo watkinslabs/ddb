@@ -252,7 +252,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             range=get_line(data,&position,fsize);
             ++index;
         }
-        data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
+        data_set->columns=(char*)safe_malloc(sizeof(char*),max_columns);
 
 
         data_column_t * temp_data_column=table->columns;
