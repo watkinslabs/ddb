@@ -208,10 +208,9 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         
         while(range){
             printf("Range %ld-%ld\n",range->start,range->end);
+            row_t *row=build_row(data,range,delimiter);
+            // TAIL 
             range=get_line(data,&position,fsize);
-            if(range) {
-                row_t *row=build_row(data,range,delimiter);
-            }
         }
 
             /*
