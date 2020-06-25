@@ -152,6 +152,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
             //printf("%d",len);
             if(len>=0) {
                 char *value=safe_malloc(len+1,1);
+                value[len]=0;
                 if(len>0) {
                     memcpy(value,&data[start_pos],len);
                     //printf (" %s \n",value);
