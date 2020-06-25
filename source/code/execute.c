@@ -83,13 +83,14 @@ typedef struct range{
 
 range_t *get_line(char *data,long *position,int fsize) {
     if(position>=fsize) {
+        printf("OUT OF BOUNDS");
         return 0;
     }
 
     range_t *range=safe_malloc(sizeof(range_t),1);
     range->end=0;
     range->start=position;
-    for(int pos=position;pos<fsize;pos++){
+    for(long pos=position;pos<fsize;pos++){
         if(data[pos]==LINE_ENDING) {
             range->end=pos;
             break;        
