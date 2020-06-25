@@ -63,7 +63,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     data_set_count+=select->join_length;
 
     if(data_set_count>0) {
-        data_set_t *data_sets=safe_malloc(sizeof(data_set_t),data_set_count);
+        data_set_t *data_sets=(data_set_t*)safe_malloc(sizeof(data_set_t),data_set_count);
 
         if(select->from){
             data_sets[0]=*load_file(cursor,select->from);
@@ -92,7 +92,7 @@ range_t *get_line(char *data,long *position,long fsize) {
     }
 
 
-    range_t *range=safe_malloc(sizeof(range_t),1);
+    range_t *range=(range_t*)safe_malloc(sizeof(range_t),1);
     range->end=0;
     range->start=*position;
     for(long pos=*position;pos<fsize;pos++){
@@ -110,7 +110,7 @@ range_t *get_line(char *data,long *position,long fsize) {
 
 row_t *build_row(char *data,range_t *range,char delimiter){
     // loop through range and split into columns
-    row_t *row=safe_malloc(sizeof(row_t),1);
+    row_t *row=(row_t*)safe_malloc(sizeof(row_t),1);
     
     int in_block=0;
     int start_pos=0;
@@ -139,7 +139,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         ++row->column_length;
     }
     //printf("%d \n",row->column_length);
-    row->columns=safe_malloc(sizeof(char*),row->column_length+1);
+    row->columns=(char*)safe_malloc(sizeof(char*),row->column_length+1);
     //scan the row and duplicate the data into the columns
     in_block=0;
     int ordinal=0;
@@ -160,7 +160,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         if(data[pos]==',') {
             int len=pos-start_pos;
             if(len>=0) {
-                char *value=safe_malloc(len+1,1);
+                char *value=(char*)safe_malloc(len+1,1);
                 if(len>0) {
                     memcpy(value,&data[start_pos],len);
                 }
@@ -199,7 +199,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             fclose(f);
             data[fsize] = 0;
         } else {
-            char *err_msg=safe_malloc(1024,1);
+            char *err_msg=(char*)safe_malloc(1024,1);
             sprintf(err_msg,"cannot open file '%s'",table->file);
             error(cursor,ERR_FILE_OPEN_ERROR,err_msg);
             return 0;
@@ -207,14 +207,14 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
 
         //if no data abort
         if(data==0) {
-            char *err_msg=safe_malloc(1024,1);
+            char *err_msg=(char*)safe_malloc(1024,1);
             sprintf(err_msg,"returned data empty. '%s'",table->file);
             error(cursor,ERR_DATA_FETCH_ERROR,err_msg);
             return 0;
         }
         
         //allocate dataset main container
-        data_set_t * data_set=safe_malloc(sizeof(data_set_t),1);
+        data_set_t * data_set=(data_set_t*)safe_malloc(sizeof(data_set_t),1);
 
         // count rows of data
         long lines=0;
@@ -228,7 +228,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
         
         //update data set and allocate row structure
         data_set->row_length=lines;
-        data_set->rows=safe_malloc(sizeof(row_t),lines);
+        data_set->rows=(row_t*)safe_malloc(sizeof(row_t),lines);
 
         int line=0;
         // quoted
