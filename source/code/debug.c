@@ -279,7 +279,7 @@ void debug_dataset(data_set_t *data){
         for(long b=0;b<temp_row->column_length;b++){
             
             if(temp_row->columns[b]) {
-                printf("%ld:%s,",temp_row->column_length,temp_row->columns[b]);
+                printf("%ld:%s,",b,temp_row->columns[b]);
             } else {
                 printf ("(null)");
             }
