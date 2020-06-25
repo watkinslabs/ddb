@@ -44,6 +44,10 @@ int free_data_set(data_set_t *data_set){
             }
             free(data_set->rows);
         }
+        for(int i=0;i<data_set->column_length;i++){
+            free(data_set->columns[i]);
+        }
+        free(data_set->columns);
         //
         free(data_set);
     }
