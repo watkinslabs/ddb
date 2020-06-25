@@ -249,13 +249,13 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             range=get_line(data,&position,fsize);
             ++index;
         }
-//        data_set->columns=(char**)safe_malloc(sizeof(char*),data_set->column_length);
+        data_set->columns=(char**)safe_malloc(sizeof(char*),data_set->column_length);
 
-        data_column_t * temp_data_column=table->columns;
-        while(temp_data_column){
-            //data_set->columns[temp_data_column->ordinal]=&strdup(temp_data_column->alias);
-            temp_data_column=temp_data_column->next;
-        }
+        //data_column_t * temp_data_column=table->columns;
+        //while(temp_data_column){
+        //    //data_set->columns[temp_data_column->ordinal]=&strdup(temp_data_column->alias);
+        //    temp_data_column=temp_data_column->next;
+        //}
             
         debug_dataset(data_set);
 
