@@ -113,12 +113,12 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     for(long pos=range->start;pos<range->end;pos++){
         //detect quoted string blocks
         //detect quoted string blocks
-        if(start_pos==pos && data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+        if(start_pos==pos && (data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE)) {
             printf(" INBLOCK ");
             in_block=1;
             continue;
         }
-        if(in_block==1 && data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+        if(in_block==1 && (data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE)) {
             printf(" NOT INBLOCK ");
             in_block=0;
             continue;
@@ -142,12 +142,12 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     start_pos=range->start;
     for(long pos=range->start;pos<range->end;pos++){
         //detect quoted string blocks
-        if(start_pos==pos && data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+        if(start_pos==pos && (data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE)) {
             printf(" INBLOCK ");
             in_block=1;
             continue;
         }
-        if(in_block==1 && data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
+        if(in_block==1 && (data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE)) {
             printf(" NOT INBLOCK ");
             in_block=0;
             continue;
