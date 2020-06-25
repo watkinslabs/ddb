@@ -81,7 +81,7 @@ typedef struct range{
 } range_t;
 
 
-range_t *get_line(char *data,long *position,int fsize) {
+range_t *get_line(char *data,long *position,long fsize) {
     if(position>=fsize) {
         printf("OUT OF BOUNDS\n");
         return 0;
@@ -172,9 +172,9 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
         long position=1;
         
 
-        printf ("FGSDFDSFSDFSDF\n");
+        
  
-        range_t *range=get_line(data,position,fsize);
+        range_t *range=get_line(data,&position,fsize);
 ;
         
         while(range){
