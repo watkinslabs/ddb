@@ -58,7 +58,6 @@ int execute_use(cursor_t *cursor,use_t *use){
 }
 
 int execute_select(cursor_t * cursor,select_t *select){
-return 0;
     int data_set_count=0;
     if(select->from) ++data_set_count;
     data_set_count+=select->join_length;
@@ -75,7 +74,8 @@ return 0;
             }
         }
     }
-
+    
+    for(int i=0;i<data_set_count;i++) free_dataset(data_sets[i]);
     return 1;
 }
 
