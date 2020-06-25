@@ -138,6 +138,12 @@ typedef struct data_set_t{
     row_t         * rows;
 } data_set_t;
 
+typedef struct range_t{
+    long start;
+    long end;
+} range_t;
+
+
 /****
 
 identity comparitor expr

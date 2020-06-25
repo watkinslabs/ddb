@@ -79,10 +79,6 @@ int execute_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
-typedef struct range{
-    long start;
-    long end;
-} range_t;
 
 
 range_t *get_line(char *data,long *position,long fsize) {
