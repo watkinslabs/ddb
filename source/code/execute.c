@@ -242,7 +242,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             //printf("Range %ld-%ld\n",range->start,range->end);
             row_t *row=build_row(data,range,delimiter);
             row->file_row=index;
-            data_set->rows[index]=*row;
+            data_set->rows[index]=row;
             // TAIL 
             range=get_line(data,&position,fsize);
             ++index;
