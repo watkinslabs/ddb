@@ -130,7 +130,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         ++row->column_length;
     }
     //printf("%d \n",row->column_length);
-    row->columns=safe_malloc(sizeof(void*),row->column_length);
+    row->columns=safe_malloc(sizeof(char*),row->column_length+1);
     //scan the row and duplicate the data into the columns
     in_block=0;
     int ordinal=0;
