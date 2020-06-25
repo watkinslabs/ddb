@@ -256,7 +256,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
 
 
         data_column_t * temp_data_column=table->columns;
-        int ordinal=0;
+        long ordinal=0;
         while(temp_data_column){
             data_set->columns[ordinal]=strdup(temp_data_column->object);
             temp_data_column=temp_data_column->next;
