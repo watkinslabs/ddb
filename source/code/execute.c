@@ -129,7 +129,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     if(range->end-range->start>0) {
         ++row->column_length;
     }
-    printf("%d \n",row->column_length);
+    //printf("%d \n",row->column_length);
     row->columns=safe_malloc(sizeof(char*),row->column_length);
     //scan the row and duplicate the data into the columns
     in_block=0;
@@ -149,12 +149,12 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         }
         if(data[pos]==',') {
             int len=pos-start_pos-1;
-            printf("%d",len);
+            //printf("%d",len);
             if(len>=0) {
                 char *value=safe_malloc(len+1,1);
                 if(len>0) {
                     memcpy(value,&data[start_pos],len);
-                    printf (" %s \n",value);
+                    //printf (" %s \n",value);
                 }
                 row->columns[ordinal]=value;
             }
