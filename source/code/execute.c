@@ -253,7 +253,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             ++index;
         }
         printf("%ld\n",max_columns);
-        data_set->columns=safe_malloc(sizeof(char*),max_columns);
+        data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
 
 
         data_column_t * temp_data_column=table->columns;
