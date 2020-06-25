@@ -147,9 +147,9 @@ row_t *build_row(char *data,range_t *range,char delimiter){
             }
             continue;
         }
-        printf("%c",data[pos]);
         if(data[pos]==',') {
             int len=start_pos-pos-1;
+            printf("%d",len);
             if(len>=0) {
                 char *value=safe_malloc(len+1,1);
                 if(len>0) {
