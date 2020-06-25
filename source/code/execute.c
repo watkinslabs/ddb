@@ -269,7 +269,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             data_set->columns[ordinal]=col_name;
             ++ordinal;
         }
-            
+        data_set->column_length=max_columns;
         //debug_dataset(data_set);
 
         free(data);
