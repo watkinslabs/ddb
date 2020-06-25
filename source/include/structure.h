@@ -22,6 +22,8 @@ typedef struct  data_column_t{
     struct  data_column_t *next_tail;
 } data_column_t;
 
+
+
 typedef struct order_column_t {
     identifier_t * identifier;
     int direction;
@@ -132,10 +134,10 @@ typedef struct row_t{
 } row_t;
 
 typedef struct data_set_t{
-    data_column_t * columns;
-    long            column_length;
-    long            row_length;
-    row_t        ** rows;
+    char   ** columns;
+    long      column_length;
+    long      row_length;
+    row_t  ** rows;
 } data_set_t;
 
 typedef struct range_t{
