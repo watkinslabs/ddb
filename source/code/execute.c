@@ -154,7 +154,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
             continue;
         }
 
-        if(data[pos]==',') {
+        if(data[pos]==',' || pos+1==range->end) {
             int len=pos-start_pos;
             if(len>=0) {
                 char *value=(char*)safe_malloc(len+1,1);
@@ -241,7 +241,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
         
  
         range_t *range=get_line(data,&position,fsize);
-;
+
         int index=0;
         while(range){
             //printf("Range %ld-%ld\n",range->start,range->end);
