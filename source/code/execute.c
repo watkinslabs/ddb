@@ -73,7 +73,7 @@ int execute_select(cursor_t * cursor,select_t *select){
                 }
             }
         }
-        //for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
+        for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
     }
     
     return 1;
@@ -259,7 +259,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             
         debug_dataset(data_set);
 
-        free(data);
+        //free(data);
         return data_set;
     }
     return 0;
