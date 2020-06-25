@@ -254,18 +254,19 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
         }
         data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
 
+
         data_column_t * temp_data_column=table->columns;
-        int index=0;
+        int ordinal=0;
         while(temp_data_column){
-            data_set->columns[index]=strdup(temp_data_column->object);
+            data_set->columns[ordinal]=strdup(temp_data_column->object);
             temp_data_column=temp_data_column->next;
-            ++index;
+            ++ordinal;
         }
-        while(index<max_columns+1){
+        while(ordinal<max_columns+1){
             char *col_name=safe_malloc(sizeof(char),20);
-            sprintf(col_name,"col_%ld",index);
-            data_set->columns[index]=strdup(temp_data_column->object);
-            ++index;
+            sprintf(col_name,"col_%ld",ordinal);
+            data_set->columns[ordinal]=strdup(temp_data_column->object);
+            ++ordinal;
         }
             
         //debug_dataset(data_set);
