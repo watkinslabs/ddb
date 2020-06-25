@@ -133,10 +133,9 @@ typedef struct row_t{
 
 typedef struct data_set_t{
     data_column_t * columns;
-    data_column_t * col3umns;
     long            column_length;
     long            row_length;
-    row_t         * rows;
+    row_t        ** rows;
 } data_set_t;
 
 typedef struct range_t{

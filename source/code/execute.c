@@ -63,18 +63,17 @@ int execute_select(cursor_t * cursor,select_t *select){
     data_set_count+=select->join_length;
 
     if(data_set_count>0) {
-        void *data_sets=safe_malloc(sizeof(data_set_t),data_set_count);
-        printf("FSDFS :%d\n",sizeof(data_set_t));
+        row_t **data_sets=safe_malloc(sizeof(data_set_t),data_set_count);
 
         if(select->from){
-        /*    data_sets[0]=(void *)load_file(cursor,select->from);
+            data_sets[0]=load_file(cursor,select->from);
             if(select->join) {
                 for(int i=0;i<select->join_length;i++) {
                     data_sets[i+1]=load_file(cursor,select->join[i].identifier);
                 }
-            }*/
+            }
         }
-        //for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
+        for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
     }
     
     return 1;
