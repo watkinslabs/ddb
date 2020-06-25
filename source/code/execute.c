@@ -225,7 +225,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
         
         //update data set and allocate row structure
         data_set->row_length=lines;
-        data_set->rows=(row_t*)safe_malloc(sizeof(row_t),lines);
+        data_set->rows=(row_t**)safe_malloc(sizeof(row_t),lines);
 
         int line=0;
         // quoted
