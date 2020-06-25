@@ -125,17 +125,17 @@ typedef struct cursor_t{
 #define COLUMN_WHITESPACE 3
 
 typedef struct row_t{
-    char *columns;
-    int column_length;
-    int column_type;
-    int file_row;
+    void *columns;
+    int   column_length;
+    int   column_type;
+    int   file_row;
 } row_t;
 
 typedef struct data_set_t{
-    data_column_t *columns;
-    int column_length;
-    int row_length;
-    row_t *rows;
+    data_column_t * columns;
+    int             column_length;
+    int             row_length;
+    row_t         * rows;
 } data_set_t;
 
 /****
