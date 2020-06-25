@@ -268,17 +268,17 @@ void debug_cursor(cursor_t *cursor){
 
 void debug_dataset(data_set_t *data){
     debug_header("dataset");
-    printf(" - column length: %d\n",data->column_length);
-    printf(" - row_length: %d\n",data->row_length);
+    printf(" - column length: %ld\n",data->column_length);
+    printf(" - row_length: %ld\n",data->row_length);
 
     for(long i=0;i<data->row_length;i++){
         printf("ROW: %ld ",i);
         
         row_t *temp_row=&data->rows[i];
-        printf("Length %d\n",temp_row->column_length);
+        printf("Length %ld\n",temp_row->column_length);
         for(int b=0;temp_row->column_length;b++){
             if(b>10) break;
-            if(b!=0) printf("%d %d,",b,temp_row->column_length);
+            if(b!=0) printf("%ld %ld,",b,temp_row->column_length);
             
             if(&temp_row->columns[b]) {
                 printf("%s",&temp_row->columns[b]);
