@@ -174,7 +174,7 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
 
         printf ("FGSDFDSFSDFSDF\n");
  
-        range_t *range=get_line(data,*position,fsize);
+        range_t *range=get_line(data,position,fsize);
 ;
         
         while(range){
