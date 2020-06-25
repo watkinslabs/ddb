@@ -154,7 +154,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
                 char *value=safe_malloc(len+1,1);
                 //value[len]=0;
                 if(len>0) {
-                    memcpy(value,data[start_pos],len);
+                    memcpy(value,&data[start_pos],len);
                   //  printf (" %s \n",value);
                 }
                 row->columns[ordinal]=*value;
