@@ -262,7 +262,6 @@ int validate_select(cursor_t * cursor,select_t *select){
     group and order columns must come from select list
     .. JOB 1 determine available source (data) columns and identity conflicts within...
     */
-    printf("***IN FIXUP \n");
     // TODO add ERROR OUTPUT.... TO CURSOR....
    // count columns and create an array
     data_column_t *tmp_ptr=select->columns;
