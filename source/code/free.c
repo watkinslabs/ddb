@@ -34,7 +34,7 @@ int free_data_columns(data_column_t *columns){
 }
 
 int free_data_set(data_set_t *data_set){
-
+    printf("FREE\n");
     if(data_set){
         if(data_set->rows) {
             for(int i=0;i<data_set->row_length;i++){
