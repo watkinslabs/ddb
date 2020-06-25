@@ -277,11 +277,9 @@ void debug_dataset(data_set_t *data){
         row_t *temp_row=data->rows[i];
         printf("Length %ld\n",temp_row->column_length);
         for(long b=0;b<temp_row->column_length;b++){
-            if(b>10) break;
-            if(b!=0) printf("%ld %ld,",b,temp_row->column_length);
             
             if(temp_row->columns[b]) {
-                printf("%s",temp_row->columns[b]);
+                printf("%ld:%s,",temp_row->column_length,temp_row->columns[b]);
             } else {
                 printf ("(null)");
             }
