@@ -248,6 +248,7 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             row->file_row=index;
             data_set->rows[index]=row;
             // TAIL 
+            free(range);
             range=get_line(data,&position,fsize);
             ++index;
         }
