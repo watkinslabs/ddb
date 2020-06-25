@@ -415,11 +415,11 @@ int validate_select(cursor_t * cursor,select_t *select){
         while(tmp_ptr){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-                debug_identifier((identifier_t*)tmp_ptr->object);
-                 int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
-                 if(res==0) {
-                     return 0;
-                 }
+                //debug_identifier((identifier_t*)tmp_ptr->object);
+                int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
+                if(res==0) {
+                    return 0;
+                }
             }
            
             tmp_ptr=tmp_ptr->next;
