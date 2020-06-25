@@ -4,6 +4,7 @@
     #define _FREE_H_ 1
     
     int free_data_columns   (data_column_t *columns);
+    int free_data_set       (data_set_t *data_set);
     int free_select         (select_t *select);
     int free_string         (char *data);
     int free_expression     (expression_t *expr);
