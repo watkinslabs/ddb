@@ -109,6 +109,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     row_t *row=safe_malloc(sizeof(row_t),1);
     
     int in_block=0;
+    int start_pos=0;
     for(long pos=range->start;pos<range->end;pos++){
         //detect quoted string blocks
         //detect quoted string blocks
@@ -124,6 +125,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
         }
         if(data[pos]==delimiter) {
             ++row->column_length;
+            start_pos=pos+1;
         }
     }//end row splitter
 
@@ -137,7 +139,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     //scan the row and duplicate the data into the columns
     in_block=0;
     int ordinal=0;
-    int start_pos=range->start;
+    start_pos=range->start;
     for(long pos=range->start;pos<range->end;pos++){
         //detect quoted string blocks
         if(start_pos==pos && data[pos]==SINGLE_QUOTE || data[pos]==DOUBLE_QUOTE) {
