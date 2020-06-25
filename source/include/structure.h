@@ -126,15 +126,15 @@ typedef struct cursor_t{
 
 typedef struct row_t{
     char  **columns;
-    int   column_length;
-    int   column_type;
-    int   file_row;
+    long    column_length;
+    int     column_type;
+    long    file_row;
 } row_t;
 
 typedef struct data_set_t{
     data_column_t * columns;
-    int             column_length;
-    int             row_length;
+    long            column_length;
+    long            row_length;
     row_t         * rows;
 } data_set_t;
 
