@@ -156,7 +156,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
                     memcpy(value,&data[start_pos],len);
                     //printf (" %s \n",value);
                 }
-                row->columns[ordinal]=&value;
+                row->columns[ordinal]=*value;
             }
             ++ordinal;
             start_pos=pos+1;
