@@ -9,7 +9,7 @@
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''
 
-int load_file(cursor_t *cursor,identifier_t *table_ident);
+data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident);
 
 /* Function: validate_create_table
  * -----------------------
@@ -65,12 +65,12 @@ int execute_select(cursor_t * cursor,select_t *select){
         load_file(cursor,select->from);
         if(select->join) {
             for(int i=0;i<select->join_length;i++) {
-                load_file(cursor,select->join[i].identifier);
+                data_set_t dataset=load_file(cursor,select->join[i].identifier);
             }
         }
     }
 
-
+    free_dataset()
 
     return 1;
 }
@@ -171,7 +171,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
 }
 
 
-int load_file(cursor_t *cursor,identifier_t *table_ident){
+data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
 
     table_def_t *table=get_table_by_identifier(cursor,table_ident);
     
@@ -255,8 +255,8 @@ int load_file(cursor_t *cursor,identifier_t *table_ident){
             
         debug_dataset(data_set);
 
-    
-        return 1;
+        free(data);
+        return data_set;
     }
     return 0;
 }
