@@ -40,8 +40,8 @@ int free_data_set(data_set_t *data_set){
         if(data_set->rows) {
             for(int i=0;i<data_set->row_length;i++){
             printf("FREE row\n");
-                for(long c=0;c<data_set->rows[i].column_length;c++)
-                    free(data_set->rows[i].columns[c]);
+                for(long c=0;c<data_set->rows[i]->column_length;c++)
+                    free(data_set->rows[i]->columns[c]);
                 free(&data_set->rows[i]);
             }
             free(data_set->rows);
