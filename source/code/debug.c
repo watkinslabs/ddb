@@ -280,11 +280,11 @@ void debug_dataset(data_set_t *data){
             if(b>10) break;
             if(b!=0) printf("%ld %ld,",b,temp_row->column_length);
             
-            /*if(&temp_row->columns[b]) {
+            if(&temp_row->columns[b]) {
                 printf("%s",temp_row->columns);
             } else {
                 printf ("(null)");
-            }*/
+            }
         }
         printf("\n");
     }
