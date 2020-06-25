@@ -263,12 +263,12 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
             temp_data_column=temp_data_column->next;
             ++ordinal;
         }
-        /*while(ordinal<max_columns+1){
+        while(ordinal<max_columns){
             char *col_name=safe_malloc(sizeof(char),20);
             sprintf(col_name,"col_%ld",ordinal);
             data_set->columns[ordinal]=col_name;
             ++ordinal;
-        }*/
+        }
             
         //debug_dataset(data_set);
 
