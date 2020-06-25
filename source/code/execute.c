@@ -59,18 +59,22 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 int execute_select(cursor_t * cursor,select_t *select){
 
+    int data_set_count=0;
+    if(select->from) ++data_set_count;
+    data_set_count+=select->join_length;
 
+    if(data_set_count>0) {
+        data_set_t data_sets[data_set_count];
 
-    if(select->from){
-        load_file(cursor,select->from);
-        if(select->join) {
-            for(int i=0;i<select->join_length;i++) {
-                data_set_t dataset=load_file(cursor,select->join[i].identifier);
+        if(select->from){
+            data_sets[0]=*load_file(cursor,select->from);
+            if(select->join) {
+                for(int i=0;i<select->join_length;i++) {
+                    data_sets[i+1]=*load_file(cursor,select->join[i].identifier);
+                }
             }
         }
     }
-
-    free_dataset()
 
     return 1;
 }
