@@ -133,9 +133,9 @@ typedef struct row_t{
 
 typedef struct data_set_t{
     data_column_t * columns;
+    data_column_t * columns;
     long            column_length;
     long            row_length;
-    long            row_length2;
     row_t         * rows;
 } data_set_t;
 
