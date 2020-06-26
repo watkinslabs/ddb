@@ -122,6 +122,7 @@ char ** get_column_list(data_column_t *columns,int length){
         temp_data_column=temp_data_column->next;
         ++index;
     }    
+    return column_list;
 }
 
 range_t *get_line(char *data,long *position,long fsize) {
