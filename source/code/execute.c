@@ -10,6 +10,8 @@
 #define SINGLE_QUOTE '\''
 
 data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident);
+data_set_t * new_data_set(char **columns,int column_count,int row_count);
+char ** get_column_list(data_column_t *columns,int length);
 
 /* Function: validate_create_table
  * -----------------------
@@ -58,12 +60,28 @@ int execute_use(cursor_t *cursor,use_t *use){
 }
 
 int execute_select(cursor_t * cursor,select_t *select){
+    /*
+    Order of execution...
+    1 FROM (including JOIN)
+    2 WHERE 
+    3 GROUP BY 
+    4 HAVING 
+    5 SELECT
+        5.1 SELECT list
+        5.2 DISTINCT
+    6 ORDER BY 
+    7 TOP / OFFSET-FETCH
+    */
     int data_set_count=0;
+    data_set_t **data_sets=0;
     if(select->from) ++data_set_count;
     data_set_count+=select->join_length;
 
+    // for now we will load everything in 1 set of sets
+    // phase 2 will be to cunk the data as needed
+    // to minimize the memory foot print Such as blocks of 1 MB
     if(data_set_count>0) {
-        data_set_t **data_sets=safe_malloc(sizeof(data_set_t),data_set_count);
+        data_sets=safe_malloc(sizeof(data_set_t),data_set_count);
 
         if(select->from){
             data_sets[0]=load_file(cursor,select->from);
@@ -73,14 +91,38 @@ int execute_select(cursor_t * cursor,select_t *select){
                 }
             }
         }
+    }
+
+    
+    // make result data set
+
+    //loop through from and joins
+    // only add rows that pass WHERE, then JOIN ON
+    int row_count=0;
+    char ** columns=get_column_list(select->columns,select->column_length);
+    data_set_t *results=new_data_set(columns,select->column_length,row_count);
+
+
+
+    // free data sets
+    if(data_set_count>0) {
+        //ok we have the data we need. clear out the loaded data sets
         for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
         free(data_sets);
     }
-    
     return 1;
 }
 
-
+char ** get_column_list(data_column_t *columns,int length){
+    data_column_t *temp_data_column=columns;
+    char **column_list=(char**)safe_malloc(sizeof(char*),length);
+    long index=0;
+    while (temp_data_column){
+        column_list[index]=strdup(temp_data_column->object);
+        temp_data_column=temp_data_column->next;
+        ++index;
+    }    
+}
 
 range_t *get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {
@@ -313,3 +355,28 @@ int lock_file(char *file){
     return 1;
 }
 
+
+ data_set_t *new_data_set(char **columns,int column_count,int row_count){
+
+    //allocate dataset main container
+    data_set_t * data_set=(data_set_t*)safe_malloc(sizeof(data_set_t),1);
+
+    //update data set and allocate row structure
+    data_set->row_length=row_count;
+
+    // init the row pointer lookup table
+    data_set->rows=(row_t**)safe_malloc(sizeof(row_t),row_count);
+
+    // update the max number of columns 
+    data_set->column_length=column_count;
+
+    // init the column pointer lookup table
+    data_set->columns=(char**)safe_malloc(sizeof(char*),column_count);
+
+    // copy column names for defined columns
+    for(int i=0;i<column_count;i++){
+        data_set->columns[i]=strdup(columns[i]);
+    }
+
+    return data_set;
+}
