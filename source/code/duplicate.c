@@ -108,7 +108,7 @@ row_t *duplicate_dataset_row(row_t *row){
     return new_row;
 }
 
-
+data_set_t *duplicate_data_set(data_set_t *data_set){
     data_set_t *new_data_set=0;
     if(data_set){
         new_data_set=safe_malloc(sizeof(data_set),1);
