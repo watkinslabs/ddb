@@ -198,7 +198,7 @@ int free_cursor(cursor_t *cursor){
     if(cursor->tables)          free_table_def(cursor->tables);
     if(cursor->active_table)    cursor->active_table=0;
     if(cursor->active_database) free(cursor->active_database);
-    
+    if(cursor->results)         free_data_set(cursor->results);
     if(cursor) free(cursor);
     return 1;
 }
