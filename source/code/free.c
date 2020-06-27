@@ -33,6 +33,18 @@ int free_data_columns(data_column_t *columns){
     return 1;
 }
 
+int free_column_list(char ** columns,int length) {
+    if(columns) {
+        for(int i=0;i<length;i++){
+            if(columns[i]){
+                free(columns[i]);
+            }
+        }
+        free(columns);
+    }
+    return 1;
+}
+
 int free_data_set(data_set_t *data_set){
     if(data_set){
         if(data_set->rows) {

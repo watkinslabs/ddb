@@ -110,7 +110,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     char ** columns=get_column_list(select->columns,select->column_length);
     data_set_t *results=new_data_set(columns,select->column_length,row_count);
-
+    free_column_list(columns);
 
 
     // free data sets
