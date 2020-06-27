@@ -119,7 +119,7 @@ data_set_t *duplicate_data_set(data_set_t *data_set){
             new_data_set->rows=(row_t**)safe_malloc(sizeof(row_t*),data_set->row_length);
             
             for(int i=0;i<data_set->row_length;i++){
-                new_data_set->rows[i]=&duplicate_data_set_rows(data_set->rows[i]);
+                new_data_set->rows[i]=duplicate_data_set_row(data_set->rows[i]);
             }
         }
     }
