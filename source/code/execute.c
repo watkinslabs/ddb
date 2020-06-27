@@ -365,19 +365,25 @@ int lock_file(char *file){
     //update data set and allocate row structure
     data_set->row_length=row_count;
 
+    
     // init the row pointer lookup table
-    data_set->rows=(row_t**)safe_malloc(sizeof(row_t),row_count);
+    if(row_count>0) {
+        data_set->rows=(row_t**)safe_malloc(sizeof(row_t),row_count);
+    }
 
     // update the max number of columns 
     data_set->column_length=column_count;
 
     // init the column pointer lookup table
-    data_set->columns=(char**)safe_malloc(sizeof(char*),column_count);
-
-    // copy column names for defined columns
-    for(int i=0;i<column_count;i++){
-        data_set->columns[i]=strdup(columns[i]);
+    if(column_count>0){
+        data_set->columns=(char**)safe_malloc(sizeof(char*),column_count);
+    
+        // copy column names for defined columns
+        for(int i=0;i<column_count;i++){
+            data_set->columns[i]=strdup(columns[i]);
+        }
     }
+
 
     return data_set;
 }
