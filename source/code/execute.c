@@ -67,6 +67,34 @@ int execute_use(cursor_t *cursor,use_t *use){
     return 0;
 }
 
+
+int evaluate_expression(expression_t *expr){
+    expression_t *temp_expr=expr;
+
+    while(temp_expr) {
+
+        //we are doing something + - / * =
+        if(temp_expr->operator) {
+
+        }
+
+
+        temp_expr->in;
+        temp_expr->list;
+        temp_expr->mode;
+        temp_expr->identifier;
+        temp_expr->literal;
+        temp_expr->negative;
+        temp_expr->not;
+        temp_expr->not_in;
+        temp_expr->positive;
+
+
+        temp_expr=temp_expr->expression;
+    }
+
+}
+
 int execute_select(cursor_t * cursor,select_t *select){
     /*
     Order of execution...
@@ -113,9 +141,37 @@ int execute_select(cursor_t * cursor,select_t *select){
     free_column_list(columns,select->column_length);
 
 
-    for(long i=0;i<data_sets[0]->row_length;i++){
+    // MVP SIMPLE assignment..
+    // PHASE 2 LIKE IN % %
+    // PHASE 3 SUB QUERY
+    
+    if(select->where) {
+        expression_t *temp_expr=select->where;
 
-        
+        expression_t expresison1;
+/*
+        while(temp_expr) {
+            temp_expr->identifier;
+            temp_expr->in;
+            temp_expr->list;
+            temp_expr->literal;
+            temp_expr->mode;
+            temp_expr->negative;
+            temp_expr->not;
+            temp_expr->not_in;
+            temp_expr->operator;
+            temp_expr->positive;
+
+
+            temp_expr=temp_expr->expression;
+        }
+*/
+
+    /*for(long i=0;i<data_sets[0]->row_length;i++){
+
+
+    }*/
+
     }
     
 
