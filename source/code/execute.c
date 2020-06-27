@@ -111,13 +111,13 @@ int execute_select(cursor_t * cursor,select_t *select){
     char ** columns=get_column_list(select->columns,select->column_length);
     data_set_t *results=new_data_set(columns,select->column_length,row_count);
     free_column_list(columns,select->column_length);
+
     // free data sets
     if(data_set_count>0) {
         //ok we have the data we need. clear out the loaded data sets
         for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
         free(data_sets);
     }
-    free_data_set(results);
     return 1;
 }
 

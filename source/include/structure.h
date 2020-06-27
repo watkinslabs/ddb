@@ -119,7 +119,7 @@ typedef struct cursor_t{
     struct timespec       created;
     struct timespec       ended;
     //data_set_t          * data;
-    int                   data_length;
+    data_set_t          * results;
 }cursor_t;
 
 #define COLUMN_DATA       1
