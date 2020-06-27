@@ -94,7 +94,7 @@ char** duplicate_data_set_columns(char **columns,long length) {
     }
 }
 
-row_t *duplicate_dataset_row(row_t *row){
+row_t *duplicate_data_set_row(row_t *row){
     row_t *new_row=0;
     if(row) {
         if(row->column_length>0) {
@@ -119,7 +119,7 @@ data_set_t *duplicate_data_set(data_set_t *data_set){
             new_data_set->rows=(row_t**)safe_malloc(sizeof(row_t*),data_set->row_length);
             
             for(int i=0;i<data_set->row_length;i++){
-                new_data_set->rows[i]=&duplicate_data_set_row(data_set->rows[i]);
+                new_data_set->rows[i]=duplicate_data_set_row(data_set->rows[i]);
             }
         }
     }
