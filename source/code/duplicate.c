@@ -80,6 +80,52 @@ table_def_t *duplicate_table(table_def_t *table){
     return new_table;
 }
 
+char** duplicate_data_set_columns(char **columns,long length) {
+    if(columns){
+        // init pointer block
+        char **columns=(char**)safe_malloc(sizeof(char*),length);
+        for(long i=0;i<length;i++){
+            //duplicate individual string
+            columns[i]=strdup(columns[i]);
+        }
+        return columns;
+    } else {
+        return 0;
+    }
+}
+
+row_t *duplicate_dataset_row(row_t *row){
+    row_t *new_row=0;
+    if(row) {
+        if(row->column_length>0) {
+            new_row->columns=duplicate_data_set_columns(row->columns,row->column_length);
+        }
+        // init other vars.. could be a whitespace, comment, or error row
+        new_row->column_length=row->column_length;
+        new_row->column_type=row->column_type;
+        new_row->file_row=row->file_row;
+    }
+    return new_row;
+}
+
+data_set_t *duplicate_data_set(data_set_t *data_set){
+    data_set_t *new_data_set=0;
+    if(data_set){
+        new_data_set=safe_malloc(sizeof(data_set),1);
+        new_data_set->column_length=data_set->column_length;
+        new_data_set->row_length  =data_set->row_length;
+        new_data_set->columns     =duplicate_data_set_columns(data_set->columns,data_set->column_length);
+        if(data_set->rows && data_set->row_length>0){
+            new_data_set->rows=(row_t**)safe_malloc(sizeof(row_t*),data_set->row_length);
+            
+            for(int i=0;i<data_set->row_length;i++){
+                new_data_set->rows[i]=duplicate_data_set_rows(data_set->rows[i]);
+            }
+        }
+    }
+    
+    return new_data_set;
+}
 
 cursor_t * duplicate_cursor(cursor_t *cursor){
     cursor_t *new_cursor=0;
@@ -118,8 +164,7 @@ cursor_t * duplicate_cursor(cursor_t *cursor){
         new_cursor->created.tv_sec   =cursor->created.tv_sec;       
         new_cursor->ended.tv_nsec    =cursor->ended.tv_nsec;       
         new_cursor->ended.tv_sec     =cursor->ended.tv_sec;       
-        new_cursor->data_length      =cursor->data_length;;       
-
+        new_cursor->results          =duplicate_data_set(cursor->results);
     }
     return new_cursor;
 }
