@@ -270,6 +270,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         ++column_length;
         tmp_ptr=tmp_ptr->next;
     }
+    select->column_length=column_length;
 
     if(column_length==0) {
         err_msg=malloc(1024);
