@@ -1,3 +1,11 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
 #include "../include/errors.h"
 #include "../include/structure.h"
 #include "../include/debug.h"
@@ -114,15 +122,18 @@ int execute_select(cursor_t * cursor,select_t *select){
 }
 
 char ** get_column_list(data_column_t *columns,int length){
-    data_column_t *temp_data_column=columns;
-    char **column_list=(char**)safe_malloc(sizeof(char*),length);
-    long index=0;
-    while (temp_data_column){
-        column_list[index]=strdup(temp_data_column->object);
-        temp_data_column=temp_data_column->next;
-        ++index;
-    }    
-    return column_list;
+    if(length>0){
+        char **column_list=(char**)safe_malloc(sizeof(char*),length);
+        long index=0;
+        data_column_t *temp_data_column=columns;
+        while (temp_data_column){
+            column_list[index]=strdup(temp_data_column->object);
+            temp_data_column=temp_data_column->next;
+            ++index;
+        }    
+        return column_list;
+    }
+    return 0;
 }
 
 range_t *get_line(char *data,long *position,long fsize) {
@@ -326,16 +337,6 @@ data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
     }
     return 0;
 }
-
-
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 
 int lock_file(char *file){
     struct sockaddr_un sun;
