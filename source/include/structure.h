@@ -104,6 +104,24 @@ typedef struct use_t{
     char *database;
 } use_t;
 
+#define COLUMN_DATA       1
+#define COLUMN_COMMENT    2
+#define COLUMN_WHITESPACE 3
+
+typedef struct row_t{
+    char  **columns;
+    long    column_length;
+    int     column_type;
+    long    file_row;
+} row_t;
+
+typedef struct data_set_t{
+    char   ** columns;
+    long      column_length;
+    long      row_length;
+    row_t  ** rows;
+} data_set_t;
+
 
 typedef struct cursor_t{
     //struct * variables;
@@ -122,23 +140,6 @@ typedef struct cursor_t{
     data_set_t          * results;
 }cursor_t;
 
-#define COLUMN_DATA       1
-#define COLUMN_COMMENT    2
-#define COLUMN_WHITESPACE 3
-
-typedef struct row_t{
-    char  **columns;
-    long    column_length;
-    int     column_type;
-    long    file_row;
-} row_t;
-
-typedef struct data_set_t{
-    char   ** columns;
-    long      column_length;
-    long      row_length;
-    row_t  ** rows;
-} data_set_t;
 
 typedef struct range_t{
     long start;
