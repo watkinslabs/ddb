@@ -17,9 +17,9 @@
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''
 
-data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident);
-data_set_t * new_data_set(char **columns,int column_count,int row_count);
-char ** get_column_list(data_column_t *columns,int length);
+data_set_t  * load_file(cursor_t *cursor,identifier_t *table_ident);
+data_set_t  * new_data_set(char **columns,int column_count,int row_count);
+char       ** get_column_list(data_column_t *columns);
 
 /* Function: validate_create_table
  * -----------------------
@@ -122,19 +122,27 @@ int execute_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
-char ** get_column_list(data_column_t *columns,int length){
-    if(length>0){
-        char **column_list=(char**)safe_malloc(sizeof(char*),length);
-        long index=0;
-        data_column_t *temp_data_column=columns;
-        while (temp_data_column){
-            column_list[index]=strdup(temp_data_column->object);
-            temp_data_column=temp_data_column->next;
-            ++index;
-        }    
-        return column_list;
-    }
-    return 0;
+char ** get_column_list(data_column_t *columns){
+
+    long index=0;
+    data_column_t *temp_data_column=columns;
+    while (temp_data_column){
+        temp_data_column=temp_data_column->next;
+        ++index;
+    }    
+
+    if(index==0) return 0;
+    char **column_list=(char**)safe_malloc(sizeof(char*),index);
+    index=0;
+    temp_data_column=columns;
+    while (temp_data_column){
+        column_list[index]=strdup(temp_data_column->object);
+        temp_data_column=temp_data_column->next;
+        ++index;
+    }    
+
+
+    return column_list;
 }
 
 range_t *get_line(char *data,long *position,long fsize) {
