@@ -327,11 +327,17 @@ expression_t * process_expression(token_array_t *tokens,int *index){
             case TOKEN_SHORT_OR  :
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
-                                if(add_expr(expr,process_expression(tokens,index))){
-                                    expr->logical_operator=token;
+                                expression_t *expr2=process_expression(tokens,index);
+                                if(expr2){
+                                    if(add_expr(expr,expr2)){
+                                        expr->logical_operator=token;
+                                    } else {
+                                        --*index;
+                                    }
                                 } else {
                                     --*index;
                                 }
+
                                 break;
         } //end switch
     } //end if
