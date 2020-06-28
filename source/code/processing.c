@@ -342,6 +342,7 @@ expression_t * process_expression(token_array_t *tokens,int *index){
         } //end switch
     } //end if
 
+    printf("break\n");
     debug_expr(expr,10);
 
     return expr;
