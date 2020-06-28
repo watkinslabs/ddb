@@ -150,8 +150,8 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
     expression_t *temp_expr=0;
 
     expr=process_simple_expr(tokens,index);
-    if(expr)
-    debug_expr(expr,10);
+    //if(expr)
+    //debug_expr(expr,10);
     if(expr){
         int loop=1;
         while(loop) {
@@ -168,13 +168,9 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
                 case TOKEN_DIVIDE : 
                 case TOKEN_MODULUS :  ++*index;
                                     expression_t *expr2=process_simple_expr(tokens,index);
-                                    if(expr2) {
-                                        printf ("FOUND IT\n");
-                                    }
-                                    debug_expr(expr2,10);
+                                    //debug_expr(expr2,10);
                                     if(expr2) expr2->arithmetic_operator=operator;
                                     if(!add_expr(expr,expr2)){
-                                        printf("FAILED\n");
                                         --*index;
                                         loop=0;
                                     } 
