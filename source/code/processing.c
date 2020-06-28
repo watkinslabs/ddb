@@ -98,15 +98,14 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
     int mode=0;
     int position=*index;
     switch(token_at(tokens,*index)->type) {
-            case TOKEN_MINUS: mode=-1; ++*index; break;
-            case TOKEN_PLUS : mode= 1; ++*index; break;
+            case TOKEN_MINUS: mode=TOKEN_MINUS; ++*index; break;
+            case TOKEN_PLUS : mode=TOKEN_PLUS; ++*index; break;
     }
 
     token_t *litteral=process_litteral(tokens,index);
     if(litteral) {
         expr=safe_malloc(sizeof(expression_t),1);
-        if (mode== 1) expr->positive=1;
-        if (mode==-1) expr->negative=1;
+        if (mode!=0) expr->uinary_operator=mode;
         expr->literal=litteral;
         expr->mode=2;
         
@@ -125,8 +124,7 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
         identifier_t *ident=process_identifier(tokens,index);
         if(ident) {
             expr=safe_malloc(sizeof(expression_t),1);
-            if (mode== 1) expr->positive=1;
-            if (mode==-1) expr->negative=1;
+            if (mode!=0) expr->uinary_operator=mode;
             expr->mode=1;
             expr->identifier=ident;
         }
