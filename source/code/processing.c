@@ -180,6 +180,9 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
             }
         }
     }
+    if(expr)
+    debug_expr(expr,10);
+
     return expr;
 } // end func
 
