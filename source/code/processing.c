@@ -334,7 +334,7 @@ expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,in
  *          returns zero (NULL) otherwise
  */
 expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *index){
-    expression_t *temp_expr=1;
+    expression_t *temp_expr=0;
     expression_t *expr=0;
     int start_loop=1;
     // NOT
