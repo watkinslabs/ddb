@@ -174,6 +174,7 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
                                     debug_expr(expr2,10);
                                     if(expr2) expr2->arithmetic_operator=operator;
                                     if(!add_expr(expr,expr2)){
+                                        printf("FAILED\n");
                                         --*index;
                                         loop=0;
                                     } 
