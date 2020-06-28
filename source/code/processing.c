@@ -319,6 +319,9 @@ expression_t * process_expression(token_array_t *tokens,int *index){
     }
 
     expr=process_boolean_primary(tokens,index);
+    printf("BOL\n");
+    debug_expr(expr,10);
+
     if(expr) {
         expr->not=not;
         int token=token_at(tokens,*index)->type;
