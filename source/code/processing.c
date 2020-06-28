@@ -370,6 +370,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         } else {
             if(needs_expression==1){
                 needs_expression=0;
+                debug_expr(temp_expr,10);
                 if(!add_expr(expr,temp_expr)){
                     *index=pos;
                     return expr;
