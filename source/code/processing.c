@@ -167,7 +167,7 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
                 case TOKEN_MODULUS :  ++*index;
                                     expression_t *expr2=process_simple_expr(tokens,index);
                                     //debug_expr(expr2,10);
-                                    if(expr2) expr2->operator=operator;
+                                    if(expr2) expr2->arithmetic_operator=operator;
                                     if(!add_expr(expr,expr2)){
                                         --*index;
                                         loop=0;
