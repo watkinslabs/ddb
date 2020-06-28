@@ -47,6 +47,7 @@
     #define ERR_LIMIT_LENGTH_NEGATIVE               43
     #define ERR_LOCKING_ERROR                       44
     #define ERR_DATA_FETCH_ERROR                    45
+    #define ERR_EXPRESSION_MALFORMED                46
 
 #endif
 

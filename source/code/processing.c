@@ -105,10 +105,17 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
     token_t *litteral=process_litteral(tokens,index);
     if(litteral) {
         expr=safe_malloc(sizeof(expression_t),1);
-        if (mode== 1) expr->positive=1;
-        if (mode==-1) expr->negative=1;
-        expr->literal=litteral;
-        expr->mode=2;
+        switch(litteral->type){
+         case TOKEN_NUMERIC:
+            case TOKEN_HEX:
+            case TOKEN_BINARY:
+            case TOKEN_REAL:
+                            if (mode== 1) expr->positive=1;
+                            if (mode==-1) expr->negative=1;
+                            expr->literal=litteral;
+                            expr->mode=2;
+                            break;
+        }
     } else {
         identifier_t *ident=process_identifier(tokens,index);
         if(ident) {
@@ -119,7 +126,9 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
             expr->identifier=ident;
         }
     }
-
+    if(expr==0 && mode!=0) {
+        --*index;
+    }
    return expr;
 } // end func
 

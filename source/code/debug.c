@@ -79,6 +79,7 @@ char * vomit(int err_no){
         case ERR_LIMIT_LENGTH_NEGATIVE           : msg="limit length negative"; break;
         case ERR_LOCKING_ERROR                   : msg="could not achieve a lock on file"; break;
         case ERR_DATA_FETCH_ERROR                : msg="fetching data from file failed"; break;
+        case ERR_EXPRESSION_MALFORMED            : msg="expression is malformed"; break;
 
         default: msg="NO CLUE";
     }
