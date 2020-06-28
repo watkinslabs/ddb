@@ -155,6 +155,7 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
         int loop=1;
         while(loop) {
             int operator=token_at(tokens,*index)->type;
+            printf("%s\n",token_type(operator));
             switch(operator) {
                 case TOKEN_BIT_OR : 
                 case TOKEN_BIT_AND : 
