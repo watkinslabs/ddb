@@ -293,7 +293,7 @@ expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,in
     expression_t *expr=0;
     expr=process_predicate(cursor,tokens,index);
     if(expr){
-        token_t *temp_token=token_at(tokens,index);
+        token_t *temp_token=token_at(tokens,*index);
         if(temp_token==0) return 0;
         switch(temp_token->type) {
             case TOKEN_IS_NOT_NULL:
@@ -311,7 +311,7 @@ expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,in
                                     //debug_expr(expr2,10);
                                     if(expr2) expr2->comparison_operator=temp_token->type; 
                                     if(!add_expr(expr,expr2)){
-                                        token_t *temp_token2=token_at(tokens,index);
+                                        token_t *temp_token2=token_at(tokens,*index);
                                         if(temp_token2) {
                                             printf("WARNING %d %s %s\n",*index,token_type(temp_token2->type),temp_token2->value);
                                         } else {
