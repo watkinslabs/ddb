@@ -294,7 +294,7 @@ expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,in
     expr=process_predicate(cursor,tokens,index);
     if(expr){
         token_t *temp_token=token_at(tokens,*index);
-        if(temp_token==0) return 0;
+        if(temp_token==0) return expr;
         switch(temp_token->type) {
             case TOKEN_IS_NOT_NULL:
             case TOKEN_IS_NULL    : ++*index; expr->comparison_operator=temp_token->type; 
