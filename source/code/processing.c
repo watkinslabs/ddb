@@ -360,8 +360,8 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         } else {
             temp_expr=process_boolean_primary(cursor,tokens,index);
         }
-        printf("---EXPR\n");
-        debug_expr(temp_expr,10);
+        //printf("---EXPR\n");
+        //debug_expr(temp_expr,10);
 
         // nothing returned.. eject with curent list
         if(!temp_expr) {
@@ -374,11 +374,15 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                     *index=pos;
                     return expr;
                 }
+                debug_expr(expr,10);
+
             }
         }
         //continue;
         temp_token=token_at(tokens,*index);
-        if(temp_token==0) break;
+        if(temp_token==0) {
+            break;
+        }
         switch(temp_token->type) {
             case TOKEN_SHORT_AND :
             case TOKEN_SHORT_OR  :
