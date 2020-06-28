@@ -309,42 +309,60 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
  *          returns zero (NULL) otherwise
  */
 expression_t * process_expression(token_array_t *tokens,int *index){
+    expression_t *temp_expr=1;
     expression_t *expr=0;
     // NOT
     
     
-    int not=0;
-    switch(token_at(tokens,*index)->type) {
-            case TOKEN_NOT : ++*index; not=1; break;
-    }
 
-    expr=process_boolean_primary(tokens,index);
-    printf("BOL\n");
-    debug_expr(expr,10);
 
-    if(expr) {
-        expr->not=not;
+    int needs_expression=0;    
+    int pos=0;
+    while(temp_expr!=0) {
+        // check for aNOT clause
+        int not=0;
+        switch(token_at(tokens,*index)->type) {
+                case TOKEN_NOT : ++*index; not=1; break;
+        }
+
+        pos=*index;
+        // first run.. pull an expression store root
+        if(temp_expr==1) {
+            temp_expr=process_boolean_primary(tokens,index);
+            expr=temp_expr;
+        } else {
+            temp_expr=process_boolean_primary(tokens,index);
+        }
+
+
+        // nothing returned.. eject with curent list
+        if(!temp_expr) {
+            return expr;
+        } else {
+            if(needs_expression==1){
+                needs_expression=0;
+                if(!add_expr(expr,temp_expr)){
+                    *index=pos;
+                    return expr;
+                }
+            }
+        }
+
         int token=token_at(tokens,*index)->type;
         switch(token) {
             case TOKEN_SHORT_AND :
             case TOKEN_SHORT_OR  :
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
-                                expression_t *expr2=process_expression(tokens,index);
-                                if(expr2){
-                                    if(add_expr(expr,expr2)){
-                                        expr->logical_operator=token;
-                                    } else {
-                                        --*index;
-                                    }
-                                } else {
-                                    --*index;
-                                }
-
-                                break;
+                                  temp_expr->not=not;
+                                  temp_expr->logical_operator=token;
+                                  needs_expression=1;
+                                  break;
+            default: break;
         } //end switch
-    } //end if
 
+
+    }
     printf("break\n");
     debug_expr(expr,10);
 
