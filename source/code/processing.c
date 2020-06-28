@@ -297,7 +297,6 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
                                     break;
         }
     }
-    debug_expr(expr,10);
     return expr;
 } // end func
 
@@ -336,6 +335,8 @@ expression_t * process_expression(token_array_t *tokens,int *index){
                                 break;
         } //end switch
     } //end if
+
+    debug_expr(expr,10);
 
     return expr;
 } //end func
