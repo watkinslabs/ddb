@@ -346,20 +346,22 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         // check for aNOT clause
         int not=0;
         token_t *temp_token=token_at(tokens,*index);
-        if(temp_token==0) return expr;
+        if(temp_token==0) {
+            return expr;
+        }
        
         switch(temp_token->type) {
                 case TOKEN_NOT : ++*index; not=1; break;
         }
 
         pos=*index;
-        // first run.. pull an expression store root
+        // pull an expression 
+        temp_expr=process_boolean_primary(cursor,tokens,index);
+        
+        // first run..store root
         if(start_loop==1) {
-            temp_expr=process_boolean_primary(cursor,tokens,index);
             expr=temp_expr;
             start_loop=0;
-        } else {
-            temp_expr=process_boolean_primary(cursor,tokens,index);
         }
         //printf("---EXPR\n");
         //debug_expr(temp_expr,10);
