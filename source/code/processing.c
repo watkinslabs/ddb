@@ -346,7 +346,7 @@ expression_t * process_expression(token_array_t *tokens,int *index){
                 }
             }
         }
-        continue;
+        //continue;
         int token=token_at(tokens,*index)->type;
         switch(token) {
             case TOKEN_SHORT_AND :
