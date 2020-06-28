@@ -150,12 +150,13 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
     expression_t *temp_expr=0;
 
     expr=process_simple_expr(tokens,index);
-    
+    if(expr)
+    debug_expr(expr);
     if(expr){
         int loop=1;
         while(loop) {
             int operator=token_at(tokens,*index)->type;
-            printf("%s\n",token_type(operator));
+            //printf("%s\n",token_type(operator));
             switch(operator) {
                 case TOKEN_BIT_OR : 
                 case TOKEN_BIT_AND : 
