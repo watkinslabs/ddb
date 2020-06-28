@@ -342,7 +342,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
     int needs_expression=0;    
     int pos=0;
     while(1) {
-        printf("LOOP\n");
         // check for aNOT clause
         int not=0;
         token_t *temp_token=token_at(tokens,*index);
@@ -357,7 +356,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         pos=*index;
         // pull an expression 
         temp_expr=process_boolean_primary(cursor,tokens,index);
-        debug_expr(temp_expr,10);
+
         // first run..store root
         if(start_loop==1) {
             expr=temp_expr;
