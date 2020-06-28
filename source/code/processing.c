@@ -342,10 +342,11 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
     int needs_expression=0;    
     int pos=0;
     while(1) {
+        printf("LOOP\n");
         // check for aNOT clause
         int not=0;
         token_t *temp_token=token_at(tokens,*index);
-        if(temp_token==0) return 0;
+        if(temp_token==0) return expr;
        
         switch(temp_token->type) {
                 case TOKEN_NOT : ++*index; not=1; break;
@@ -365,9 +366,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
 
         // nothing returned.. eject with curent list
         if(!temp_expr) {
-            printf("NO EXPR\n");
-            debug_expr(expr,10);
-
             return expr;
         } else {
             if(needs_expression==1){
