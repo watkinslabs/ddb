@@ -76,7 +76,7 @@ int add_expr(expression_t *expression,expression_t *item){
         temp_expr_tail=temp_expr;
         temp_expr=temp_expr->expression;
     }
-    temp_expr->expression=item;
+    temp_expr_tail->expression=item;
     
     temp_expr=item;
     temp_expr_tail=item;
