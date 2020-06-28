@@ -309,8 +309,9 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
  *          returns zero (NULL) otherwise
  */
 expression_t * process_expression(token_array_t *tokens,int *index){
-    expression_t *temp_expr=1;
+    expression_t *temp_expr=0;
     expression_t *expr=0;
+    int start_loop=1;
     // NOT
     
     
@@ -327,9 +328,10 @@ expression_t * process_expression(token_array_t *tokens,int *index){
 
         pos=*index;
         // first run.. pull an expression store root
-        if(temp_expr==1) {
+        if(start_loop==1) {
             temp_expr=process_boolean_primary(tokens,index);
             expr=temp_expr;
+            start_loop=0;
         } else {
             temp_expr=process_boolean_primary(tokens,index);
         }
