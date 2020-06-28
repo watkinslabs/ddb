@@ -30,6 +30,7 @@ void set_error(cursor_t *cursor,int error_no,char *msg){
  */
 token_t * token_at(token_array_t *tokens,int index){
     if(valid_token_index(tokens,index)){
+        if(&tokens->array[index]==0) return 0;
         return &tokens->array[index];
     }
     return 0;
