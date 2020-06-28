@@ -172,6 +172,9 @@ void debug_expr(expression_t *expr,int depth){
         printf("%s Litteral: [%s] '%s'\n",pad,token_type(expr->literal->type),expr->literal->value);
     }
 
+    if(!expr->literal &&  !expr->identifier) {
+        printf("\n");
+    }
     //if(depth>0) free(pad);
     if(expr->expression) debug_expr(expr->expression,depth+1);
     //else printf("NUF \n");
