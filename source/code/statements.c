@@ -25,7 +25,9 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     
 
     // switch        
-    switch(token_at(tokens,*start)->type){
+    token_t *temp_token=token_at(tokens,*start);
+    if(temp_token==0) return 0;
+    switch(temp_token->type){
         case TOKEN_SELECT:  select=safe_malloc(sizeof(select_t),1);
                             select->distinct=0;
                             select->columns=0;
@@ -46,7 +48,12 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     }//end switch                
 
     // distinct
-    switch(token_at(tokens,*start)->type){
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        free_select(select);
+        return 0;
+    }
+    switch(temp_token->type){
         case TOKEN_DISTINCT: select->distinct=1;         
                              ++*start;
                              break;
@@ -63,7 +70,11 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     // everything after FROM is subordinant to FROM
     // no from.. then we are done;
     // from
-    switch(token_at(tokens,*start)->type){
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return select;
+    }
+    switch(temp_token->type){
         case TOKEN_FROM:     ++*start;
                             select->from=process_identifier(cursor,tokens,start);
                             select->alias=process_alias(cursor,tokens,start);
@@ -76,7 +87,11 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     loop=1;
     while(loop){
         join_t *join;
-        switch(token_at(tokens,*start)->type){
+        temp_token=token_at(tokens,*start);
+        if(temp_token==0) {
+            return select;
+        }
+        switch(temp_token->type){
             case TOKEN_JOIN:
             case TOKEN_LEFT_JOIN:
             case TOKEN_RIGHT_JOIN:
@@ -87,7 +102,13 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
                                         join_t *join=&select->join[select->join_length-1];
                                         join->identifier=process_identifier(cursor,tokens,start);
                                         join->alias=process_alias(cursor,tokens,start);
-                                        switch(token_at(tokens,*start)->type){
+                                        temp_token=token_at(tokens,*start);
+                                        if(temp_token==0) {
+                                            free_select(select);
+                                            return 0;
+                                        }
+
+                                        switch(temp_token->type){
                                             case TOKEN_ON: ++*start; 
                                                            join->expression=process_expression(cursor,tokens,start);
                                                            break;
@@ -102,7 +123,12 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     // where
     loop=1;
     while(loop){
-        switch(token_at(tokens,*start)->type){
+        temp_token=token_at(tokens,*start);
+        if(temp_token==0) {
+            return select;
+        }
+
+        switch(temp_token->type){
             case TOKEN_WHERE: ++*start;
                         select->where=process_expression(cursor,tokens,start);
                         break;
@@ -111,13 +137,21 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
         }
     }
 
-    switch(token_at(tokens,*start)->type){
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return select;
+    }
+    switch(temp_token->type){
         case TOKEN_GROUP_BY: ++*start; 
                                 select->group=process_group_column_list(cursor,tokens,start); 
                                 break;
     }
 
-    switch(token_at(tokens,*start)->type){
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return select;
+    }
+   switch(temp_token->type){
         case TOKEN_ORDER_BY: ++*start; 
                                 select->order=process_order_column_list(cursor,tokens,start); 
                                 break;
@@ -126,15 +160,30 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     // limit
     loop=1;
     while(loop){
-        switch(token_at(tokens,*start)->type){
-            case TOKEN_LIMIT_START: select->has_limit_start=1;
-                                    select->limit_start=atoi(token_at(tokens,*start)->value);
+        temp_token=token_at(tokens,*start);
+        if(temp_token==0) {
+            return select;
+        }
+        switch(temp_token->type){
+            case TOKEN_LIMIT_START: temp_token=token_at(tokens,*start);
+                                    if(temp_token==0) {
+                                        free_select(select);
+                                        return 0;
+                                    }
+                                    select->has_limit_start=1;
+                                    select->limit_start=atoi(temp_token->value);
                                     ++*start;
                                     break;
-            case TOKEN_LIMIT_LENGTH: select->has_limit_length=1;
-                                     select->limit_length=atoi(token_at(tokens,*start)->value);    
-                                     ++*start;
-                                     break;
+            case TOKEN_LIMIT_LENGTH:temp_token=token_at(tokens,*start);
+                                    if(temp_token==0) {
+                                        free_select(select);
+                                        return 0;
+                                    }
+            
+                                    select->has_limit_length=1;
+                                    select->limit_length=atoi(temp_token->value);    
+                                    ++*start;
+                                    break;
             default: loop=0; break;
         }//end switch
     }
@@ -153,7 +202,12 @@ table_def_t * process_create_table(cursor_t *cursor,token_array_t *tokens,int *s
    table_def_t *table_def=0;
    
     // required
-    switch(token_at(tokens,*start)->type){
+    token_t *temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return 0;
+    }
+
+    switch(temp_token->type){
         case TOKEN_CREATE_TABLE: ++*start; 
                                  table_def=safe_malloc(sizeof(table_def_t),1);
                                  break;
@@ -176,16 +230,30 @@ table_def_t * process_create_table(cursor_t *cursor,token_array_t *tokens,int *s
     }
 
     // required
-    if(token_at(tokens,*start)->type==TOKEN_FILE   && 
-       token_at(tokens,*start+1)->type==TOKEN_STRING) { 
-           ++*start; 
-           table_def->file= copy_token_value_at(tokens,*start); 
-           ++*start;
-       }
-    else {
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
         free_table_def(table_def); 
         return 0;
     }
+
+    if(temp_token->type==TOKEN_FILE){
+        temp_token=token_at(tokens,*start+1);
+        if(temp_token==0) {
+            free_table_def(table_def); 
+            return 0;
+        }
+
+        if(temp_token->type==TOKEN_STRING) { 
+            ++*start; 
+            table_def->file= copy_token_value_at(tokens,*start); 
+            ++*start;
+        }
+    } else {
+        // if its not FILE.. then its invalid
+        free_table_def(table_def); 
+        return 0;
+    }
+
     /*
     // optional
     if(token_at(tokens,*start)->type==TOKEN_REPO   && 
@@ -196,19 +264,47 @@ table_def_t * process_create_table(cursor_t *cursor,token_array_t *tokens,int *s
         }
 */
     // optional
-    if(token_at(tokens,*start)->type==TOKEN_COLUMN && 
-       token_at(tokens,*start+1)->type==TOKEN_STRING) { 
-           ++*start; 
-           table_def->column= copy_token_value_at(tokens,*start); 
-           ++*start;
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return table_def;
+    }
+    
+    if(temp_token->type==TOKEN_COLUMN) {
+        temp_token=token_at(tokens,*start+1);
+        if(temp_token==0) {
+            free_table_def(table_def); 
+            return 0;
+        }
+
+        if(temp_token->type==TOKEN_STRING) { 
+            ++*start; 
+            table_def->column= copy_token_value_at(tokens,*start); 
+            ++*start;
+        } else {
+            free_table_def(table_def); 
+            return 0;
         } // optional
+    }
 
     // optional
-    if(token_at(tokens,*start)->type==TOKEN_STRICT) {
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return table_def;
+    }
+    if(temp_token->type==TOKEN_STRICT) {
         ++*start;
         token_t *t1=token_at(tokens,*start);
-        if(t1->type==TOKEN_TRUE)  { table_def->strict=1; ++*start; }
-        else if(t1->type==TOKEN_FALSE) { table_def->strict=0; ++*start; } 
+        if(t1) {
+            if(t1->type==TOKEN_TRUE)  { table_def->strict=1; ++*start; }
+            else if(t1->type==TOKEN_FALSE) { table_def->strict=0; ++*start; } 
+            else {
+                free_table_def(table_def); 
+                return 0;
+            }
+        } else {
+            free_table_def(table_def); 
+            return 0;
+        }
     }
         
     return table_def;
@@ -226,7 +322,11 @@ use_t *process_use(cursor_t *cursor,token_array_t *tokens,int *start){
     use_t *use=0;
    
     // required
-    switch(token_at(tokens,*start)->type){
+    token_t *temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        return 0;
+    }
+    switch(temp_token->type){
         case TOKEN_USE: ++*start; 
                                  use=safe_malloc(sizeof(use_t),1);
                                  break;
@@ -237,7 +337,13 @@ use_t *process_use(cursor_t *cursor,token_array_t *tokens,int *start){
 
     // SOURCE is a reqwite by the lexer. while not perfect its always accurate. 
     // it should be qualifier...
-    switch(token_at(tokens,*start)->type) {
+    temp_token=token_at(tokens,*start);
+    if(temp_token==0) {
+        free(use);
+        return 0;
+    }
+
+    switch(temp_token->type) {
         case TOKEN_SOURCE:  use->database=copy_token_value_at(tokens,*start);
                             ++*start;
                             break;
