@@ -367,13 +367,9 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
 
         // nothing returned.. eject with curent list
         if(!temp_expr) {
-            printf("RETURN\n");
             return expr;
         }
         if(start_loop!=1){
-            printf ("BEFORE ADD\n");
-            debug_expr(temp_expr,10);
-
             if(!add_expr(expr,temp_expr)){
                 *index=pos;
                 return expr;
@@ -402,9 +398,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
 
         start_loop=0;
     }
-    printf("break\n");
-    debug_expr(expr,10);
-
     return expr;
 } //end func
 
