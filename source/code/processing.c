@@ -361,7 +361,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         // first run..store root
         if(start_loop==1) {
             expr=temp_expr;
-            start_loop=0;
         }
         //printf("---EXPR\n");
         //debug_expr(temp_expr,10);
@@ -369,13 +368,12 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         // nothing returned.. eject with curent list
         if(!temp_expr) {
             return expr;
-        } else {
-            if(needs_expression==1){
-                needs_expression=0;
-                if(!add_expr(expr,temp_expr)){
-                    *index=pos;
-                    return expr;
-                }
+        }
+        if(start_loop!=1){
+
+            if(!add_expr(expr,temp_expr)){
+                *index=pos;
+                return expr;
             }
         }
         //continue;
@@ -389,7 +387,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
                                   temp_expr->not=not;
-                                  needs_expression=1;
                                   expression_t *temp_expr2=safe_malloc(sizeof(expression_t),1);
                                   temp_expr2->mode=6;
                                   temp_expr2->logical_operator=temp_token->type;
@@ -398,7 +395,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
             default: break;
         } //end switch
 
-
+        start_loop=0;
     }
     printf("break\n");
     debug_expr(expr,10);
