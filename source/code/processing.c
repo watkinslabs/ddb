@@ -357,7 +357,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         pos=*index;
         // pull an expression 
         temp_expr=process_boolean_primary(cursor,tokens,index);
-        
+        debug_expr(temp_expr,10);
         // first run..store root
         if(start_loop==1) {
             expr=temp_expr;
