@@ -373,8 +373,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                 *index=pos;
                 return expr;
             }
-            printf ("AFTER ADD\n");
-            debug_expr(expr,10);
         }
         //continue;
         temp_token=token_at(tokens,*index);
