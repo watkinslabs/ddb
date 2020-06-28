@@ -313,7 +313,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
                                     if(!add_expr(expr,expr2)){
                                         token_t *temp_token2=token_at(tokens,index);
                                         if(temp_token2) {
-                                            printf("WARNING %d %s %s\n",*index,token_type(token_at(temp_token2->type)),temp_token2->value);
+                                            printf("WARNING %d %s %s\n",*index,token_type(temp_token2->type),temp_token2->value);
                                         } else {
                                             return 0;
                                         }
