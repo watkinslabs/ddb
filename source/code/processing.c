@@ -191,7 +191,6 @@ expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *inde
             }
         }
     }
-    debug_expr(expr,10);
     return expr;
 } // end func
 
@@ -386,6 +385,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                                   temp_expr->not=not;
                                   temp_expr->logical_operator=temp_token->type;
                                   needs_expression=1;
+                                  printf("NEEDS\n");
                                   break;
             default: break;
         } //end switch
