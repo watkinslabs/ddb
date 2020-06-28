@@ -387,7 +387,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                                   temp_expr->not=not;
                                   temp_expr->logical_operator=temp_token->type;
                                   needs_expression=1;
-                                  printf("NEEDS\n");
+                                  printf("NEEDS %s\n",token_type(temp_token->type));
                                   break;
             default: break;
         } //end switch
