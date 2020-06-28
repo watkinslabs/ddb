@@ -130,9 +130,10 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
         temp_expr->not_in;
         temp_expr->positive;
 
-*/
+
         temp_expr=temp_expr->expression;
     }
+    */
 
 }
 
