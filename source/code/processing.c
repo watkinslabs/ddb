@@ -278,7 +278,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
         int token=token_at(tokens,*index)->type;
         switch(token) {
             case TOKEN_IS_NOT_NULL:
-            case TOKEN_IS_NULL    : ++*index; expr->comparitor=token; break;
+            case TOKEN_IS_NULL    : ++*index; expr->comparison_operator=token; break;
             
             case TOKEN_NULL_EQ    : 
             case TOKEN_LESS_EQ    :
@@ -289,7 +289,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
             case TOKEN_ASSIGNMENT : ++*index;
                                     expression_t *expr2=process_predicate(tokens,index);
                                     //debug_expr(expr2,10);
-                                    if(expr2) expr2->comparitor=token; 
+                                    if(expr2) expr2->comparison_operator=token; 
                                     if(add_expr(expr,expr2)){
 
                                     } else { 
