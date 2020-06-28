@@ -114,7 +114,7 @@ expression_t * process_simple_expr(cursor_t *cursor,token_array_t *tokens,int *i
             case TOKEN_PLUS : mode=TOKEN_PLUS; ++*index; break;
     }
 
-    token_t *litteral=process_litteral(tokens,index);
+    token_t *litteral=process_litteral(cursor,tokens,index);
     if(litteral) {
         expr=safe_malloc(sizeof(expression_t),1);
         if (mode!=0) expr->uinary_operator=mode;
@@ -133,7 +133,7 @@ expression_t * process_simple_expr(cursor_t *cursor,token_array_t *tokens,int *i
             }
         }
     } else {
-        identifier_t *ident=process_identifier(tokens,index);
+        identifier_t *ident=process_identifier(cursor,tokens,index);
         if(ident) {
             expr=safe_malloc(sizeof(expression_t),1);
             if (mode!=0) expr->uinary_operator=mode;
@@ -161,7 +161,7 @@ expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *inde
     expression_t *expr=0;
     expression_t *temp_expr=0;
 
-    expr=process_simple_expr(tokens,index);
+    expr=process_simple_expr(cursor,tokens,index);
     //if(expr)
     //debug_expr(expr,10);
     if(expr){
@@ -179,7 +179,7 @@ expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *inde
                 case TOKEN_MULTIPLY :
                 case TOKEN_DIVIDE : 
                 case TOKEN_MODULUS :  ++*index;
-                                    expression_t *expr2=process_simple_expr(tokens,index);
+                                    expression_t *expr2=process_simple_expr(cursor,tokens,index);
                                     //debug_expr(expr2,10);
                                     if(expr2) expr2->arithmetic_operator=temp_token->value;
                                     if(!add_expr(expr,expr2)){
@@ -220,7 +220,7 @@ expression_t * process_expr_list(cursor_t *cursor,token_array_t *tokens,int *ind
     expression_t *temp_expr=0;    
     while(loop){
         
-        temp_expr=process_simple_expr(tokens,index);
+        temp_expr=process_simple_expr(cursor,tokens,index);
         if(temp_expr==0) {
             break;
         }
@@ -259,7 +259,7 @@ expression_t * process_expr_list(cursor_t *cursor,token_array_t *tokens,int *ind
 expression_t * process_predicate(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
 
-    expr=process_bit_expr(tokens,index);
+    expr=process_bit_expr(cursor,tokens,index);
 
    /*
     if(expr){
@@ -268,7 +268,7 @@ expression_t * process_predicate(cursor_t *cursor,token_array_t *tokens,int *ind
             case TOKEN_IN     : mode=1;  
             case TOKEN_NOT_IN : mode=-1; 
                                 ++*index;
-                                  if(add_expr(expr,process_expr_list(tokens,index))){
+                                  if(add_expr(expr,process_expr_list(cursor,tokens,index))){
                                       if(mode== 1) expr->not_in=1;
                                       else if(mode==-1) expr->in=1;
                                   } else {
@@ -291,7 +291,7 @@ expression_t * process_predicate(cursor_t *cursor,token_array_t *tokens,int *ind
  */
 expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
-    expr=process_predicate(tokens,index);
+    expr=process_predicate(cursor,tokens,index);
     if(expr){
         token_t *temp_token=token_at(tokens,index);
         if(temp_token==0) return 0;
@@ -307,7 +307,7 @@ expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,in
             case TOKEN_GREATER    :
             case TOKEN_NOT_EQ     :
             case TOKEN_ASSIGNMENT : ++*index;
-                                    expression_t *expr2=process_predicate(tokens,index);
+                                    expression_t *expr2=process_predicate(cursor,tokens,index);
                                     //debug_expr(expr2,10);
                                     if(expr2) expr2->comparison_operator=temp_token->type; 
                                     if(!add_expr(expr,expr2)){
@@ -354,11 +354,11 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         pos=*index;
         // first run.. pull an expression store root
         if(start_loop==1) {
-            temp_expr=process_boolean_primary(tokens,index);
+            temp_expr=process_boolean_primary(cursor,tokens,index);
             expr=temp_expr;
             start_loop=0;
         } else {
-            temp_expr=process_boolean_primary(tokens,index);
+            temp_expr=process_boolean_primary(cursor,tokens,index);
         }
 
 
@@ -411,7 +411,7 @@ expression_t * process_group_column_list(cursor_t *cursor,token_array_t *tokens,
     identifier_t *ident=0;
     int loop=1;
     while(loop) {
-        ident=process_identifier(tokens,index);
+        ident=process_identifier(cursor,tokens,index);
         
         if(ident) {
             expr2=safe_malloc(sizeof(expression_t),1); 
@@ -454,7 +454,7 @@ expression_t * process_order_column_list(cursor_t *cursor,token_array_t *tokens,
     identifier_t *ident=0;
     int loop=1;
     while(loop) {
-        ident=process_identifier(tokens,index);
+        ident=process_identifier(cursor,tokens,index);
         if(ident) {
             token_t *temp_token=token_at(tokens,*index);
             if(temp_token==0) {
@@ -530,19 +530,19 @@ data_column_t * process_select_list(cursor_t *cursor,token_array_t *tokens,int *
             case TOKEN_NULL: 
                                     value=copy_token_value_at(tokens,*index);
                                     ++*index;
-                                    alias=process_alias(tokens,index);
+                                    alias=process_alias(cursor,tokens,index);
                                     columns=add_data_column(columns,token->type,value,alias,ordinal);
                                     ++ordinal;
                                     break;
 
-            case TOKEN_QUALIFIER:   ident=process_identifier(tokens,index);
-                                    alias=process_alias(tokens,index);
+            case TOKEN_QUALIFIER:   ident=process_identifier(cursor,tokens,index);
+                                    alias=process_alias(cursor,tokens,index);
                                     columns=add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
 
-            case TOKEN_SOURCE:      ident=process_identifier(tokens,index);
-                                    alias=process_alias(tokens,index);
+            case TOKEN_SOURCE:      ident=process_identifier(cursor,tokens,index);
+                                    alias=process_alias(cursor,tokens,index);
                                     columns=add_data_column(columns,TOKEN_IDENTIFIER,ident,alias,ordinal);
                                     ++ordinal;
                                     break;
