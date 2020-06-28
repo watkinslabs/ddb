@@ -105,21 +105,21 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
     token_t *litteral=process_litteral(tokens,index);
     if(litteral) {
         expr=safe_malloc(sizeof(expression_t),1);
-        switch(litteral->type){
-         case TOKEN_NUMERIC:
-            case TOKEN_HEX:
-            case TOKEN_BINARY:
-            case TOKEN_REAL:
-                            if (mode== 1) expr->positive=1;
-                            if (mode==-1) expr->negative=1;
-                            expr->literal=litteral;
-                            expr->mode=2;
-                            break;
-            default:
-                            *index=position;
-                            free(expr);
-                            return 0;
-
+        if (mode== 1) expr->positive=1;
+        if (mode==-1) expr->negative=1;
+        expr->literal=litteral;
+        expr->mode=2;
+        
+        if (mode!=0) {
+            switch(litteral->type){
+                case TOKEN_NUMERIC:
+                case TOKEN_HEX:
+                case TOKEN_BINARY:
+                case TOKEN_REAL: break;
+                default:  *index=position+1;
+                        free(expr);
+                        return 0;
+            }
         }
     } else {
         identifier_t *ident=process_identifier(tokens,index);
