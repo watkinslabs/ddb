@@ -17,7 +17,7 @@ SELECT
     JOIN                 mock3 as t3 ON t3.iid=1 
     
     WHERE 
-             t1.first='bob'
+             t1.first=-'bob'
         or   1  or 2
         or   t1.id=1.54
         and  t2.id=0x04F 

@@ -68,14 +68,39 @@ int execute_use(cursor_t *cursor,use_t *use){
 }
 
 
-int evaluate_expression(expression_t *expr){
+//get the value of the item at this location in the dataset
+char *get_value_at(cursor_t *cursor,identifier_t *iden){
+    char *value=0;
+
+    return value;
+}
+
+int evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
 
     while(temp_expr) {
-
+        long   lvalue=0;
+        float  fvalue=0;
         //we are doing something + - / * =
         if(temp_expr->operator) {
+            // literal (lets just make this a token code)
+            if(temp_expr->mode==1) {
+                char *value=get_value_at(cursor,temp_expr->identifier);
+            }
+            // identifier (lets just make this a token code)
+            if(temp_expr->mode==2) {
+                char *value=get_value_at(cursor,temp_expr->identifier);
+            }
 
+            switch (temp_expr->operator){
+                case TOKEN_MINUS    : break;
+                case TOKEN_PLUS     : break;
+                case TOKEN_MULTIPLY : break;
+                case TOKEN_DIVIDE   : break;
+                case TOKEN_MODULUS  : break;
+             
+                default:  printf ("%s",token_type(temp_expr->operator));      break;
+            }
         }
 
 
