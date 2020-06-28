@@ -297,7 +297,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
         if(temp_token==0) return 0;
         switch(temp_token->type) {
             case TOKEN_IS_NOT_NULL:
-            case TOKEN_IS_NULL    : ++*index; expr->comparison_operator=token; 
+            case TOKEN_IS_NULL    : ++*index; expr->comparison_operator=temp_token->type; 
                                     break;
             
             case TOKEN_NULL_EQ    : 
