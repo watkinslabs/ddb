@@ -191,6 +191,7 @@ expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *inde
             }
         }
     }
+    debug_expr(expr,10);
     return expr;
 } // end func
 
