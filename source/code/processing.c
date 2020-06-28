@@ -17,7 +17,10 @@
  */
 char * process_alias(token_array_t *tokens,int *index){
     char *alias=0;
-    switch(token_at(tokens,*index)->type) {
+    token_t *temp_token=token_at(tokens,*index);
+    if(temp_token==0) return 0;
+
+    switch(temp_token->type) {
         case TOKEN_ALIAS: alias=copy_token_value_at(tokens,*index); 
                           ++*index; break;
     }
@@ -37,7 +40,10 @@ char * process_alias(token_array_t *tokens,int *index){
  */
 identifier_t * process_identifier(token_array_t *tokens,int *index){
     identifier_t *ident=0;
-    switch(token_at(tokens,*index)->type) {
+    token_t *temp_token=token_at(tokens,*index);
+    if(temp_token==0) return 0;
+    
+    switch(temp_token->type) {
         case TOKEN_QUALIFIER:   ident=safe_malloc(sizeof(identifier_t),1);
                                 ident->qualifier=copy_token_value_at(tokens,*index);
                                 ident->source   =copy_token_value_at(tokens,*index+1);
@@ -67,6 +73,8 @@ identifier_t * process_identifier(token_array_t *tokens,int *index){
  */
 token_t * process_litteral(token_array_t *tokens,int *index){
     token_t *token=token_at(tokens,*index);
+    if(token==0) return 0;
+
     token_t *temp_token=0;
     switch(token->type) {
         case TOKEN_NULL   :
@@ -97,7 +105,11 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
     expression_t *expr=0;
     int mode=0;
     int position=*index;
-    switch(token_at(tokens,*index)->type) {
+
+    token_t *temp_token=token_at(tokens,*index);
+    if(temp_token==0) return expr;
+
+    switch(temp_token->type) {
             case TOKEN_MINUS: mode=TOKEN_MINUS; ++*index; break;
             case TOKEN_PLUS : mode=TOKEN_PLUS; ++*index; break;
     }
@@ -155,8 +167,9 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
     if(expr){
         int loop=1;
         while(loop) {
-            int operator=token_at(tokens,*index)->type;
-            switch(operator) {
+            token_t *temp_token=token_at(tokens,*index);
+            if(temp_token==0) return expr;
+            switch(temp_token->type) {
                 case TOKEN_BIT_OR : 
                 case TOKEN_BIT_AND : 
                 case TOKEN_SHIFT_LEFT :
@@ -168,14 +181,13 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
                 case TOKEN_MODULUS :  ++*index;
                                     expression_t *expr2=process_simple_expr(tokens,index);
                                     //debug_expr(expr2,10);
-                                    if(expr2) expr2->arithmetic_operator=operator;
+                                    if(expr2) expr2->arithmetic_operator=temp_token->value;
                                     if(!add_expr(expr,expr2)){
                                         --*index;
                                         loop=0;
                                     } 
                                     break;
                 default: loop=0; break;
-
             }
         }
     }
@@ -196,7 +208,10 @@ expression_t * process_expr_list(token_array_t *tokens,int *index){
     expression_t *expr=0;
     int start_point=*index;
 
-    switch(token_at(tokens,*index)->type) {
+    token_t *temp_token=token_at(tokens,*index);
+    if(temp_token==0) return 0;
+
+    switch(temp_token->type) {
         case TOKEN_PAREN_LEFT: ++*index;
         default: return 0;
     }
@@ -213,14 +228,18 @@ expression_t * process_expr_list(token_array_t *tokens,int *index){
         temp_expr->list=1;
         add_expr(expr,temp_expr);
         
+        temp_token=token_at(tokens,*index);
+        if(temp_token==0) return 0;
 
-        switch(token_at(tokens,*index)->type) {
+        switch(temp_token->type) {
             case TOKEN_LIST_DELIMITER: ++*index;
             default: loop=0;
         }
     }
 
-    switch(token_at(tokens,*index)->type) {
+    temp_token=token_at(tokens,*index);
+    if(temp_token==0) return 0;
+    switch(temp_token->type) {
         case TOKEN_PAREN_RIGHT: ++*index;
         default: *index=start_point; free_expression(expr); return 0;
     }
@@ -274,8 +293,9 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
     expression_t *expr=0;
     expr=process_predicate(tokens,index);
     if(expr){
-        int token=token_at(tokens,*index)->type;
-        switch(token) {
+        token_t *temp_token=token_at(tokens,*index);
+        if(temp_token==0) return 0;
+        switch(temp_token->type) {
             case TOKEN_IS_NOT_NULL:
             case TOKEN_IS_NULL    : ++*index; expr->comparison_operator=token; 
                                     break;
@@ -289,7 +309,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
             case TOKEN_ASSIGNMENT : ++*index;
                                     expression_t *expr2=process_predicate(tokens,index);
                                     //debug_expr(expr2,10);
-                                    if(expr2) expr2->comparison_operator=token; 
+                                    if(expr2) expr2->comparison_operator=temp_token->type; 
                                     if(!add_expr(expr,expr2)){
                                         printf("WARNING %d %s %s\n",*index,token_type(token_at(tokens,*index)->type),token_at(tokens,*index)->value);
                                         --*index;
@@ -319,7 +339,10 @@ expression_t * process_expression(token_array_t *tokens,int *index){
     while(temp_expr!=0) {
         // check for aNOT clause
         int not=0;
-        switch(token_at(tokens,*index)->type) {
+        token_t *temp_token=token_at(tokens,*index);
+        if(temp_token==0) return 0;
+       
+        switch(temp_token->type) {
                 case TOKEN_NOT : ++*index; not=1; break;
         }
 
@@ -347,14 +370,15 @@ expression_t * process_expression(token_array_t *tokens,int *index){
             }
         }
         //continue;
-        int token=token_at(tokens,*index)->type;
-        switch(token) {
+        temp_token=token_at(tokens,*index);
+        if(temp_token==0) break;
+        switch(temp_token->type) {
             case TOKEN_SHORT_AND :
             case TOKEN_SHORT_OR  :
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
                                   temp_expr->not=not;
-                                  temp_expr->logical_operator=token;
+                                  temp_expr->logical_operator=temp_token->type;
                                   needs_expression=1;
                                   break;
             default: break;
