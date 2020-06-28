@@ -181,7 +181,7 @@ expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *inde
                 case TOKEN_MODULUS :  ++*index;
                                     expression_t *expr2=process_simple_expr(cursor,tokens,index);
                                     //debug_expr(expr2,10);
-                                    if(expr2) expr2->arithmetic_operator=temp_token->value;
+                                    if(expr2) expr2->arithmetic_operator=temp_token->type;
                                     if(!add_expr(expr,expr2)){
                                         --*index;
                                         loop=0;
