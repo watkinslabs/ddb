@@ -90,7 +90,7 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
     int EVAL_TYPE=EVAL_LONG; 
 
     while(temp_expr) {
-        
+        /*
         // so we have a value and we want 
         if(temp_expr->comparitor) {
 
@@ -131,7 +131,7 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
         temp_expr->positive;
 
 
-        temp_expr=temp_expr->expression;
+        temp_expr=temp_expr->expression;*/
     }
 
 
