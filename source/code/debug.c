@@ -174,7 +174,7 @@ void debug_expr(expression_t *expr,int depth){
 
     //if(depth>0) free(pad);
     if(expr->expression) debug_expr(expr->expression,depth+1);
-    else printf("NUF \n");
+    //else printf("NUF \n");
 }
 
 /* Function: debug_identifier
