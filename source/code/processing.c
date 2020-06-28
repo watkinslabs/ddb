@@ -96,7 +96,7 @@ token_t * process_litteral(token_array_t *tokens,int *index){
 expression_t * process_simple_expr(token_array_t *tokens,int *index){
     expression_t *expr=0;
     int mode=0;
-
+    int position=*index;
     switch(token_at(tokens,*index)->type) {
             case TOKEN_MINUS: mode=-1; ++*index; break;
             case TOKEN_PLUS : mode= 1; ++*index; break;
@@ -115,6 +115,11 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
                             expr->literal=litteral;
                             expr->mode=2;
                             break;
+            default:
+                            *index=position;
+                            free(expr);
+                            return 0;
+
         }
     } else {
         identifier_t *ident=process_identifier(tokens,index);
