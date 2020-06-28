@@ -311,7 +311,12 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
                                     //debug_expr(expr2,10);
                                     if(expr2) expr2->comparison_operator=temp_token->type; 
                                     if(!add_expr(expr,expr2)){
-                                        printf("WARNING %d %s %s\n",*index,token_type(token_at(tokens,*index)->type),token_at(tokens,*index)->value);
+                                        token_t *temp_token2=token_at(tokens,index);
+                                        if(temp_token2) {
+                                            printf("WARNING %d %s %s\n",*index,token_type(token_at(temp_token2->type)),temp_token2->value);
+                                        } else {
+                                            return 0;
+                                        }
                                         --*index;
                                     }
                                     break;
@@ -418,11 +423,15 @@ expression_t * process_group_column_list(token_array_t *tokens,int *index){
             else {
                 add_expr(expr,expr2);
             }
-
-            if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
+            token_t *temp_token=token_at(tokens,*index);
+            if(temp_token==0){
                 loop=0;
             } else {
-                ++*index;
+                if(temp_token->type!=TOKEN_LIST_DELIMITER) {
+                    loop=0;
+                } else {
+                    ++*index;
+                }
             }
         } else {
             loop=0;
@@ -447,12 +456,16 @@ expression_t * process_order_column_list(token_array_t *tokens,int *index){
     while(loop) {
         ident=process_identifier(tokens,index);
         if(ident) {
-            int token=token_at(tokens,*index)->type;
-            switch(token){
+            token_t *temp_token=token_at(tokens,*index);
+            if(temp_token==0) {
+                return expr;
+            }
+            
+            switch(temp_token->type){
                 case TOKEN_ASC:  
                 case TOKEN_DESC: ++*index; 
                                 expr2=safe_malloc(sizeof(expression_t),1); 
-                                expr2->direction=token;
+                                expr2->direction=temp_token->type;
                                 expr2->identifier=ident;
                                 expr2->mode=EXPRESSION_ORDER_BY;
                                 if(expr==0) {
@@ -473,8 +486,14 @@ expression_t * process_order_column_list(token_array_t *tokens,int *index){
                                     add_expr(expr,expr2);
                                 }
                                 break;
-            }//end switch            
-            if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
+            }//end switch
+            
+            temp_token=token_at(tokens,*index);
+            if(temp_token==0) {
+                return expr;
+            }
+            
+            if(temp_token->type!=TOKEN_LIST_DELIMITER) {
                 loop=0;
             } else {
                 ++*index;
@@ -499,6 +518,7 @@ data_column_t * process_select_list(token_array_t *tokens,int *index){
     identifier_t * ident  =0;
     while(loop){
         token=token_at(tokens,*index);
+        if(token==0) return columns;
 
         switch(token->type){
             // litterals
@@ -529,8 +549,12 @@ data_column_t * process_select_list(token_array_t *tokens,int *index){
             default: loop=0; break;
         }
         
-
-        switch(token_at(tokens,*index)->type){
+        token=token_at(tokens,*index);
+        if(token==0) {
+            return columns;
+        }
+            
+        switch(token->type){
             case TOKEN_LIST_DELIMITER: ++*index;
                                        break;
             default: loop=0;
@@ -550,7 +574,12 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
 
     data_column_t * col=0;
     int ordinal=0;
-    switch(token_at(tokens,*index)->type) {
+    token_t *temp_token=token_at(tokens,*index);
+    if(temp_token==0) {
+        return 0;
+    }
+
+    switch(temp_token->type) {
         case TOKEN_PAREN_LEFT: ++*index; 
                                break;
         default: return 0;
@@ -559,17 +588,20 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
     int loop=1;
     while(loop) {
         token_t *column=0;
-        if(token_at(tokens,*index)->type==TOKEN_STRING) {
+        temp_token=token_at(tokens,*index);
+        if(temp_token==0) break;
+        if(temp_token->type==TOKEN_STRING) {
             column=duplicate_token(&tokens->array[*index]);
             ++*index;
         }
         if(column) {
-            
             col=add_data_column(col,column->type,column->value,0,ordinal);
             //freeing the wrapper but keeping the value... freed later by other func
             free(column);
             ++ordinal;
-            if(token_at(tokens,*index)->type!=TOKEN_LIST_DELIMITER) {
+            temp_token=token_at(tokens,*index);
+            if(temp_token==0) break;
+            if(temp_token->type!=TOKEN_LIST_DELIMITER) {
                 loop=0;
             } else {
                 ++*index;
@@ -578,11 +610,12 @@ data_column_t * process_column_list(token_array_t *tokens,int *index){
             loop=0;
         }
     }
-    switch(token_at(tokens,*index)->type) {
-        case TOKEN_PAREN_RIGHT: ++*index; 
-                                break;
-        default: free_data_columns(col); 
-                 return 0;
+    temp_token=token_at(tokens,*index);
+    if(temp_token && temp_token->type==TOKEN_PAREN_RIGHT) {
+         ++*index; 
+    } else {
+         free_data_columns(col); 
+        return 0;
     }
     
     return col;
