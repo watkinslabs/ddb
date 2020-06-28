@@ -367,7 +367,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
             printf("NO EXPR\n");
             return expr;
         } else {
-            debug_expr(temp_expr,10);
             if(needs_expression==1){
                 needs_expression=0;
                 if(!add_expr(expr,temp_expr)){
@@ -390,7 +389,6 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                                   temp_expr2->mode=6;
                                   temp_expr2->logical_operator=temp_token->type;
                                   add_expr(expr,temp_expr2);
-                                  printf("NEEDS %s\n",token_type(temp_token->type));
                                   break;
             default: break;
         } //end switch
