@@ -88,7 +88,7 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
     
     // the default evaluation type
     int EVAL_TYPE=EVAL_LONG; 
-/*
+
     while(temp_expr) {
         
         // so we have a value and we want 
@@ -134,16 +134,6 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
         temp_expr=temp_expr->expression;
     }
 
-
-OR
-t1.first=-1.5 OR
-1 OR
-2 AND
-t1.id=1.54 OR
-t2.id=0x04F OR
-t1.id=0x04A 
-t2.id=-1-1
-    */
 
 }
 

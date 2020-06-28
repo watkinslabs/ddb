@@ -17,7 +17,7 @@ SELECT
     JOIN                 mock3 as t3 ON t3.iid=1 
     
     WHERE 
-             t1.first=-1.511+5
+             t1.first=-1.511+5+6+3+21-5
              
         or   1
         and 2=1
