@@ -385,8 +385,11 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
                                   temp_expr->not=not;
-                                  temp_expr->logical_operator=temp_token->type;
                                   needs_expression=1;
+                                  expression_t *temp_expr2=safe_malloc(sizeof(expression_t*),1);
+                                  temp_expr2->mode=6;
+                                  temp_expr2->logical_operator=temp_token->type;
+                                  add_expr(expr,temp_expr2);
                                   printf("NEEDS %s\n",token_type(temp_token->type));
                                   break;
             default: break;
