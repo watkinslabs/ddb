@@ -88,50 +88,50 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
     
     // the default evaluation type
     int EVAL_TYPE=EVAL_LONG; 
-
+    char *value=0;
+    int   type=0;
+    
     while(temp_expr) {
-        /*
+        // identifier (lets just make this a token code)
+        if(temp_expr->mode==1) {
+            value=get_value_at(cursor,temp_expr->identifier);
+            type=TOKEN_IDENTIFIER;
+        }
         // so we have a value and we want 
-        if(temp_expr->comparitor) {
-
-        }
-
-        //we are doing something + - / * =
-        if(temp_expr->operator) {
-            // literal (lets just make this a token code)
-            if(temp_expr->mode==1) {
-                char *value=temp_expr->literal->value;
-                char *value=temp_expr->literal->value;
-            }
-            // identifier (lets just make this a token code)
-            if(temp_expr->mode==2) {
-                char *value=get_value_at(cursor,temp_expr->identifier);
-            }
-
-            switch (temp_expr->operator){
-                case TOKEN_MINUS    : break;
-                case TOKEN_PLUS     : break;
-                case TOKEN_MULTIPLY : break;
-                case TOKEN_DIVIDE   : break;
-                case TOKEN_MODULUS  : break;
-             
-                default:  printf ("%s",token_type(temp_expr->operator));      break;
-            }
+        if(temp_expr->mode==1) {
+            char *value=temp_expr->literal->value;
+            int   type =temp_expr->literal->type;
         }
 
 
+
+
+        switch (temp_expr->arithmetic_operator){
+            case TOKEN_MINUS    : break;
+            case TOKEN_PLUS     : break;
+            case TOKEN_MULTIPLY : break;
+            case TOKEN_DIVIDE   : break;
+            case TOKEN_MODULUS  : break;
+            
+            default:  printf ("%s",token_type(temp_expr->arithmetic_operator));      break;
+        }
+
+/*
         temp_expr->in;
         temp_expr->list;
         temp_expr->mode;
         temp_expr->identifier;
         temp_expr->literal;
-        temp_expr->negative;
         temp_expr->not;
         temp_expr->not_in;
-        temp_expr->positive;
+        temp_expr->arithmetic_operator;
+        temp_expr->assignment_operator;
+        temp_expr->comparison_operator;
+        temp_expr->logical_operator;
+        */
 
 
-        temp_expr=temp_expr->expression;*/
+  
     }
 
 
