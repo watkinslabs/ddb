@@ -156,11 +156,15 @@ void debug_expr(expression_t *expr,int depth){
     if(expr->not)         printf("%s  not:    %d ,",pad,expr->not);
     if(expr->not_in)      printf("%s  not_in: %d ,",pad,expr->not_in);
     if(expr->in)          printf("%s  in:     %d \n",pad,expr->in);
-    if(expr->direction)   printf("%s  direction:  %s ,",pad,token_type(expr->direction));
-    if(expr->negative)    printf("%s  negative:   %d ,",pad,expr->negative);
-    if(expr->positive)    printf("%s  positive:   %d ,",pad,expr->positive);
-    if(expr->comparitor)  printf("%s  comparitor: %s ,",pad,token_type(expr->comparitor));
-    if(expr->operator)    printf("%s  operator:   %s \n",pad,token_type(expr->operator));
+    if(expr->direction)   printf("%s  direction:  %s ,\n",pad,token_type(expr->direction));
+
+
+    if(expr->assignment_operator)  printf(" - assignment operator :%s\n",expr->assignment_operator);
+    if(expr->comparison_operator)  printf(" - comparison operator :%s\n",expr->comparison_operator);
+    if(expr->arithmetic_operator)  printf(" - arithmetic operator :%s\n",expr->arithmetic_operator);
+    if(expr->logical_operator   )  printf(" - logical operator    :%s\n",expr->logical_operator);
+    if(expr->uinary_operator    )  printf(" - uinary operator     :%s\n",expr->uinary_operator);
+
     if(expr->identifier){
         printf("%s Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
     }
