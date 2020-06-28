@@ -374,7 +374,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                     *index=pos;
                     return expr;
                 }
-                debug_expr(expr,10);
+                debug_expr(temp_expr,10);
 
             }
         }
