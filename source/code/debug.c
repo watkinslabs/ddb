@@ -159,11 +159,11 @@ void debug_expr(expression_t *expr,int depth){
     if(expr->direction)   printf("%s  direction:  %s ,\n",pad,token_type(expr->direction));
 
 
-    if(expr->assignment_operator)  printf(" - assignment operator :%s\n",expr->assignment_operator);
-    if(expr->comparison_operator)  printf(" - comparison operator :%s\n",expr->comparison_operator);
-    if(expr->arithmetic_operator)  printf(" - arithmetic operator :%s\n",expr->arithmetic_operator);
-    if(expr->logical_operator   )  printf(" - logical operator    :%s\n",expr->logical_operator);
-    if(expr->uinary_operator    )  printf(" - uinary operator     :%s\n",expr->uinary_operator);
+    if(expr->assignment_operator)  printf(" - assignment operator :%s\n",token_type(expr->assignment_operator));
+    if(expr->comparison_operator)  printf(" - comparison operator :%s\n",token_type(expr->comparison_operator));
+    if(expr->arithmetic_operator)  printf(" - arithmetic operator :%s\n",token_type(expr->arithmetic_operator));
+    if(expr->logical_operator   )  printf(" - logical operator    :%s\n",token_type(expr->logical_operator   ));
+    if(expr->uinary_operator    )  printf(" - uinary operator     :%s\n",token_type(expr->uinary_operator    ));
 
     if(expr->identifier){
         printf("%s Identifier: %s.%s\n",pad,expr->identifier->qualifier,expr->identifier->source);
