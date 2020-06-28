@@ -513,7 +513,7 @@ int process_queries(cursor_t *cursor,char *queries){
     // process queries and build data structure
     while(loop){
         position=tokens->position;
-        select_t *select=process_select(tokens,&tokens->position);
+        select_t *select=process_select(cursor,tokens,&tokens->position);
         if(select) {
             commands=add_command(commands,select,TOKEN_SELECT);
         } else {
@@ -523,7 +523,7 @@ int process_queries(cursor_t *cursor,char *queries){
         }
 
         position=tokens->position;
-        table_def_t *table_def=process_create_table(tokens,&tokens->position);
+        table_def_t *table_def=process_create_table(cursor,tokens,&tokens->position);
         if(table_def) {
             commands=add_command(commands,table_def,TOKEN_CREATE_TABLE);
         } else {
@@ -533,7 +533,7 @@ int process_queries(cursor_t *cursor,char *queries){
         }
 
         position=tokens->position;
-        use_t *use=process_use(tokens,&tokens->position);
+        use_t *use=process_use(cursor,tokens,&tokens->position);
         if(use) {
             commands=add_command(commands,use,TOKEN_USE);
         } else {

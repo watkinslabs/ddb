@@ -12,7 +12,7 @@
  * 
  * returns: nothing. All output is via stdio
  */
-select_t * process_select(token_array_t *tokens,int *start){
+select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
     if(valid_token_index(tokens,*start)==0) return 0;
 
     //if(*start>=tokens->top) return;
@@ -53,7 +53,7 @@ select_t * process_select(token_array_t *tokens,int *start){
     }//end switch                
 
 
-    select->columns=process_select_list(tokens,start);
+    select->columns=process_select_list(cursor,tokens,start);
 
     if(select->columns==0) {
         free_select(select);
@@ -65,8 +65,8 @@ select_t * process_select(token_array_t *tokens,int *start){
     // from
     switch(token_at(tokens,*start)->type){
         case TOKEN_FROM:     ++*start;
-                            select->from=process_identifier(tokens,start);
-                            select->alias=process_alias(tokens,start);
+                            select->from=process_identifier(cursor,tokens,start);
+                            select->alias=process_alias(cursor,tokens,start);
                             break;
         default: return select;
     }// end switch
@@ -85,11 +85,11 @@ select_t * process_select(token_array_t *tokens,int *start){
                                         ++*start;
                                         add_join(select);
                                         join_t *join=&select->join[select->join_length-1];
-                                        join->identifier=process_identifier(tokens,start);
-                                        join->alias=process_alias(tokens,start);
+                                        join->identifier=process_identifier(cursor,tokens,start);
+                                        join->alias=process_alias(cursor,tokens,start);
                                         switch(token_at(tokens,*start)->type){
                                             case TOKEN_ON: ++*start; 
-                                                           join->expression=process_expression(tokens,start);
+                                                           join->expression=process_expression(cursor,tokens,start);
                                                            break;
                                         }//end switch                
                                         break;
@@ -104,7 +104,7 @@ select_t * process_select(token_array_t *tokens,int *start){
     while(loop){
         switch(token_at(tokens,*start)->type){
             case TOKEN_WHERE: ++*start;
-                        select->where=process_expression(tokens,start);
+                        select->where=process_expression(cursor,tokens,start);
                         break;
             default: loop=0; 
                      break;
@@ -113,13 +113,13 @@ select_t * process_select(token_array_t *tokens,int *start){
 
     switch(token_at(tokens,*start)->type){
         case TOKEN_GROUP_BY: ++*start; 
-                                select->group=process_group_column_list(tokens,start); 
+                                select->group=process_group_column_list(cursor,tokens,start); 
                                 break;
     }
 
     switch(token_at(tokens,*start)->type){
         case TOKEN_ORDER_BY: ++*start; 
-                                select->order=process_order_column_list(tokens,start); 
+                                select->order=process_order_column_list(cursor,tokens,start); 
                                 break;
     }
 
@@ -148,7 +148,7 @@ select_t * process_select(token_array_t *tokens,int *start){
  * returns: table_def_t data structure
  *          0 (NULL) for failure
  */
-table_def_t * process_create_table(token_array_t *tokens,int *start){
+table_def_t * process_create_table(cursor_t *cursor,token_array_t *tokens,int *start){
     if(valid_token_index(tokens,*start)==0) return 0;
    table_def_t *table_def=0;
    
@@ -161,7 +161,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
     }//end switch                
 
     // required
-    table_def->identifier=process_identifier(tokens,start);
+    table_def->identifier=process_identifier(cursor,tokens,start);
     if(table_def->identifier==0) {
         free_table_def(table_def); 
         return 0;
@@ -169,7 +169,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
 
     // required
     
-    table_def->columns=process_column_list(tokens,start);
+    table_def->columns=process_column_list(cursor,tokens,start);
     if(table_def->columns==0) {
         free_table_def(table_def); 
         return 0; 
@@ -221,7 +221,7 @@ table_def_t * process_create_table(token_array_t *tokens,int *start){
  * returns: use_t data structure
  *          0 (NULL) for failure
  */
-use_t *process_use(token_array_t *tokens,int *start){
+use_t *process_use(cursor_t *cursor,token_array_t *tokens,int *start){
     if(valid_token_index(tokens,*start)==0) return 0;
     use_t *use=0;
    

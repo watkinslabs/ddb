@@ -15,7 +15,7 @@
  *          index pointer is incremented +1 on match
  *          returns zero (NULL) otherwise
  */
-char * process_alias(token_array_t *tokens,int *index){
+char * process_alias(cursor_t *cursor,token_array_t *tokens,int *index){
     char *alias=0;
     token_t *temp_token=token_at(tokens,*index);
     if(temp_token==0) return 0;
@@ -38,7 +38,7 @@ char * process_alias(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-identifier_t * process_identifier(token_array_t *tokens,int *index){
+identifier_t * process_identifier(cursor_t *cursor,token_array_t *tokens,int *index){
     identifier_t *ident=0;
     token_t *temp_token=token_at(tokens,*index);
     if(temp_token==0) return 0;
@@ -71,7 +71,7 @@ identifier_t * process_identifier(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-token_t * process_litteral(token_array_t *tokens,int *index){
+token_t * process_litteral(cursor_t *cursor,token_array_t *tokens,int *index){
     token_t *token=token_at(tokens,*index);
     if(token==0) return 0;
 
@@ -101,7 +101,7 @@ token_t * process_litteral(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_simple_expr(token_array_t *tokens,int *index){
+expression_t * process_simple_expr(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     int mode=0;
     int position=*index;
@@ -157,7 +157,7 @@ expression_t * process_simple_expr(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_bit_expr(token_array_t *tokens,int *index){
+expression_t * process_bit_expr(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     expression_t *temp_expr=0;
 
@@ -204,7 +204,7 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_expr_list(token_array_t *tokens,int *index){
+expression_t * process_expr_list(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     int start_point=*index;
 
@@ -256,7 +256,7 @@ expression_t * process_expr_list(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_predicate(token_array_t *tokens,int *index){
+expression_t * process_predicate(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
 
     expr=process_bit_expr(tokens,index);
@@ -264,7 +264,7 @@ expression_t * process_predicate(token_array_t *tokens,int *index){
    /*
     if(expr){
         int mode=0;
-        switch(token_at(tokens,*index)->type) {
+        switch(cursor_t *cursor,token_at(tokens,*index)->type) {
             case TOKEN_IN     : mode=1;  
             case TOKEN_NOT_IN : mode=-1; 
                                 ++*index;
@@ -289,7 +289,7 @@ expression_t * process_predicate(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_boolean_primary(token_array_t *tokens,int *index){
+expression_t * process_boolean_primary(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     expr=process_predicate(tokens,index);
     if(expr){
@@ -333,7 +333,7 @@ expression_t * process_boolean_primary(token_array_t *tokens,int *index){
  *          index pointer is incremented +n on match
  *          returns zero (NULL) otherwise
  */
-expression_t * process_expression(token_array_t *tokens,int *index){
+expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *temp_expr=1;
     expression_t *expr=0;
     int start_loop=1;
@@ -405,7 +405,7 @@ expression_t * process_expression(token_array_t *tokens,int *index){
  *          expression_t if matched
  *          returns zero (NULL) otherwise
  */
-expression_t * process_group_column_list(token_array_t *tokens,int *index){
+expression_t * process_group_column_list(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     expression_t *expr2=0;
     identifier_t *ident=0;
@@ -448,7 +448,7 @@ expression_t * process_group_column_list(token_array_t *tokens,int *index){
  *          expression_t if matched
  *          returns zero (NULL) otherwise
  */
-expression_t * process_order_column_list(token_array_t *tokens,int *index){
+expression_t * process_order_column_list(cursor_t *cursor,token_array_t *tokens,int *index){
     expression_t *expr=0;
     expression_t *expr2=0;
     identifier_t *ident=0;
@@ -505,7 +505,7 @@ expression_t * process_order_column_list(token_array_t *tokens,int *index){
     return expr;
 }
 
-data_column_t * process_select_list(token_array_t *tokens,int *index){
+data_column_t * process_select_list(cursor_t *cursor,token_array_t *tokens,int *index){
     // a root object is present so the list is always n+1
     data_column_t *columns=0;
     
@@ -570,7 +570,7 @@ data_column_t * process_select_list(token_array_t *tokens,int *index){
  * returns: a nested set of expression_t
  *          0 or (NULL) on failure
  */
-data_column_t * process_column_list(token_array_t *tokens,int *index){
+data_column_t * process_column_list(cursor_t *cursor,token_array_t *tokens,int *index){
 
     data_column_t * col=0;
     int ordinal=0;
