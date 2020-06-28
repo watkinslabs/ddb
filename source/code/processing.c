@@ -341,7 +341,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
 
     int needs_expression=0;    
     int pos=0;
-    while(temp_expr!=0) {
+    while(1) {
         // check for aNOT clause
         int not=0;
         token_t *temp_token=token_at(tokens,*index);
