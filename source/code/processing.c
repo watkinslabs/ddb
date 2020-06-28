@@ -364,6 +364,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
 
         // nothing returned.. eject with curent list
         if(!temp_expr) {
+            printf("NO EXPR\n");
             return expr;
         } else {
             if(needs_expression==1){
