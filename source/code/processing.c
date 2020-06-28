@@ -330,7 +330,7 @@ expression_t * process_expression(token_array_t *tokens,int *index){
             case TOKEN_AND       : 
             case TOKEN_OR        : ++*index;
                                 if(add_expr(expr,process_expression(tokens,index))){
-                                    expr->comparitor=token;
+                                    expr->logical_operator=token;
                                 } else {
                                     --*index;
                                 }

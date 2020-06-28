@@ -41,11 +41,12 @@ typedef struct expression_t{
     int not;                  // expr 
     int not_in;               // predicate 
     int in;                   // predicate
-    int negative;             // simple expr  
-    int positive;             // simple expr             
     int direction;            // column_list
-    int comparitor;           // expression
-    int operator;             // bit_expr
+    int assignment_operator;  // expression
+    int comparison_operator;  // expression
+    int arithmetic_operator;  // bit_expr
+    int logical_operator;     // bit_expr
+    int uinary_operator;      // bit_expr
     
     //this can be a LITTERAL OR a IDENTITY
     identifier_t *identifier;

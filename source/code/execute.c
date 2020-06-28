@@ -75,17 +75,33 @@ char *get_value_at(cursor_t *cursor,identifier_t *iden){
     return value;
 }
 
+#define EVAL_INT     1
+#define EVAL_LONG    2
+#define EVAL_FLOAT   3
+#define EVAL_STRING  4
+
 int evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
+    char *str_value   = 0;
+    long  long_value  = 0;
+    float float_value = 0;
+    
+    // the default evaluation type
+    int EVAL_TYPE=EVAL_LONG; 
 
     while(temp_expr) {
-        long   lvalue=0;
-        float  fvalue=0;
+        
+        // so we have a value and we want 
+        if(temp_expr->comparitor) {
+
+        }
+
         //we are doing something + - / * =
         if(temp_expr->operator) {
             // literal (lets just make this a token code)
             if(temp_expr->mode==1) {
-                char *value=get_value_at(cursor,temp_expr->identifier);
+                char *value=temp_expr->literal->value;
+                char *value=temp_expr->literal->value;
             }
             // identifier (lets just make this a token code)
             if(temp_expr->mode==2) {
