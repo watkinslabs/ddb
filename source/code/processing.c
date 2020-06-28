@@ -360,7 +360,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
         } else {
             temp_expr=process_boolean_primary(cursor,tokens,index);
         }
-
+        debug_expr(temp_expr,10);
 
         // nothing returned.. eject with curent list
         if(!temp_expr) {
