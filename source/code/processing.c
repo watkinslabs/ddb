@@ -313,9 +313,6 @@ expression_t * process_expression(token_array_t *tokens,int *index){
     expression_t *expr=0;
     int start_loop=1;
     // NOT
-    
-    
-
 
     int needs_expression=0;    
     int pos=0;
@@ -349,7 +346,7 @@ expression_t * process_expression(token_array_t *tokens,int *index){
                 }
             }
         }
-
+        continue;
         int token=token_at(tokens,*index)->type;
         switch(token) {
             case TOKEN_SHORT_AND :
