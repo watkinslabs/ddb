@@ -63,13 +63,29 @@ char * copy_token_value_at(token_array_t *tokens,int index){
 int add_expr(expression_t *expression,expression_t *item){
     if(item==0) return 0;
 
+    
     if(expression->expression==0) {
         expression->expression=item;
         expression->expression_tail=item;
-    } else {
-        expression->expression_tail->expression=item;
-        expression->expression_tail=item;
+        return 1;
+    } 
+
+    expression_t *temp_expr=expression;
+    expression_t *temp_expr_tail=expression;
+    while (temp_expr){
+        temp_expr_tail=temp_expr;
+        temp_expr=temp_expr->expression;
     }
+    temp_expr->expression=item;
+    
+    temp_expr=item;
+    temp_expr_tail=item;
+    while (temp_expr){
+        temp_expr_tail=temp_expr;
+        temp_expr=temp_expr->expression;
+    }
+    expression->expression_tail=temp_expr_tail;
+    
     return 1;
 }
 
