@@ -151,7 +151,7 @@ expression_t * process_bit_expr(token_array_t *tokens,int *index){
 
     expr=process_simple_expr(tokens,index);
     if(expr)
-    debug_expression(expr);
+    debug_expr(expr,10);
     if(expr){
         int loop=1;
         while(loop) {
