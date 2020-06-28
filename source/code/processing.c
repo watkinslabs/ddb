@@ -388,7 +388,7 @@ expression_t * process_expression(cursor_t *cursor,token_array_t *tokens,int *in
                                   expression_t *temp_expr2=safe_malloc(sizeof(expression_t),1);
                                   temp_expr2->mode=6;
                                   temp_expr2->logical_operator=temp_token->type;
-                                  //add_expr(expr,temp_expr2);
+                                  add_expr(expr,temp_expr2);
                                   break;
             default: break;
         } //end switch
