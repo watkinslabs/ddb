@@ -100,8 +100,8 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
     while(temp_expr) {
         // identifier (lets just make this a token code)
         if(temp_expr->mode==1) {
-            value=get_value_at(cursor,temp_expr->identifier);
-            type=TOKEN_IDENTIFIER;
+            //value=get_value_at(cursor,temp_expr->identifier);
+            //type=TOKEN_IDENTIFIER;
         }
         // litteral
         if(temp_expr->mode==2) {
@@ -128,7 +128,6 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
                                 break; 
             case TOKEN_BOOL:    expr1.INT_V=1;
                                 expr1.INT_V=1;
-                                if()
                                 expr1.type=EVAL_BOOL;
                                 break; 
          }
