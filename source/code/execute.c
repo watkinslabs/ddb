@@ -75,21 +75,27 @@ char *get_value_at(cursor_t *cursor,identifier_t *iden){
     return value;
 }
 
-#define EVAL_INT     1
-#define EVAL_LONG    2
-#define EVAL_FLOAT   3
-#define EVAL_STRING  4
+#define EVAL_STRING  1
+#define EVAL_INT     2
+#define EVAL_LONG    3
+#define EVAL_FLOAT   4
+#define EVAL_BOOL    5
+#define EVAL_NULL    6
+
+typedef struct expression_value_t {
+    char *STRING_V;
+    int   INT_V;
+    long  LONG_V;
+    float FLOAT_V;
+    int   type;
+} expression_value_t;
 
 int evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    char *str_value   = 0;
-    long  long_value  = 0;
-    float float_value = 0;
     
     // the default evaluation type
-    int EVAL_TYPE=EVAL_LONG; 
-    char *value=0;
-    int   type=0;
+    expression_value_t expr1;
+    expression_value_t expr2;
     
     while(temp_expr) {
         // identifier (lets just make this a token code)
@@ -97,12 +103,54 @@ int evaluate_expression(cursor_t *cursor,expression_t *expr){
             value=get_value_at(cursor,temp_expr->identifier);
             type=TOKEN_IDENTIFIER;
         }
-        // so we have a value and we want 
-        if(temp_expr->mode==1) {
-            char *value=temp_expr->literal->value;
-            int   type =temp_expr->literal->type;
+        // litteral
+        if(temp_expr->mode==2) {
+            switch(temp_expr->literal->type){
+            case TOKEN_STRING:  expr1.STRING_V=temp_expr->literal->value; 
+                                expr1.type=EVAL_STRING;
+                                break;
+            case TOKEN_NUMERIC: 
+                                expr1.type=EVAL_LONG;
+                                break;
+
+            case TOKEN_HEX:     
+                                expr1.type=EVAL_LONG;
+                                break; 
+            case TOKEN_BINARY:  
+                                expr1.type=EVAL_LONG;
+                                break; 
+            case TOKEN_REAL:
+                                expr1.type=EVAL_FLOAT;
+                                break;
+
+            case TOKEN_NULL:     
+                                expr1.type=EVAL_NULL;
+                                break; 
+            case TOKEN_BOOL:    expr1.INT_V=1;
+                                expr1.INT_V=1;
+                                if()
+                                expr1.type=EVAL_BOOL;
+                                break; 
+         }
         }
 
+        //compare the expression
+        if(temp_expr->uinary_operator) {
+
+        }
+
+
+        //compare the expression
+        if(temp_expr->comparison_operator) {
+
+        }
+        //do math on the expression
+        if(temp_expr->arithmetic_operator) {
+        }
+        
+        //evalulate another expression
+        if(temp_expr->logical_operator) {
+        }
 
 
 
