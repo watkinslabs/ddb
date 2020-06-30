@@ -169,7 +169,8 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
         }// end uniary check for expr
 
         //this is loop+1 and arithmetic is flagged
-        if(next_operation) {
+        //schedule math on the expression
+        if(temp_expr->arithmetic_operator) {
             if(exprV->type==EVAL_STRING) {
                 printf ("Eval Expression: cannot preform arithmetic on a string");
                 if(exprV) free(exprV);
@@ -395,36 +396,8 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                             *expr=*temp_expr;
                             return 0;
             }// end master outer switch
-            next_operation=0;
         }
         
-        //schedule math on the expression
-        if(temp_expr->arithmetic_operator) {
-            // advance pointer
-//            temp_expr=temp_expr->expression;
-            if(temp_expr==0) {
-                printf ("expression missing right hand side of arithmetic\n");
-                if(exprV) free(exprV);
-                if(tempV) free(tempV);
-                //*expr=NULL;
-                return 0;
-            }
-            
-            
-            switch (temp_expr->arithmetic_operator){
-                case TOKEN_MINUS    : 
-                case TOKEN_PLUS     : 
-                case TOKEN_MULTIPLY : 
-                case TOKEN_DIVIDE   : 
-                case TOKEN_MODULUS  : next_operation=temp_expr->arithmetic_operator; break;
-                
-                default: printf ("unsuported 'YET': %s",token_type(temp_expr->arithmetic_operator));     
-                        if(exprV) free(exprV);
-                        if(tempV) free(tempV);
-                        *expr=*temp_expr;
-                        return 0;
-            }
-        }
 
         if(exprV==0) exprV=tempV;
 
