@@ -18,7 +18,7 @@ SELECT
     
     WHERE 
 
-        1=1
+        -1=1-2
              
         /*  or 2
         or   t1.id=1.54
