@@ -230,7 +230,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 case TOKEN_MULTIPLY :break;
                 case TOKEN_DIVIDE   :break;
                 case TOKEN_MODULUS  :break;
-                default:    printf("Unknown arithmetic operation %s",token_type(t1));
+                default:    printf("Unknown arithmetic operation %s",t1);
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
                             *expr=*temp_expr;
@@ -244,7 +244,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 case TOKEN_MULTIPLY :break;
                 case TOKEN_DIVIDE   :break;
                 case TOKEN_MODULUS  :break;
-                default:    printf("Unknown arithmetic operation %s",token_type(t2));
+                default:    printf("Unknown arithmetic operation %s",t2);
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
                             *expr=*temp_expr;
