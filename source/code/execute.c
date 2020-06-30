@@ -472,17 +472,18 @@ int compare_expressions(cursor_t *cursor,expression_t *expr){
         }
         printf("FOUND A comparison\n");
         expression_value_t *expr2=evaluate_expression(cursor,expr);
+        printf("GOT IT\n");
 
         switch(comparison){
             case TOKEN_IS_NOT_NULL:
-            case TOKEN_IS_NULL    : break;
+            case TOKEN_IS_NULL    : 
             case TOKEN_NULL_EQ    : 
             case TOKEN_LESS_EQ    :
             case TOKEN_GREATER_EQ :
             case TOKEN_LESS       :
             case TOKEN_GREATER    :
             case TOKEN_NOT_EQ     :
-            case TOKEN_ASSIGNMENT :
+            case TOKEN_ASSIGNMENT : break;
             default:    printf("ERROR");
                         return 0;
         }
