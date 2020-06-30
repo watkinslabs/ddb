@@ -121,7 +121,11 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                     //exprV=
                     break;
                     // litteral
-            case 2: tempV=eval_token(temp_expr->literal); break;
+            case 2: printf ("EVAL->'\"%s\"'\n",temp_expr->literal->value);
+                    tempV=eval_token(temp_expr->literal); 
+                    printf ("DONE\n");
+                    
+                    break;
             default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
                      if(exprV) free(exprV);
                      if(tempV) free(tempV);
