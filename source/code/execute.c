@@ -401,7 +401,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
         //schedule math on the expression
         if(temp_expr->arithmetic_operator) {
             // advance pointer
-            temp_expr=temp_expr->expression;
+//            temp_expr=temp_expr->expression;
             if(temp_expr==0) {
                 printf ("expression missing right hand side of arithmetic\n");
                 if(exprV) free(exprV);
