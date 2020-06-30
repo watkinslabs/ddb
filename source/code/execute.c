@@ -497,7 +497,7 @@ int compare_expressions(cursor_t *cursor,expression_t *expr){
         }
     } // end if comparitor
 
-    printf ("Expression has no comparitor.. so its always true");
+    //printf ("Expression has no comparitor.. so its always true");
     return 1;
 }
 
