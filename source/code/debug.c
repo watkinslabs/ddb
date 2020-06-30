@@ -80,7 +80,6 @@ char * vomit(int err_no){
         case ERR_LOCKING_ERROR                   : msg="could not achieve a lock on file"; break;
         case ERR_DATA_FETCH_ERROR                : msg="fetching data from file failed"; break;
         case ERR_EXPRESSION_MALFORMED            : msg="expression is malformed"; break;
-
         default: msg="NO CLUE";
     }
     //printf("%d ",err_no);
