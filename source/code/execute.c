@@ -471,6 +471,7 @@ int compare_expressions(cursor_t *cursor,expression_t *expr){
             return 0;
         }
         printf("FOUND A comparison\n");
+        if(expr==0) printf("EXPR EMPTY\n");
         expression_value_t *expr2=evaluate_expression(cursor,expr);
         printf("GOT IT\n");
 
