@@ -419,7 +419,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 printf ("arithmetic has empty expression after");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
-                *expr=*temp_expr;
+                //*expr=NULL;
                 return 0;
             }
             
@@ -629,7 +629,7 @@ char ** get_column_list(data_column_t *columns,int length){
     return 0;
 }
 
-range_t *get_line(char *data,long *position,long fsize) {
+range_t * get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {
         //printf("OUT OF BOUNDS %ld of %ld\n",*position,fsize);
         return 0;
@@ -652,7 +652,7 @@ range_t *get_line(char *data,long *position,long fsize) {
     return range;
 }
 
-row_t *build_row(char *data,range_t *range,char delimiter){
+row_t * build_row(char *data,range_t *range,char delimiter){
     // loop through range and split into columns
     row_t *row=(row_t*)safe_malloc(sizeof(row_t),1);
     
@@ -714,8 +714,7 @@ row_t *build_row(char *data,range_t *range,char delimiter){
     return row;
 }
 
-
-data_set_t *load_file(cursor_t *cursor,identifier_t *table_ident){
+data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
 
     table_def_t *table=get_table_by_identifier(cursor,table_ident);
     
@@ -851,7 +850,7 @@ int lock_file(char *file){
 }
 
 
- data_set_t *new_data_set(char **columns,int column_count,int row_count){
+ data_set_t * new_data_set(char **columns,int column_count,int row_count){
 
     //allocate dataset main container
     data_set_t * data_set=(data_set_t*)safe_malloc(sizeof(data_set_t),1);
