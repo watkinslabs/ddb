@@ -271,6 +271,9 @@ void debug_cursor(cursor_t *cursor){
         printf("- ERROR: %s\n",cursor->error_message);
         printf("- POS: %d\n",cursor->parse_position);
     }
+    if(cursor->results) {
+        debug_dataset(cursor->results);
+    }
 
 }
 

@@ -55,7 +55,20 @@ typedef struct expression_t{
     struct expression_t *expression_tail;
 } expression_t;
 
+#define EVAL_STRING  1
+#define EVAL_INT     2
+#define EVAL_LONG    3
+#define EVAL_FLOAT   4
+#define EVAL_BOOL    5
+#define EVAL_NULL    6
 
+typedef struct expression_value_t {
+    char *STRING_V;
+    int   INT_V;
+    long  LONG_V;
+    float FLOAT_V;
+    int   type;
+} expression_value_t;
 
 typedef struct join_t {
     int             type;
@@ -137,8 +150,9 @@ typedef struct cursor_t{
     int                   status;
     struct timespec       created;
     struct timespec       ended;
-    //data_set_t          * data;
+    data_set_t         ** source;     //array of datasets that results is created from
     data_set_t          * results;
+
 }cursor_t;
 
 

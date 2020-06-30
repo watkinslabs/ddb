@@ -75,113 +75,411 @@ char *get_value_at(cursor_t *cursor,identifier_t *iden){
     return value;
 }
 
-#define EVAL_STRING  1
-#define EVAL_INT     2
-#define EVAL_LONG    3
-#define EVAL_FLOAT   4
-#define EVAL_BOOL    5
-#define EVAL_NULL    6
 
-typedef struct expression_value_t {
-    char *STRING_V;
-    int   INT_V;
-    long  LONG_V;
-    float FLOAT_V;
-    int   type;
-} expression_value_t;
 
-int evaluate_expression(cursor_t *cursor,expression_t *expr){
+expression_value_t *eval_token(token_t *token){
+    expression_value_t *expr=safe_malloc(sizeof(expression_value_t),1);
+    expr->type=0;
+    switch(token->type){
+        case TOKEN_STRING:  expr->STRING_V=token->value; 
+                            expr->type=EVAL_STRING;
+                            break;
+        case TOKEN_NUMERIC: expr->LONG_V=atol(token->value); 
+                            expr->type=EVAL_LONG;
+                            break;
+        case TOKEN_HEX:     expr->LONG_V=stoi(&token->value+2, 0, 16);
+                            expr->type=EVAL_LONG;
+                            break; 
+        case TOKEN_BINARY:  expr->LONG_V=stoi(&token->value+2, 0, 2);
+                            expr->type=EVAL_LONG;
+                            break; 
+        case TOKEN_REAL:    expr->FLOAT_V=atof(token->value); 
+                            expr->type=EVAL_FLOAT;
+                            break;
+        case TOKEN_NULL:    expr->type=EVAL_NULL;
+                            break; 
+    }    
+    return expr;
+}
+
+expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
+    expression_value_t *exprV;
+    expression_value_t *tempV;
+
     
-    // the default evaluation type
-    expression_value_t expr1;
-    expression_value_t expr2;
+    int next_operation=0;
+
     
     while(temp_expr) {
-        // identifier (lets just make this a token code)
-        if(temp_expr->mode==1) {
-            //value=get_value_at(cursor,temp_expr->identifier);
-            //type=TOKEN_IDENTIFIER;
-        }
-        // litteral
-        if(temp_expr->mode==2) {
-            switch(temp_expr->literal->type){
-            case TOKEN_STRING:  expr1.STRING_V=temp_expr->literal->value; 
-                                expr1.type=EVAL_STRING;
-                                break;
-            case TOKEN_NUMERIC: 
-                                expr1.type=EVAL_LONG;
-                                break;
+        // process token(s)/data point.. 
+        switch(temp_expr->mode){
+            // identifier (lets just make this a token code)
+            case 1: char *value=get_value_at(cursor,temp_expr->identifier);
+                    //type=TOKEN_IDENTIFIER;
+                    //exprV=
+                    break;
+                    // litteral
+            case 2: tempV=eval_token(temp_expr->literal); break;
+            default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
+                     if(exprV) free(exprV);
+                     if(tempV) free(tempV);
+                     return 0;
+                     break;
+        }// end switch 
 
-            case TOKEN_HEX:     
-                                expr1.type=EVAL_LONG;
-                                break; 
-            case TOKEN_BINARY:  
-                                expr1.type=EVAL_LONG;
-                                break; 
-            case TOKEN_REAL:
-                                expr1.type=EVAL_FLOAT;
-                                break;
-
-            case TOKEN_NULL:     
-                                expr1.type=EVAL_NULL;
-                                break; 
-            case TOKEN_BOOL:    expr1.INT_V=1;
-                                expr1.INT_V=1;
-                                expr1.type=EVAL_BOOL;
-                                break; 
-         }
-        }
-
-        //compare the expression
+       // process a prefix + or - 
         if(temp_expr->uinary_operator) {
+            //nothing to do for the "+" operator
+            if(temp_expr->uinary_operator==TOKEN_MINUS){
+                switch(tempV->type){
+                    case TOKEN_STRING:  printf("cannot apply uinary operation to a string");
+                                        if(exprV) free(exprV);
+                                        if(tempV) free(tempV);
+                                        return 0;
+                    case TOKEN_NULL:    printf("cannot apply uinary operation to a NULL");
+                                        if(exprV) free(exprV);
+                                        if(tempV) free(tempV);
+                                        return 0;
+                    case TOKEN_NUMERIC: 
+                    case TOKEN_HEX:     
+                    case TOKEN_BINARY:  
+                    case TOKEN_REAL:    tempV->LONG_V*=-1;
+                                        break;
+                }
+            }
+        }// end uniary check for expr
 
+        //this is loop+1 and arithmetic is flagged
+        if(next_operation) {
+            if(exprV->type==EVAL_STRING) {
+                printf ("Eval Expression: cannot preform arithmetic on a string");
+                if(exprV) free(exprV);
+                if(tempV) free(tempV);
+                return 0;
+            }
+
+            if(exprV->type==EVAL_NULL) {
+                printf ("Eval Expression: cannot preform arithmetic on a NULL");
+                if(exprV) free(exprV);
+                if(tempV) free(tempV);
+                return 0;
+            }
+
+           // convert matrix.. 
+           // if 'x' convert to the greater type
+           //  +i|l|f+
+           // ---------
+           // l+ | |x+
+           // f+ | | +
+
+
+            int t1=exprV->type;
+            int t2=tempV->type;
+            // convert incompatible types to compatible 
+            // ones (prevent loss of precision...)
+            if(t1!=t2) {
+                if(t1==EVAL_LONG && t2==EVAL_FLOAT)  { 
+                    exprV->FLOAT_V=(float)exprV->LONG_V; 
+                    exprV->LONG_V=0; 
+                    exprV->type=EVAL_FLOAT; 
+                }
+                if(t1==EVAL_INT && t2==EVAL_FLOAT)  { 
+                    exprV->FLOAT_V=(float)exprV->INT_V; 
+                    exprV->INT_V=0; 
+                    exprV->type=EVAL_FLOAT; 
+                }
+
+                if(t1==EVAL_INT && t2==EVAL_LONG)  { 
+                    exprV->LONG_V=(long)exprV->INT_V; 
+                    exprV->INT_V=0; 
+                    exprV->type=EVAL_LONG; 
+                }
+            }
+
+            
+            // do the math between the differing types
+            switch(exprV->type){
+                case EVAL_INT:
+                                switch(t2){
+                                    case EVAL_INT:   
+                                                    switch(next_operation){
+                                                        case TOKEN_MINUS    : exprV->INT_V-=tempV->INT_V; break;
+                                                        case TOKEN_PLUS     : exprV->INT_V+=tempV->INT_V; break;
+                                                        case TOKEN_MULTIPLY : exprV->INT_V*=tempV->INT_V; break;
+                                                        case TOKEN_DIVIDE   : exprV->INT_V/=tempV->INT_V; break; 
+                                                        case TOKEN_MODULUS  : exprV->INT_V%=tempV->INT_V; break;
+                                                        default:    printf("Unknown arithmetic operation");
+                                                                    if(exprV) free(exprV);
+                                                                    if(tempV) free(tempV);
+                                                                    return 0;
+                                                    }
+                                                    break;
+
+                                    case EVAL_FLOAT:
+                                                    switch(next_operation){
+                                                        case TOKEN_MINUS    : exprV->INT_V-=(int)tempV->FLOAT_V; break;
+                                                        case TOKEN_PLUS     : exprV->INT_V+=(int)tempV->FLOAT_V; break;
+                                                        case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->FLOAT_V; break;
+                                                        case TOKEN_DIVIDE   : exprV->INT_V/=(int)tempV->FLOAT_V; break; 
+                                                        case TOKEN_MODULUS  : exprV->INT_V%=(int)tempV->FLOAT_V; break;
+                                                        default:    printf("Unknown arithmetic operation");
+                                                                    if(exprV) free(exprV);
+                                                                    if(tempV) free(tempV);
+                                                                    return 0;
+                                                    }
+                                                    break;
+
+                                    case EVAL_LONG:
+                                                    switch(next_operation){
+                                                        case TOKEN_MINUS    : exprV->INT_V-=(int)tempV->LONG_V; break;
+                                                        case TOKEN_PLUS     : exprV->INT_V+=(int)tempV->LONG_V; break;
+                                                        case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->LONG_V; break;
+                                                        case TOKEN_DIVIDE   : exprV->INT_V/=(int)tempV->LONG_V; break; 
+                                                        case TOKEN_MODULUS  : exprV->INT_V%=(int)tempV->LONG_V; break;
+                                                        default:    printf("Unknown arithmetic operation");
+                                                                    if(exprV) free(exprV);
+                                                                    if(tempV) free(tempV);
+                                                                    return 0;
+                                                    }
+                                                    break;
+                                    default :
+                                                printf("Error in trype conversion");
+                                                if(exprV) free(exprV);
+                                                if(tempV) free(tempV);
+                                                return 0;
+                                }// internal switch
+                            break;
+
+            case EVAL_FLOAT:
+                            switch(t2){
+                                case EVAL_INT:   
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->FLOAT_V-=(float)tempV->INT_V; break;
+                                                    case TOKEN_PLUS     : exprV->FLOAT_V+=(float)tempV->INT_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->INT_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->FLOAT_V/=(float)tempV->INT_V; break; 
+                                                    case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->INT_V,(double)exprV->FLOAT_V); break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+
+                                case EVAL_FLOAT:
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->FLOAT_V-=tempV->FLOAT_V; break;
+                                                    case TOKEN_PLUS     : exprV->FLOAT_V+=tempV->FLOAT_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->FLOAT_V*=tempV->FLOAT_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->FLOAT_V/=tempV->FLOAT_V; break; 
+                                                    case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->FLOAT_V,(double)exprV->FLOAT_V); break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+
+                                case EVAL_LONG:
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->FLOAT_V-=(float)tempV->LONG_V; break;
+                                                    case TOKEN_PLUS     : exprV->FLOAT_V+=(float)tempV->LONG_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->LONG_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->FLOAT_V/=(float)tempV->LONG_V; break; 
+                                                    case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->LONG_V,(double)exprV->FLOAT_V); break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+                                default :
+                                            printf("Error in trype conversion");
+                                            if(exprV) free(exprV);
+                                            if(tempV) free(tempV);
+                                            return 0;
+                            }// internal switch
+                            break;
+
+            case EVAL_LONG:
+                            switch(t2){
+                                case EVAL_INT:   
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->LONG_V-=(long)tempV->INT_V; break;
+                                                    case TOKEN_PLUS     : exprV->LONG_V+=(long)tempV->INT_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->INT_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->LONG_V/=(long)tempV->INT_V; break;
+                                                    case TOKEN_MODULUS  : exprV->LONG_V%=(long)tempV->INT_V; break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+
+                                case EVAL_FLOAT:
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->LONG_V-=(long)tempV->FLOAT_V; break;
+                                                    case TOKEN_PLUS     : exprV->LONG_V+=(long)tempV->FLOAT_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->FLOAT_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->LONG_V/=(long)tempV->FLOAT_V; break;
+                                                    case TOKEN_MODULUS  : exprV->LONG_V%=(long)tempV->FLOAT_V; break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+
+                                case EVAL_LONG:
+                                                switch(next_operation){
+                                                    case TOKEN_MINUS    : exprV->LONG_V-=tempV->LONG_V; break;
+                                                    case TOKEN_PLUS     : exprV->LONG_V+=tempV->LONG_V; break;
+                                                    case TOKEN_MULTIPLY : exprV->LONG_V*=tempV->LONG_V; break;
+                                                    case TOKEN_DIVIDE   : exprV->LONG_V/=tempV->LONG_V; break;
+                                                    case TOKEN_MODULUS  : exprV->LONG_V%=tempV->LONG_V; break;
+                                                    default:    printf("Unknown arithmetic operation");
+                                                                if(exprV) free(exprV);
+                                                                if(tempV) free(tempV);
+                                                                return 0;
+                                                }
+                                                break;
+                                default :   printf("Error in trype conversion");
+                                            if(exprV) free(exprV);
+                                            if(tempV) free(tempV);
+                                            return 0;
+                            }// internal switch
+                            break;
+                default :   printf("Error in trype conversion");
+                            if(exprV) free(exprV);
+                            if(tempV) free(tempV);
+                            return 0;
+            }// end master outer switch
+            next_operation=0;
         }
 
+        //schedule math on the expression
+        if(temp_expr->arithmetic_operator) {
+            // advance pointer
+            temp_expr=temp_expr->expression;
+            if(temp_expr==0) {
+                printf ("arithmetic has empty expression after");
+                if(exprV) free(exprV);
+                if(tempV) free(tempV);
+                return 0;
+            }
+            
+            
+            switch (temp_expr->arithmetic_operator){
+                case TOKEN_MINUS    : 
+                case TOKEN_PLUS     : 
+                case TOKEN_MULTIPLY : 
+                case TOKEN_DIVIDE   : 
+                case TOKEN_MODULUS  : next_operation=temp_expr->arithmetic_operator; break;
+                
+                default: printf ("unsuported 'YET': %s",token_type(temp_expr->arithmetic_operator));     
+                        if(exprV) free(exprV);
+                        if(tempV) free(tempV);
+                        return 0;
+            }
+        }
+
+        if(exprV==0) exprV=tempV;
 
         //compare the expression
         if(temp_expr->comparison_operator) {
-
-        }
-        //do math on the expression
-        if(temp_expr->arithmetic_operator) {
+            if(tempV) free(tempV);
+            return exprV;
         }
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
+            if(tempV) free(tempV);
+            return exprV;
         }
 
+        temp_expr=temp_expr->expression;
+        // if this is a first cycle.. assign to root.. 
+    }// end while...
 
-
-        switch (temp_expr->arithmetic_operator){
-            case TOKEN_MINUS    : break;
-            case TOKEN_PLUS     : break;
-            case TOKEN_MULTIPLY : break;
-            case TOKEN_DIVIDE   : break;
-            case TOKEN_MODULUS  : break;
-            
-            default:  printf ("%s",token_type(temp_expr->arithmetic_operator));      break;
-        }
-
-/*
-        temp_expr->in;
-        temp_expr->list;
-        temp_expr->mode;
-        temp_expr->identifier;
-        temp_expr->literal;
-        temp_expr->not;
-        temp_expr->not_in;
-        temp_expr->arithmetic_operator;
-        temp_expr->assignment_operator;
-        temp_expr->comparison_operator;
-        temp_expr->logical_operator;
-        */
-
-
-  
+    if(next_operation){
+        printf("ERR: expression still doing arithmetic missing last expression");
+        if(exprV) free(exprV);
+        if(tempV) free(tempV);
+        return 0;
     }
+    if(tempV) free(tempV);
 
+    //update pointer if successfull
+    *expr=*temp_expr;
+    return exprV;
+}
 
+int compare_expressions(cursor_t *cursor,expression_t *expr){
+    expression_value_t *expr1=evaluate_expression(cursor,expr);
+
+    //compare the expression
+    if(expr->comparison_operator) {
+        int comparison=expr->comparison_operator;
+        expr=expr->expression;
+        if(!expr)  {
+            printf ("ERROR");
+            return 0;
+        }
+        expression_value_t *expr2=evaluate_expression(cursor,expr);
+
+        switch(comparison){
+            case TOKEN_IS_NOT_NULL:
+            case TOKEN_IS_NULL    : break;
+            case TOKEN_NULL_EQ    : 
+            case TOKEN_LESS_EQ    :
+            case TOKEN_GREATER_EQ :
+            case TOKEN_LESS       :
+            case TOKEN_GREATER    :
+            case TOKEN_NOT_EQ     :
+            case TOKEN_ASSIGNMENT :
+            default:    printf("ERROR");
+                        return 0;
+        }
+    } // end if comparitor
+
+    printf ("Expression has no comparitor.. so its always true");
+    return 1;
+}
+
+int evaluate_expressions(cursor_t *cursor,expression_t *expr){
+    expression_t *temp_expr=expr;
+    
+    // the default evaluation type
+
+    int compare=0;
+    int logical_operator=0;
+    int bool_value=0;   //start off false
+    while(temp_expr) {
+        bool_value=compare_expressions(cursor,temp_expr);
+        
+        logical_operator=temp_expr->logical_operator;
+        if(logical_operator){
+            // advance pointer
+            temp_expr=temp_expr->expression;
+            int bool_value2=compare_expressions(cursor,temp_expr);
+            
+            switch(logical_operator) {
+                case TOKEN_SHORT_AND :
+                case TOKEN_SHORT_OR  :
+                case TOKEN_AND       : 
+                case TOKEN_OR        :
+                default:print("Error Invalid Logical Operator");
+                            return 0;
+            }
+        }
+        
+        
+        // advance pointer
+        temp_expr=temp_expr->expression;
+    }
+    return 0;
 }
 
 int execute_select(cursor_t * cursor,select_t *select){
@@ -229,6 +527,8 @@ int execute_select(cursor_t * cursor,select_t *select){
     data_set_t *results=new_data_set(columns,select->column_length,row_count);
     free_column_list(columns,select->column_length);
 
+    cursor->source =data_sets;
+    cursor->results=results;
 
     // MVP SIMPLE assignment..
     // PHASE 2 LIKE IN % %
@@ -236,32 +536,16 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     if(select->where) {
         expression_t *temp_expr=select->where;
-
-        expression_t expresison1;
-/*
-        while(temp_expr) {
-            temp_expr->identifier;
-            temp_expr->in;
-            temp_expr->list;
-            temp_expr->literal;
-            temp_expr->mode;
-            temp_expr->negative;
-            temp_expr->not;
-            temp_expr->not_in;
-            temp_expr->operator;
-            temp_expr->positive;
-
-
-            temp_expr=temp_expr->expression;
-        }
-*/
-
+        int results=evaluate_expressions(cursor,select->where);
+        if(results) printf("where expression true\n");
+        else        printf("where expression false\n");
+    }
     /*for(long i=0;i<data_sets[0]->row_length;i++){
 
 
     }*/
 
-    }
+    
     
 
     // free data sets
@@ -269,9 +553,9 @@ int execute_select(cursor_t * cursor,select_t *select){
         //ok we have the data we need. clear out the loaded data sets
         for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
         free(data_sets);
+        cursor->source=0;
     }
     
-    if(cursor->results) free_data_set(cursor->results);
     cursor->results=results;
     
     return 1;
