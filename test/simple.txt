@@ -17,7 +17,7 @@ SELECT
     JOIN                 mock3 as t3 ON t3.iid=1 
     
     WHERE 
---             -t1.first=-1.511+5+6+3+21-5
+
         -1+1-1=-1
              
         or   1=True
@@ -32,4 +32,5 @@ SELECT
     GROUP BY t2.id,t1.id,iid
     ORDER BY t1.id,iid,t2.id
     LIMIT 1, 10;
+    --             -t1.first=-1.511+5+6+3+21-5
         */
