@@ -222,6 +222,35 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 }
             }
 
+
+
+            switch(t1){
+                case TOKEN_MINUS    :break;
+                case TOKEN_PLUS     :break;
+                case TOKEN_MULTIPLY :break;
+                case TOKEN_DIVIDE   :break;
+                case TOKEN_MODULUS  :break;
+                default:    printf("Unknown arithmetic operation %s",token_type(t1));
+                            if(exprV) free(exprV);
+                            if(tempV) free(tempV);
+                            *expr=*temp_expr;
+                            return 0;
+            }
+
+
+            switch(t2){
+                case TOKEN_MINUS    :break;
+                case TOKEN_PLUS     :break;
+                case TOKEN_MULTIPLY :break;
+                case TOKEN_DIVIDE   :break;
+                case TOKEN_MODULUS  :break;
+                default:    printf("Unknown arithmetic operation %s",token_type(t2));
+                            if(exprV) free(exprV);
+                            if(tempV) free(tempV);
+                            *expr=*temp_expr;
+                            return 0;
+            }
+
             
 
             
@@ -236,11 +265,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=tempV->INT_V; break;
                                                         case TOKEN_DIVIDE   : exprV->INT_V/=tempV->INT_V; break; 
                                                         case TOKEN_MODULUS  : exprV->INT_V%=tempV->INT_V; break;
-                                                        default:    printf("Unknown arithmetic operation");
-                                                                    if(exprV) free(exprV);
-                                                                    if(tempV) free(tempV);
-                                                                    *expr=*temp_expr;
-                                                                    return 0;
                                                     }
                                                     break;
 
@@ -251,11 +275,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->FLOAT_V; break;
                                                         case TOKEN_DIVIDE   : exprV->INT_V/=(int)tempV->FLOAT_V; break; 
                                                         case TOKEN_MODULUS  : exprV->INT_V%=(int)tempV->FLOAT_V; break;
-                                                        default:    printf("Unknown arithmetic operation");
-                                                                    if(exprV) free(exprV);
-                                                                    if(tempV) free(tempV);
-                                                                    *expr=*temp_expr;
-                                                                    return 0;
                                                     }
                                                     break;
 
@@ -266,11 +285,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->LONG_V; break;
                                                         case TOKEN_DIVIDE   : exprV->INT_V/=(int)tempV->LONG_V; break; 
                                                         case TOKEN_MODULUS  : exprV->INT_V%=(int)tempV->LONG_V; break;
-                                                        default:    printf("Unknown arithmetic operation");
-                                                                    if(exprV) free(exprV);
-                                                                    if(tempV) free(tempV);
-                                                                    *expr=*temp_expr;
-                                                                    return 0;
                                                     }
                                                     break;
                                     default :
@@ -291,11 +305,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->INT_V; break;
                                                     case TOKEN_DIVIDE   : exprV->FLOAT_V/=(float)tempV->INT_V; break; 
                                                     case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->INT_V,(double)exprV->FLOAT_V); break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
 
@@ -306,11 +315,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=tempV->FLOAT_V; break;
                                                     case TOKEN_DIVIDE   : exprV->FLOAT_V/=tempV->FLOAT_V; break; 
                                                     case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->FLOAT_V,(double)exprV->FLOAT_V); break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
 
@@ -321,11 +325,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->LONG_V; break;
                                                     case TOKEN_DIVIDE   : exprV->FLOAT_V/=(float)tempV->LONG_V; break; 
                                                     case TOKEN_MODULUS  : exprV->FLOAT_V=fmod((double)tempV->LONG_V,(double)exprV->FLOAT_V); break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
                                 default :
@@ -346,11 +345,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->INT_V; break;
                                                     case TOKEN_DIVIDE   : exprV->LONG_V/=(long)tempV->INT_V; break;
                                                     case TOKEN_MODULUS  : exprV->LONG_V%=(long)tempV->INT_V; break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
 
@@ -361,11 +355,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->FLOAT_V; break;
                                                     case TOKEN_DIVIDE   : exprV->LONG_V/=(long)tempV->FLOAT_V; break;
                                                     case TOKEN_MODULUS  : exprV->LONG_V%=(long)tempV->FLOAT_V; break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
 
@@ -376,11 +365,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=tempV->LONG_V; break;
                                                     case TOKEN_DIVIDE   : exprV->LONG_V/=tempV->LONG_V; break;
                                                     case TOKEN_MODULUS  : exprV->LONG_V%=tempV->LONG_V; break;
-                                                    default:    printf("Unknown arithmetic operation");
-                                                                if(exprV) free(exprV);
-                                                                if(tempV) free(tempV);
-                                                                *expr=*temp_expr;
-                                                                return 0;
                                                 }
                                                 break;
                                 default :   printf("Error in trype conversion");
