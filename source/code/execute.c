@@ -221,20 +221,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 }
             }
 
-            switch(t1){
-                case EVAL_NULL:    printf("t1: NULL ");   break;
-                case EVAL_INT:     printf("t1: INT ");    break;
-                case EVAL_FLOAT:   printf("t1: FLOAT ");  break;
-                case EVAL_LONG:    printf("t1: LONG ");   break;
-                case EVAL_STRING:  printf("t1: STRING "); break;
-            }
-            switch(t2){
-                case EVAL_NULL:    printf("t2: NULL ");   break;
-                case EVAL_INT:     printf("t2: INT ");    break;
-                case EVAL_FLOAT:   printf("t2: FLOAT ");  break;
-                case EVAL_LONG:    printf("t2: LONG ");   break;
-                case EVAL_STRING:  printf("t2: STRING "); break;
-            }
+            
 
             
             // do the math between the differing types
@@ -410,7 +397,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
             }// end master outer switch
             next_operation=0;
         }
-
+        
         //schedule math on the expression
         if(temp_expr->arithmetic_operator) {
             // advance pointer
@@ -464,11 +451,13 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
 
     //update pointer if successfull
     *expr=*temp_expr;
+
     return exprV;
 }
 
 int compare_expressions(cursor_t *cursor,expression_t *expr){
     expression_value_t *expr1=evaluate_expression(cursor,expr);
+    debug_expression_value(expr1);
 
     //compare the expression
     if(expr->comparison_operator) {
@@ -480,6 +469,7 @@ int compare_expressions(cursor_t *cursor,expression_t *expr){
         printf("FOUND A comparison\n");
         if(expr==0) printf("EXPR EMPTY\n");
         expression_value_t *expr2=evaluate_expression(cursor,expr);
+        debug_expression_value(expr2);
         printf("GOT IT\n");
 
         switch(comparison){

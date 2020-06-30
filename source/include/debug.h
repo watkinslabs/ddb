@@ -38,6 +38,7 @@
     void debug_create_table(table_def_t *table);
     void debug_use         (use_t *use);
     void debug_dataset     (data_set_t *data);
+    void debug_expression_value(expression_value_t *expr);
 
 
  

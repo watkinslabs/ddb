@@ -422,10 +422,27 @@ void debug_select(select_t *select){
  * returns: nothing. All output is via stdio
  */
 void debug_use(use_t *use){
+
     // DEBUGGING INFORMATION
 
     if(use==0) return;
     debug_header("Use");
     if (use->database) printf(" - database: %s\n",use->database);
 
+}
+
+void debug_expression_value(expression_value_t *expr){
+    if(expr){
+        switch(expr->type){
+            case EVAL_NULL:    printf("Expression:        is NULL\n");             break;
+            case EVAL_INT:     printf("Expression: INT    :%d\n" ,expr->INT_V);    break;
+            case EVAL_FLOAT:   printf("Expression: FLOAT  :%f\n" ,expr->FLOAT_V);  break;
+            case EVAL_LONG:    printf("Expression: LONG   :%ld\n",expr->LONG_V);   break;
+            case EVAL_STRING:  printf("Expression: STRING :%s\n" ,expr->STRING_V); break;
+            default: printf("Expression: I've got no clue\n"); break;
+        }
+    } else {
+        printf("Expression: does not exist\n");
+    }
+    return 1;
 }
