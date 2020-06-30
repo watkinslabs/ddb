@@ -125,6 +125,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
             default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
                      if(exprV) free(exprV);
                      if(tempV) free(tempV);
+                    *expr=*temp_expr;
                      return 0;
                      break;
         }// end switch 
@@ -137,10 +138,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                     case TOKEN_STRING:  printf("cannot apply uinary operation to a string");
                                         if(exprV) free(exprV);
                                         if(tempV) free(tempV);
+                                        *expr=*temp_expr;
                                         return 0;
                     case TOKEN_NULL:    printf("cannot apply uinary operation to a NULL");
                                         if(exprV) free(exprV);
                                         if(tempV) free(tempV);
+                                        *expr=*temp_expr;
                                         return 0;
                     case TOKEN_NUMERIC: 
                     case TOKEN_HEX:     
@@ -157,6 +160,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 printf ("Eval Expression: cannot preform arithmetic on a string");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
+                *expr=*temp_expr;
                 return 0;
             }
 
@@ -164,6 +168,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 printf ("Eval Expression: cannot preform arithmetic on a NULL");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
+                *expr=*temp_expr;
                 return 0;
             }
 
@@ -184,18 +189,37 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                     exprV->FLOAT_V=(float)exprV->LONG_V; 
                     exprV->LONG_V=0; 
                     exprV->type=EVAL_FLOAT; 
+                    printf ("converting t1 to FLOAT\n");
                 }
                 if(t1==EVAL_INT && t2==EVAL_FLOAT)  { 
                     exprV->FLOAT_V=(float)exprV->INT_V; 
                     exprV->INT_V=0; 
                     exprV->type=EVAL_FLOAT; 
+                    printf ("converting t1 to FLOAT\n");
                 }
 
                 if(t1==EVAL_INT && t2==EVAL_LONG)  { 
                     exprV->LONG_V=(long)exprV->INT_V; 
                     exprV->INT_V=0; 
                     exprV->type=EVAL_LONG; 
+                    printf ("converting t1 to LONG\n");
+
                 }
+            }
+
+            switch(t1){
+                case EVAL_NULL:    printf("t1: NULL ");   break;
+                case EVAL_INT:     printf("t1: INT ");    break;
+                case EVAL_FLOAT:   printf("t1: FLOAT ");  break;
+                case EVAL_LONG:    printf("t1: LONG ");   break;
+                case EVAL_STRING:  printf("t1: STRING "); break;
+            }
+            switch(t2){
+                case EVAL_NULL:    printf("t2: NULL ");   break;
+                case EVAL_INT:     printf("t2: INT ");    break;
+                case EVAL_FLOAT:   printf("t2: FLOAT ");  break;
+                case EVAL_LONG:    printf("t2: LONG ");   break;
+                case EVAL_STRING:  printf("t2: STRING "); break;
             }
 
             
@@ -213,6 +237,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         default:    printf("Unknown arithmetic operation");
                                                                     if(exprV) free(exprV);
                                                                     if(tempV) free(tempV);
+                                                                    *expr=*temp_expr;
                                                                     return 0;
                                                     }
                                                     break;
@@ -227,6 +252,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         default:    printf("Unknown arithmetic operation");
                                                                     if(exprV) free(exprV);
                                                                     if(tempV) free(tempV);
+                                                                    *expr=*temp_expr;
                                                                     return 0;
                                                     }
                                                     break;
@@ -241,6 +267,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                         default:    printf("Unknown arithmetic operation");
                                                                     if(exprV) free(exprV);
                                                                     if(tempV) free(tempV);
+                                                                    *expr=*temp_expr;
                                                                     return 0;
                                                     }
                                                     break;
@@ -248,6 +275,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                 printf("Error in trype conversion");
                                                 if(exprV) free(exprV);
                                                 if(tempV) free(tempV);
+                                                *expr=*temp_expr;
                                                 return 0;
                                 }// internal switch
                             break;
@@ -264,6 +292,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
@@ -278,6 +307,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
@@ -292,6 +322,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
@@ -299,6 +330,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                             printf("Error in trype conversion");
                                             if(exprV) free(exprV);
                                             if(tempV) free(tempV);
+                                            *expr=*temp_expr;
                                             return 0;
                             }// internal switch
                             break;
@@ -315,6 +347,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
@@ -329,6 +362,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
@@ -343,18 +377,21 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     default:    printf("Unknown arithmetic operation");
                                                                 if(exprV) free(exprV);
                                                                 if(tempV) free(tempV);
+                                                                *expr=*temp_expr;
                                                                 return 0;
                                                 }
                                                 break;
                                 default :   printf("Error in trype conversion");
                                             if(exprV) free(exprV);
                                             if(tempV) free(tempV);
+                                            *expr=*temp_expr;
                                             return 0;
                             }// internal switch
                             break;
                 default :   printf("Error in trype conversion");
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
+                            *expr=*temp_expr;
                             return 0;
             }// end master outer switch
             next_operation=0;
@@ -368,6 +405,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 printf ("arithmetic has empty expression after");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
+                *expr=*temp_expr;
                 return 0;
             }
             
@@ -382,6 +420,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 default: printf ("unsuported 'YET': %s",token_type(temp_expr->arithmetic_operator));     
                         if(exprV) free(exprV);
                         if(tempV) free(tempV);
+                        *expr=*temp_expr;
                         return 0;
             }
         }
@@ -410,6 +449,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
         printf("ERR: expression still doing arithmetic missing last expression");
         if(exprV) free(exprV);
         if(tempV) free(tempV);
+        *expr=*temp_expr;
         return 0;
     }
     if(tempV) free(tempV);
