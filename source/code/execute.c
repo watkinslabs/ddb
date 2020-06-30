@@ -113,7 +113,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
 
     
     while(temp_expr) {
-        // process token(s)/data point.. 
+
+        //compare the expression (eject higher functions problem)
+        if(temp_expr->comparison_operator) {
+            if(tempV) free(tempV);
+            *expr=*temp_expr;
+            return exprV;
+        }
+                // process token(s)/data point.. 
         switch(temp_expr->mode){
             // identifier (lets just make this a token code)
             case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
@@ -121,7 +128,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                     //exprV=
                     break;
                     // litteral
-            case 2: printf ("EVAL->'\"%s\"'\n",temp_expr->literal->value);
+            case 2: printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
                     tempV=eval_token(temp_expr->literal); 
                     printf ("DONE\n");
                     
@@ -431,12 +438,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
 
         if(exprV==0) exprV=tempV;
 
-        //compare the expression
-        if(temp_expr->comparison_operator) {
-            if(tempV) free(tempV);
-            *expr=*temp_expr;
-            return exprV;
-        }
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
