@@ -118,7 +118,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
         // if found after the first element.. eject
         // if not... its the first comparitor
         if(exprV && temp_expr->comparison_operator) {
-            if(tempV) free(tempV);
+            if(tempV!=exprV) free(tempV);
             *expr=*temp_expr;
             return exprV;
         }
