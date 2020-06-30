@@ -403,7 +403,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
             // advance pointer
             temp_expr=temp_expr->expression;
             if(temp_expr==0) {
-                printf ("arithmetic has empty expression after");
+                printf ("expression missing right hand side of arithmetic\n");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
                 //*expr=NULL;
