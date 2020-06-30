@@ -587,7 +587,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     if(select->where) {
         expression_t *temp_expr=select->where;
-        int results=evaluate_expressions(cursor,select->where);
+       // int results=evaluate_expressions(cursor,select->where);
         if(results) printf("where expression true\n");
         else        printf("where expression false\n");
     }
