@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <math.h>
 
 #include "../include/errors.h"
 #include "../include/structure.h"
