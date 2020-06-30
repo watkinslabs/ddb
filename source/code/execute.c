@@ -108,7 +108,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_value_t *exprV;
     expression_value_t *tempV;
 
-    
+    printf ("in evaluate expression\n");
     int next_operation=0;
 
     
