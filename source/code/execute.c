@@ -473,7 +473,6 @@ int compare_expressions(cursor_t *cursor,expression_t *expr){
     //compare the expression
     if(expr->comparison_operator) {
         int comparison=expr->comparison_operator;
-        expr=expr->expression;
         if(!expr)  {
             printf ("ERROR");
             return 0;
