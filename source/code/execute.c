@@ -88,12 +88,12 @@ expression_value_t *eval_token(token_t *token){
         case TOKEN_NUMERIC: expr->LONG_V=atol(token->value); 
                             expr->type=EVAL_LONG;
                             break;
-        case TOKEN_HEX:     expr->LONG_V=stoi(&token->value+2, 0, 16);
-                            expr->type=EVAL_LONG;
-                            break; 
-        case TOKEN_BINARY:  expr->LONG_V=stoi(&token->value+2, 0, 2);
-                            expr->type=EVAL_LONG;
-                            break; 
+        //case TOKEN_HEX:     expr->LONG_V=stoi(&token->value+2, 0, 16);
+        //                    expr->type=EVAL_LONG;
+        //                    break; 
+        //case TOKEN_BINARY:  expr->LONG_V=stoi(&token->value+2, 0, 2);
+        //                    expr->type=EVAL_LONG;
+        //                    break; 
         case TOKEN_REAL:    expr->FLOAT_V=atof(token->value); 
                             expr->type=EVAL_FLOAT;
                             break;
