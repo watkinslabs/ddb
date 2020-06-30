@@ -114,8 +114,10 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     
     while(temp_expr) {
 
-        //compare the expression (eject higher functions problem)
-        if(temp_expr->comparison_operator) {
+        // compare the expression (eject higher functions problem)
+        // if found after the first element.. eject
+        // if not... its the first comparitor
+        if(expr && temp_expr->comparison_operator) {
             if(tempV) free(tempV);
             *expr=*temp_expr;
             return exprV;
@@ -587,7 +589,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     if(select->where) {
         expression_t *temp_expr=select->where;
-       // int results=evaluate_expressions(cursor,select->where);
+        int results=evaluate_expressions(cursor,select->where);
         if(results) printf("where expression true\n");
         else        printf("where expression false\n");
     }
