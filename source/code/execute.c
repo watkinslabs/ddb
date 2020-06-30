@@ -105,8 +105,8 @@ expression_value_t *eval_token(token_t *token){
 
 expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    expression_value_t *exprV;
-    expression_value_t *tempV;
+    expression_value_t *exprV=0;
+    expression_value_t *tempV=0;
 
     printf ("in evaluate expression\n");
     int next_operation=0;
