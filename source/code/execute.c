@@ -391,12 +391,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
         //compare the expression
         if(temp_expr->comparison_operator) {
             if(tempV) free(tempV);
+            *expr=*temp_expr;
             return exprV;
         }
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
             if(tempV) free(tempV);
+            *expr=*temp_expr;
             return exprV;
         }
 
