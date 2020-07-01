@@ -104,7 +104,7 @@ expression_value_t *eval_token(token_t *token){
 }
 
 expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
-    expression_t *temp_expr=expr;
+    expression_t *temp_expr=*expr;
     expression_value_t *exprV=0;
     expression_value_t *tempV=0;
 
@@ -405,7 +405,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         if(expr1) return 1;
         else return 0;
     }
-    
+
     if(expr2->comparison_operator) {
         int comparison=expr2->comparison_operator;
         printf("FOUND A comparison\n");
