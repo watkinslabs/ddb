@@ -135,6 +135,7 @@ typedef struct data_set_t{
     long      column_length;
     long      row_length;
     row_t  ** rows;
+    long      position;
 } data_set_t;
 
 
