@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <math.h>
+#include <assert.h>
 
 #include "../include/errors.h"
 #include "../include/structure.h"
