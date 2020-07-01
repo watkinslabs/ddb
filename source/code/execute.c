@@ -1031,7 +1031,10 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         printf( "no match? long");
         return 0;
     }
-    printf("NO CLUE WHATS UP WITH THIS TYPE COMPARISON\n");
+    printf("NO CLUE WHATS UP WITH THIS TYPE COMPARISON %d\n",comparison);
+
+    debug_expression_value(e1);
+    debug_expression_value(e2);
     return 0;
 
 }
