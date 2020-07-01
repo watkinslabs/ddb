@@ -438,7 +438,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int logical_operator=0;
     int bool_value=0;   //start off false
     while(temp_expr) {
-        bool_value=compare_expressions(cursor,*temp_expr);
+        bool_value=compare_expressions(cursor,temp_expr);
         
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
