@@ -627,7 +627,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
     for(long row=0;row<length;row++){
         if(row%100==0) {
-        printf ("SET %d %ld of %ld\n",set,row,length); 
+        printf ("SET %d %ld of %ld count %d\n",set,row,length,cursor->source_count); 
         }
         results+=evaluate_expressions(cursor,expr);
         data_set->rows[row];
