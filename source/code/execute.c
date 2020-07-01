@@ -632,7 +632,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         results+=evaluate_expressions(cursor,expr);
         data_set->rows[row];
         if(set+1<cursor->source_count) {
-            results+=return_match(cursor,select,1+set);
+            results+=return_match(cursor,select,set+1);
         }
 
     }
