@@ -540,10 +540,11 @@ int execute_select(cursor_t * cursor,select_t *select){
         expression_t *temp_expr=select->where;
         
         long row_count_max=0;
-        for(int set=0;set<data_set_count;set++){
+        for(int set=0;set<data_set_count;set++){ 
             if(set==0) row_count_max=data_sets[set]->row_length;
             else row_count_max*=data_sets[set]->row_length;
-
+        }
+        
         printf("row_count_max:%d",row_count_max);
 
         for(int set=0;set<data_set_count;set++){
