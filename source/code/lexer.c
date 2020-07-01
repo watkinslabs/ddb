@@ -556,6 +556,8 @@ int process_queries(cursor_t *cursor,char *queries){
         char *message=safe_malloc(message_len,1);
         sprintf(message,"error: unknown text at position :%d %s >>> %s  <<< \n",tokens->position,token_type(token->type),token->value);
         error(cursor,ERR_UNKNOWN_SQL,message);
+        token_print(tokens);
+
         return 0;
     }
 
@@ -614,7 +616,6 @@ int process_queries(cursor_t *cursor,char *queries){
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
-    token_print(tokens);
     cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
