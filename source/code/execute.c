@@ -546,6 +546,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             // if where clause fails.. we skip this row
             if(results==0) continue;
 
+            if(1=0)
             // loop through JOIN
             for(int set=1;set<data_set_count;set++){
                 for(long i=0;i<data_sets[set]->row_length;i++){
