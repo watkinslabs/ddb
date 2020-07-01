@@ -548,10 +548,14 @@ int execute_select(cursor_t * cursor,select_t *select){
 
             if(1==0)
             // loop through JOIN
+            // (INNER) JOIN: Returns records that have matching values in both tables
+            // LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+            // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+            // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
             for(int set=1;set<data_set_count;set++){
                 for(long i=0;i<data_sets[set]->row_length;i++){
                     data_sets[set]->position=i;
-                    expression_t *expressions=&select->join[set];
+                    expression_t *expressions=*select->join[set];
                     results=evaluate_expressions(cursor,expressions);
                     
                     
