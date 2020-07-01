@@ -379,18 +379,17 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             }// end master outer switch
         }
 
-     
+        if(exprV==0) exprV=tempV;
+
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
-            printf("Logical split\n");
             if(tempV) free(tempV);
             *expr=temp_expr;
             return exprV;
         }
-    
-       if(exprV==0) exprV=tempV;
 
+        temp_expr=temp_expr->expression;
         // if this is a first cycle.. assign to root.. 
     }// end while...
 
@@ -1035,4 +1034,5 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
     printf("NO CLUE WHATS UP WITH THIS TYPE COMPARISON %d\n",comparison);
 
     return 0;
+
 }
