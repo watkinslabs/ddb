@@ -394,14 +394,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 }
 
 int compare_expressions(cursor_t *cursor,expression_t **expr){
-    expression_value_t *expr1=evaluate_expression(cursor,expr);
-    debug_expression_value(expr1);
+    expression_value_t *exprV1=evaluate_expression(cursor,expr);
+    debug_expression_value(exprV1);
 
     //compare the expression
     expression_t *expr2=*expr;
 
     if(!expr2) {
-        debug_expression_value(expr1);
+        debug_expression_value(exprV1);
         if(expr1) return 1;
         else return 0;
     }
@@ -409,10 +409,8 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     if(expr2->comparison_operator) {
         int comparison=expr2->comparison_operator;
         printf("FOUND A comparison\n");
-        if(expr==0) printf("EXPR EMPTY\n");
-        expression_value_t *expr2=evaluate_expression(cursor,expr);
-        debug_expression_value(expr2);
-        printf("GOT IT\n");
+        expression_value_t *exprV2=evaluate_expression(cursor,expr);
+        debug_expression_value(exprV2);
 
         switch(comparison){
             case TOKEN_IS_NOT_NULL:
