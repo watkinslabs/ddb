@@ -244,8 +244,8 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             printf ("\n%d\n",exprV->type);
             // do the math between the differing types
             switch(exprV->type){
-                printf ("DOING...  \n");
                 case EVAL_INT:
+                            printf ("DOING INT...  \n");
                                 switch(t2){
                                     case EVAL_INT:   
                                                     switch(temp_expr->arithmetic_operator){
@@ -286,6 +286,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             break;
 
             case EVAL_FLOAT:
+                            printf ("DOING FLOAT...  \n");
                             switch(t2){
                                 case EVAL_INT:   
                                                 switch(temp_expr->arithmetic_operator){
@@ -326,6 +327,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             break;
 
             case EVAL_LONG:
+                            printf ("DOING LONG...  \n");
                             switch(t2){
                                 case EVAL_INT:   
                                                 switch(temp_expr->arithmetic_operator){
