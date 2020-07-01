@@ -368,7 +368,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             return 0;
             }// end master outer switch
         }
-        
+        debug_expression_value(exprV);
 
         if(exprV==0) exprV=tempV;
 
