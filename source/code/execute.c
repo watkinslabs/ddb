@@ -466,7 +466,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
         // advance pointer
         if(temp_expr){
             printf("Advancing pointer\n");
-            temp_expr=temp_expr->expression;
+//            temp_expr=temp_expr->expression;
         }
 
     }
