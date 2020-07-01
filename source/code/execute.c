@@ -384,10 +384,9 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
-
+            printf("Logical split\n");
             if(tempV) free(tempV);
             *expr=temp_expr;
-            printf("Logical spliut\n");
             return exprV;
         }
 
