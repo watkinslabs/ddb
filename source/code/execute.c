@@ -638,9 +638,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     if(set+1<cursor->source_count) {
         printf("--->\n");
         for(long row=0;row<2;row++){
-            printf("===>");
+            printf("===>\n");
             results+=return_match(cursor,select,set+1);
-            printf("<===");
+            printf("<===\n");
         }
         printf("<<--\n");
     }
