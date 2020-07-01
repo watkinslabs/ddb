@@ -538,15 +538,23 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     if(select->where) {
         expression_t *temp_expr=select->where;
-        int results=evaluate_expressions(cursor,select->where);
-        if(results) printf("where expression true\n");
-        else        printf("where expression false\n");
+        
+        long row_count_max=0;
+        for(int set=0;set<data_set_count;set++){
+            if(set==0) row_count_max=data_sets[set]->row_length;
+            else row_count_max*=data_sets[set]->row_length;
+
+        printf("row_count_max:%d",row_count_max);
+
+        for(int set=0;set<data_set_count;set++){
+            for(long i=0;i<data_sets[set]->row_length;i++){
+                int results=evaluate_expressions(cursor,select->where);
+                //if(results) printf("where expression true\n");
+                //else        printf("where expression false\n");
+            }
+        }
+
     }
-    /*for(long i=0;i<data_sets[0]->row_length;i++){
-
-
-    }*/
-
     
     
 
