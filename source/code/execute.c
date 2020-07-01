@@ -626,7 +626,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     data_set_t *data_set=cursor->source[set];
 
     for(long row=0;row<length;row++){
-        if(row%1000==0) {
+        if(row%100==0) {
         printf ("SET %d %ld\n",set,row); 
         }
         results+=evaluate_expressions(cursor,expr);
