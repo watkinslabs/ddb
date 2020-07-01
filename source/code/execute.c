@@ -23,8 +23,8 @@ data_set_t * new_data_set(char **columns,int column_count,int row_count);
 char ** get_column_list(data_column_t *columns,int length);
 
 char * long_2_string(long value);
-char * int_2_string(long value);
-char * float_2_string(long value);
+char * int_2_string(int value);
+char * float_2_string(float  value);
 int    compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison);
 
 /* Function: validate_create_table
