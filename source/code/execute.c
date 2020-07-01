@@ -540,7 +540,6 @@ int execute_select(cursor_t * cursor,select_t *select){
 
         printf("row_count_max: %ld\n",row_count_max);
 
-        int results=0;
         // loop through JOIN
         // (INNER) JOIN: Returns records that have matching values in both tables
         // LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
