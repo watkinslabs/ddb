@@ -438,9 +438,9 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int bool_value1=0;   //start off false
     int bool_value2=0;
     bool_value1=compare_expressions(cursor,&temp_expr);
+    printf("%d res\n",bool_value1);
 
     while(temp_expr) {
-        printf("%d res\n",bool_value1);
         if(!temp_expr) break;
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
@@ -453,7 +453,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 case TOKEN_SHORT_AND :
                 case TOKEN_SHORT_OR  :
                 case TOKEN_AND       : printf ("AND\n"); if(!bool_value1 || !bool_value2) bool_value1=0; break;
-                case TOKEN_OR        :  printf ("OR\n"); if(bool_value1 || bool_value2) bool_value1=1; break;
+                case TOKEN_OR        : printf ("OR\n"); if(bool_value1 || bool_value2) bool_value1=1; break;
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
