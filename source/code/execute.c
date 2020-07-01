@@ -826,16 +826,16 @@ char * int_2_string(int value){
     const int n = snprintf(NULL, 0, "%d", value);
     assert(n > 0);
     char * buf=safe_malloc(sizeof(char)*(n+1),1);
-    int c = snprintf(buf, n+1, "%lu", value);
+    int c = snprintf(buf, n+1, "%d", value);
     assert(c == n);
     return buf;
 }
 
 char * float_2_string(float value){
-    const int n = snprintf(NULL, 0, "%lu", value);
+    const int n = snprintf(NULL, 0, "%f", value);
     assert(n > 0);
     char *buf=safe_malloc(sizeof(char)*(n+1),1);
-    int c = snprintf(buf, n+1, "%lu", value);
+    int c = snprintf(buf, n+1, "%f", value);
     assert(c == n);
     return buf;
 }
