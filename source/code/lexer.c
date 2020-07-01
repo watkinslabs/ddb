@@ -352,7 +352,7 @@ void token_combine(token_array_t *tokens,int *list){
                     token_delete(tokens,start_index+1);
                 }
                 tokens->array[start_index].value=new_token;
-                i=-1;
+                i=-1;         //TOSO: FIX HACK fails after 1  match...
                 list_index=0;
 
             }
