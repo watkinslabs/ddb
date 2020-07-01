@@ -402,7 +402,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
     if(!expr2) {
         debug_expression_value(exprV1);
-        if(expr1) return 1;
+        if(exprV1) return 1;
         else return 0;
     }
 
