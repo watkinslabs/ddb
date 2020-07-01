@@ -384,15 +384,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         }
 
         if(exprV==0) exprV=tempV;
-
-        
-        //evalulate another expression
-        if(temp_expr->logical_operator) {
-            if(tempV!=exprV) free(tempV);
-            *expr=temp_expr;
-            printf("EXIT THIS WAY\n");
-            return exprV;
-        }
+     
 
         temp_expr=temp_expr->expression;
         // if this is a first cycle.. assign to root.. 
