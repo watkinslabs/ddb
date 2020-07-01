@@ -250,7 +250,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             }
             
 
-            printf ("\n%d\n",exprV->type);
+            
             // do the math between the differing types
             switch(exprV->type){
                 case EVAL_INT:
@@ -397,7 +397,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 
 int compare_expressions(cursor_t *cursor,expression_t **expr){
     expression_value_t *exprV1=evaluate_expression(cursor,expr);
-    //debug_expression_value(exprV1);
+    debug_expression_value(exprV1);
 
     //compare the expression
     expression_t *expr2=*expr;
