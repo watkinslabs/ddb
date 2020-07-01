@@ -535,7 +535,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             else row_count_max*=data_sets[set]->row_length;
         }
 
-        printf("row_count_max:%d",row_count_max);
+        printf("row_count_max:%ld",row_count_max);
 
         int results=0;
         
@@ -594,7 +594,7 @@ int execute_select(cursor_t * cursor,select_t *select){
                     }
                     //else        printf("where expression false\n");
                 }
-                
+
             }
     }
     
