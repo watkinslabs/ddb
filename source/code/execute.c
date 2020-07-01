@@ -563,8 +563,8 @@ int execute_select(cursor_t * cursor,select_t *select){
                         continue;
                     } 
 
-  
-                    expressions=&select->join[set].expression;
+                    join_t *join=&select->join[set];
+                    expressionsjoin->expression;
                     //results=evaluate_expressions(cursor,expressions);
                     results=1;
 
@@ -573,7 +573,7 @@ int execute_select(cursor_t * cursor,select_t *select){
                     // >-1 add row
                     
                     //results=evaluate_expressions(cursor,expressions);
-                    switch(select->join[set].type){
+                    switch(join->type){
                         case TOKEN_JOIN:        if(!results) {
                                                     data_sets[set]->position=-2;
                                                     continue;
