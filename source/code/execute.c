@@ -241,7 +241,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             printf("Doing arthmetic\n");
             
 
-            
+            printf ("\n%d\n",exprV->type);
             // do the math between the differing types
             switch(exprV->type){
                 printf ("DOING...  \n");
