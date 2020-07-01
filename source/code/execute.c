@@ -628,7 +628,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     for(long row=0;row<length;row++){
         results+=evaluate_expressions(cursor,expr);
         data_set->rows[row];
-        if(set+1<cursor->source[0]) {
+        if(set+1<cursor->source_count) {
             results+=return_match(cursor,select,1+set);
         }
 
