@@ -642,7 +642,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     }
 
 
-    return 1;
+    return results;
 }
 
 
