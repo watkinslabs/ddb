@@ -396,7 +396,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 }
 
 int compare_expressions(cursor_t *cursor,expression_t **expr){
-    printf("compare\n");
     expression_value_t *exprV1=evaluate_expression(cursor,expr);
 
     //debug_expression_value(exprV1);
@@ -405,7 +404,6 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     expression_t *expr2=*expr;
 
     if(!expr2) {
-        printf("NO #2\n");
         if(exprV1) return 1;
         else return 0;
     }
@@ -416,13 +414,10 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         //debug_expression_value(exprV2);
 
         int results=compare_expression_value(exprV1,exprV2,comparison);
-        printf("#2\n");
         return results;
     } // end if comparitor
 
-    printf("#1\n");
     if(exprV1) return 1;
-    printf("#0\n");
     return 0;
 }
 
