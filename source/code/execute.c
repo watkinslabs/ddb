@@ -447,7 +447,6 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
             // advance pointer
             temp_expr=temp_expr->expression;
             bool_value2=compare_expressions(cursor,&temp_expr);
-            printf("%d res2\n",bool_value2);
             
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
@@ -457,6 +456,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
+            printf("%d res2\n",bool_value2);
         } else {
             printf ("not sure\n");
             debug_expr(temp_expr,10);
