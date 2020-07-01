@@ -142,8 +142,8 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     printf ("DONE\n");
                     break;
             // logical operator
-            case 6: 
-                        if(tempV!=exprV) free(tempV);
+            case 6:     if(tempV!=exprV) free(tempV);
+                        *expr=temp_expr;
                         return exprV;
                     
             default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
@@ -390,7 +390,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         // if this is a first cycle.. assign to root.. 
     }// end while...
 
-    if(tempV) free(tempV);
+    if(tempV && tempV!=exprV) free(tempV);
 
     //update pointer if successfull
     *expr=temp_expr;
