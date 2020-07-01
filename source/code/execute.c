@@ -540,31 +540,62 @@ int execute_select(cursor_t * cursor,select_t *select){
         int results=0;
         
 
-        // loop through WHERE
-        for(long i=0;i<data_sets[0]->row_length;i++){
-            results=evaluate_expressions(cursor,select->where);
-            // if where clause fails.. we skip this row
-            if(results==0) continue;
 
             // loop through JOIN
             // (INNER) JOIN: Returns records that have matching values in both tables
             // LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
             // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
             // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+            
             for(int set=1;set<data_set_count;set++){
+                if(data_sets[set-1]->position==-2) continue;
                 for(long i=0;i<data_sets[set]->row_length;i++){
                     data_sets[set]->position=i;
-                    expression_t *expressions=select->join[set].expression;
-                    results=evaluate_expressions(cursor,expressions);
-                    
-                    
-                    if(results) {
+                    expression_t *expressions=0;
 
+                    if(set==0) {
+                        expressions=select->where;
+                        //results=evaluate_expressions(cursor,expressions);
+                        results=1;
+                        if(!results) {
+                            data_sets[set]->position=-2;
+                        }
+                        continue;
+                    } 
+
+  
+                    expressions=select->join[set].expression;
+                    //results=evaluate_expressions(cursor,expressions);
+                    results=1;
+
+                    // -2=skip everything
+                    // -1 add blank row
+                    // >-1 add row
+                    
+                    //results=evaluate_expressions(cursor,expressions);
+                    switch(select->join[set].type){
+                        case TOKEN_JOIN:        if(!results) {
+                                                    data_sets[set]->position=-2;
+                                                    continue;
+                                                }
+                                                break;
+                        case TOKEN_LEFT_JOIN:   if(!results) {
+                                                    data_sets[set]->position=-1;
+                                                }
+                                                break;
+                        //case TOKEN_RIGHT_JOIN:  if(!results) {
+                        //                            data_sets[set-1]->position=-1;
+                        //                        }
+                        //                break;
+                        //case TOKEN_FULL_OUTER_JOIN: if(!results) {
+                        //                             data_sets[set-1]->position=-1;
+                        //                            }
+                                        break;
                     }
                     //else        printf("where expression false\n");
                 }
+                
             }
-        }
     }
     
     
