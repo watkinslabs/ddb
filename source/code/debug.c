@@ -379,6 +379,7 @@ void debug_select(select_t *select){
     if (select->join) {
         debug_sub_header("JOIN");// %d\n",select->join_length);
         for(int i=0;i<select->join_length;i++){
+            printf("  Type: %s\n",select->join[i].type);
             if(select->join[i].identifier) {
                 int printed=0;
                 if(select->join[i].identifier->qualifier) {
