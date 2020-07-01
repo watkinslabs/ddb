@@ -614,7 +614,7 @@ int process_queries(cursor_t *cursor,char *queries){
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
-    print_tokens(tokens);
+    debug(tokens);
     cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
