@@ -632,7 +632,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         results+=evaluate_expressions(cursor,expr);
         data_set->rows[row];
         if(set+1<cursor->source_count) {
-            printf ("SET?\n");
             results+=return_match(cursor,select,set+1);
         }
 
