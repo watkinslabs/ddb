@@ -224,27 +224,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
 
 
 
-            switch(t1){
+
+            switch(temp_expr->arithmetic_operator){
                 case TOKEN_MINUS    :break;
                 case TOKEN_PLUS     :break;
                 case TOKEN_MULTIPLY :break;
                 case TOKEN_DIVIDE   :break;
                 case TOKEN_MODULUS  :break;
-                default:    printf("Unknown arithmetic operation %d",t1);
-                            if(exprV) free(exprV);
-                            if(tempV) free(tempV);
-                            *expr=*temp_expr;
-                            return 0;
-            }
-
-
-            switch(t2){
-                case TOKEN_MINUS    :break;
-                case TOKEN_PLUS     :break;
-                case TOKEN_MULTIPLY :break;
-                case TOKEN_DIVIDE   :break;
-                case TOKEN_MODULUS  :break;
-                default:    printf("Unknown arithmetic operation %d",t2);
+                default:    printf("Unknown arithmetic operation %d",temp_expr->arithmetic_operator);
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
                             *expr=*temp_expr;
@@ -259,7 +246,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                 case EVAL_INT:
                                 switch(t2){
                                     case EVAL_INT:   
-                                                    switch(next_operation){
+                                                    switch(temp_expr->arithmetic_operator){
                                                         case TOKEN_MINUS    : exprV->INT_V-=tempV->INT_V; break;
                                                         case TOKEN_PLUS     : exprV->INT_V+=tempV->INT_V; break;
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=tempV->INT_V; break;
@@ -269,7 +256,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     break;
 
                                     case EVAL_FLOAT:
-                                                    switch(next_operation){
+                                                    switch(temp_expr->arithmetic_operator){
                                                         case TOKEN_MINUS    : exprV->INT_V-=(int)tempV->FLOAT_V; break;
                                                         case TOKEN_PLUS     : exprV->INT_V+=(int)tempV->FLOAT_V; break;
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->FLOAT_V; break;
@@ -279,7 +266,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                     break;
 
                                     case EVAL_LONG:
-                                                    switch(next_operation){
+                                                    switch(temp_expr->arithmetic_operator){
                                                         case TOKEN_MINUS    : exprV->INT_V-=(int)tempV->LONG_V; break;
                                                         case TOKEN_PLUS     : exprV->INT_V+=(int)tempV->LONG_V; break;
                                                         case TOKEN_MULTIPLY : exprV->INT_V*=(int)tempV->LONG_V; break;
@@ -299,7 +286,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
             case EVAL_FLOAT:
                             switch(t2){
                                 case EVAL_INT:   
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->FLOAT_V-=(float)tempV->INT_V; break;
                                                     case TOKEN_PLUS     : exprV->FLOAT_V+=(float)tempV->INT_V; break;
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->INT_V; break;
@@ -309,7 +296,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                 break;
 
                                 case EVAL_FLOAT:
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->FLOAT_V-=tempV->FLOAT_V; break;
                                                     case TOKEN_PLUS     : exprV->FLOAT_V+=tempV->FLOAT_V; break;
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=tempV->FLOAT_V; break;
@@ -319,7 +306,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                 break;
 
                                 case EVAL_LONG:
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->FLOAT_V-=(float)tempV->LONG_V; break;
                                                     case TOKEN_PLUS     : exprV->FLOAT_V+=(float)tempV->LONG_V; break;
                                                     case TOKEN_MULTIPLY : exprV->FLOAT_V*=(float)tempV->LONG_V; break;
@@ -339,7 +326,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
             case EVAL_LONG:
                             switch(t2){
                                 case EVAL_INT:   
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->LONG_V-=(long)tempV->INT_V; break;
                                                     case TOKEN_PLUS     : exprV->LONG_V+=(long)tempV->INT_V; break;
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->INT_V; break;
@@ -349,7 +336,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                 break;
 
                                 case EVAL_FLOAT:
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->LONG_V-=(long)tempV->FLOAT_V; break;
                                                     case TOKEN_PLUS     : exprV->LONG_V+=(long)tempV->FLOAT_V; break;
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=(long)tempV->FLOAT_V; break;
@@ -359,7 +346,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
                                                 break;
 
                                 case EVAL_LONG:
-                                                switch(next_operation){
+                                                switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->LONG_V-=tempV->LONG_V; break;
                                                     case TOKEN_PLUS     : exprV->LONG_V+=tempV->LONG_V; break;
                                                     case TOKEN_MULTIPLY : exprV->LONG_V*=tempV->LONG_V; break;

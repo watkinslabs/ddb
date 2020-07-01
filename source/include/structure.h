@@ -61,6 +61,7 @@ typedef struct expression_t{
 #define EVAL_FLOAT   4
 #define EVAL_BOOL    5
 #define EVAL_NULL    6
+#define EVAL_DOUBLE  7
 
 typedef struct expression_value_t {
     char *STRING_V;
