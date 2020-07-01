@@ -237,7 +237,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             *expr=temp_expr;
                             return 0;
             }
-
+            printf("Doing arthmetic\n");
             
 
             
