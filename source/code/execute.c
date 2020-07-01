@@ -555,7 +555,7 @@ int execute_select(cursor_t * cursor,select_t *select){
 
                 if(set==0) {
                     expressions=select->where;
-                    //results=evaluate_expressions(cursor,expressions);
+                    results=evaluate_expressions(cursor,expressions);
                     results=1;
                     if(!results) {
                         data_sets[set]->position=-2;
