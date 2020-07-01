@@ -546,7 +546,6 @@ int execute_select(cursor_t * cursor,select_t *select){
             // if where clause fails.. we skip this row
             if(results==0) continue;
 
-            if(1==0)
             // loop through JOIN
             // (INNER) JOIN: Returns records that have matching values in both tables
             // LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
@@ -555,7 +554,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             for(int set=1;set<data_set_count;set++){
                 for(long i=0;i<data_sets[set]->row_length;i++){
                     data_sets[set]->position=i;
-                    expression_t *expressions=*select->join[set];
+                    expression_t *expressions=select->join[set].expression;
                     results=evaluate_expressions(cursor,expressions);
                     
                     
