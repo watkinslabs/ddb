@@ -401,7 +401,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     expression_t *expr2=*expr;
     
     if(expr2->comparison_operator) {
-        int comparison=expr->comparison_operator;
+        int comparison=*expr->comparison_operator;
         if(!expr)  {
             printf ("ERROR");
             return 0;
