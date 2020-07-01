@@ -386,6 +386,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         if(temp_expr->logical_operator) {
             if(tempV!=exprV) free(tempV);
             *expr=temp_expr;
+            printf("EXIT THIS WAY\n");
             return exprV;
         }
 
