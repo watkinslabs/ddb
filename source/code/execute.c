@@ -877,7 +877,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_FLOAT   && stricmp(e1->STRING_V,float_2_string(e2->FLOAT_V))==1) return 1;
                                     
         }
-        printf( "no match? string");
+//        printf( "no match? string");
         return 0;
     }
 
@@ -886,7 +886,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
             case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; 
             case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
         }
-        printf( "no match? null");
+//        printf( "no match? null");
         return 0;
     }
     if(e1->type==EVAL_INT){
@@ -931,7 +931,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) return 1;
                                     
         }
-        printf( "no match? int");
+//        printf( "no match? int");
         return 0;
     }
     if(e1->type==EVAL_FLOAT){
@@ -976,7 +976,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) return 1;
                                     
         }
-        printf( "no match? float");
+//        printf( "no match? float");
         return 0;
     }
     if(e1->type==EVAL_LONG){
@@ -1021,7 +1021,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_FLOAT   && e1->LONG_V==e2->FLOAT_V  ) return 1;
                                     
         }
-        printf( "no match? long");
+//        printf( "no match? long");
         return 0;
     }
     printf("NO CLUE WHATS UP WITH THIS TYPE COMPARISON %d\n",comparison);
