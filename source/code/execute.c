@@ -622,11 +622,13 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         type=select->join[set-1].type;
         expr=select->join[set-1].expression;
     }
-    printf ("SET %d\n",set);
+    
     data_set_t *data_set=cursor->source[set];
 
     for(long row=0;row<length;row++){
-        printf("%ld",row);
+        if(row%1000==0) {
+        printf ("SET %d %ld\n",set,row); 
+        }
         results+=evaluate_expressions(cursor,expr);
         data_set->rows[row];
         if(set+1<cursor->source_count) {
