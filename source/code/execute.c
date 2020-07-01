@@ -421,7 +421,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         expression_value_t *exprV2=evaluate_expression(cursor,expr);
         debug_expression_value(exprV2);
 
-        int results=compare_expression_value(exprV1,exprV2,expr2->comparison_operator);
+        int results=compare_expression_value(exprV1,exprV2,comparison);
         return results;
     } // end if comparitor
 
