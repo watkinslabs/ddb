@@ -103,7 +103,7 @@ expression_value_t *eval_token(token_t *token){
     return expr;
 }
 
-expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
+expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
     expression_t *temp_expr=expr;
     expression_value_t *exprV=0;
     expression_value_t *tempV=0;
