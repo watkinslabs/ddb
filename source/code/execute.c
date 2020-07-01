@@ -384,12 +384,13 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
+
             if(tempV) free(tempV);
             *expr=temp_expr;
+            printf("Logical spliut\n");
             return exprV;
         }
 
-        temp_expr=temp_expr->expression;
         // if this is a first cycle.. assign to root.. 
     }// end while...
 
