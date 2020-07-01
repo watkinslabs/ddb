@@ -444,6 +444,8 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     while(temp_expr) {
         bool_value=compare_expressions(cursor,&temp_expr);
         
+        if(!temp_expr) return bool_value;
+
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
             // advance pointer
@@ -458,7 +460,8 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 default:printf("Error Invalid Logical Operator");
                             return 0;
             }
-        }
+        }// end if logical operator
+        
         
         
         // advance pointer
