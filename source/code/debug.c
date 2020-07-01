@@ -442,7 +442,7 @@ void debug_expression_value(expression_value_t *expr){
             case EVAL_FLOAT:   printf("Expression: FLOAT  :%f\n" ,expr->FLOAT_V);  break;
             case EVAL_LONG:    printf("Expression: LONG   :%ld\n",expr->LONG_V);   break;
             case EVAL_STRING:  printf("Expression: STRING :%s\n" ,expr->STRING_V); break;
-            default: printf("Expression: I've got no clue\n"); break;
+            default: printf("Expression: I've got no clue ->'%d'\n",expr->type); break;
         }
     } else {
         printf("Expression: does not exist\n");
