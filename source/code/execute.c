@@ -444,7 +444,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t **expr){
         if(logical_operator){
             // advance pointer
             temp_expr=temp_expr->expression;
-            int bool_value2=compare_expressions(cursor,*temp_expr);
+            int bool_value2=compare_expressions(cursor,&temp_expr);
             
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
