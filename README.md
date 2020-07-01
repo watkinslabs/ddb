@@ -68,3 +68,141 @@ if res.success==True:
 ```
 uh.. perl guys help?
 ```
+
+
+
+```
+# Debugging output
+builds/ddbc -d test/simple.txt
+row_count_max:1003003001 -- CREATE_TABLE DEBUG -------------
+ - identifier: test.mock1
+ - Column Type: STRING
+ - Column Value: id
+ - Column Type: STRING
+ - Column Value: first
+ - Column Type: STRING
+ - Column Value: last
+  file:          /home/nd/repos/wlddb/test/test.mock.csv 
+  column:        , 
+  strict:        1 
+ --
+ -- CREATE_TABLE DEBUG -------------
+ - identifier: test.mock2
+ - Column Type: STRING
+ - Column Value: id
+ - Column Type: STRING
+ - Column Value: first
+ - Column Type: STRING
+ - Column Value: last
+  file:          /home/nd/repos/wlddb/test/test.mock.csv 
+  column:        , 
+  strict:        1 
+ --
+ -- CREATE_TABLE DEBUG -------------
+ - identifier: test.mock3
+ - Column Type: STRING
+ - Column Value: iid
+ - Column Type: STRING
+ - Column Value: first
+ - Column Type: STRING
+ - Column Value: last
+  file:          /home/nd/repos/wlddb/test/test.mock.csv 
+  column:        , 
+  strict:        1 
+ --
+ # Use
+ - database: test
+ # Select
+ ## HAS DISTINCT
+ - identifier: t1.id
+   - alias: id1
+   - ordinal: 0
+ - identifier: t2.id
+   - alias: id2
+   - ordinal: 1
+ - identifier: t3.iid
+   - alias: id3
+   - ordinal: 2
+ - identifier: t1.first
+   - alias: first1
+   - ordinal: 3
+ - identifier: t2.first
+   - alias: first2
+   - ordinal: 4
+ - identifier: t3.first
+   - alias: first3
+   - ordinal: 5
+ ## FROM
+ - identifier: test.mock1
+   - alias: t1
+ ## JOIN
+  Type: LEFT_JOIN
+test.mock1 ALIAS: t2
+   mode:   1 ,  Identifier: t2.id
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '1'
+  Type: RIGHT_JOIN
+test.mock3 ALIAS: t3
+   mode:   1 ,  Identifier: t3.iid
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '1'
+ ---WHERE---
+   mode:   2 ,  Litteral: [NUMERIC] '1'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '15'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '6'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '8'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '456'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '123123'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '4'
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '15'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '6'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '8'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '456'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '123123'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '4'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '11'
+   mode:   6 , logical    :AND 
+   mode:   2 ,  Litteral: [NUMERIC] '2'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '2'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '41'
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '4'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '1'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '5'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '35'
+   mode:   6 , logical    :AND 
+   mode:   2 ,  Litteral: [NUMERIC] '5'
+   mode:   6 , logical    :AND 
+   mode:   2 ,  Litteral: [NUMERIC] '4'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '1'
+   mode:   6 , logical    :OR 
+   mode:   2 ,  Litteral: [NUMERIC] '1'
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '1'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '2'
+   mode:   6 , logical    :OR 
+   mode:   2 ,  Litteral: [NUMERIC] '2'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '3'
+   mode:   6 , logical    :AND 
+   mode:   2 ,  Litteral: [NUMERIC] '5'
+   mode:   2 , comparison :ASSIGNMENT  uinary     :MINUS   Litteral: [NUMERIC] '1'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '6'
+   mode:   2 , arithmetic :MINUS   Litteral: [NUMERIC] '1'
+   mode:   6 , logical    :OR 
+   mode:   2 ,  Litteral: [REAL] '3.4'
+   mode:   2 , arithmetic :PLUS   Litteral: [REAL] '4.1'
+   mode:   2 , comparison :ASSIGNMENT   Litteral: [NUMERIC] '3'
+   mode:   2 , arithmetic :PLUS   Litteral: [NUMERIC] '10'
+   mode:   2 , arithmetic :MINUS   Litteral: [REAL] '0.5'
+   mode:   2 , arithmetic :MINUS   Litteral: [NUMERIC] '5'
+   mode:   6 , logical    :OR 
+   mode:   2 ,  Litteral: [REAL] '5.2'
+
+# Cursor
+- Database: test
+- Created : 1593615259.275536291
+- Ended   : 1593615259.305501484
+- Ellapsed: 0.029965193
+- Status  : SUCCESS
+ # dataset
+ - column length: 6
+ - row_length: 0
+ - position: 0
+
+```
