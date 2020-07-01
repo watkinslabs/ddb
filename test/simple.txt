@@ -24,6 +24,7 @@ SELECT
         and 5
         and 4+1
         or 1
+        or 2
         and 5=-1
         /*
         or   t1.id=1.54
