@@ -410,7 +410,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
     if(expr2->comparison_operator) {
         int comparison=expr2->comparison_operator;
-        printf("FOUND A comparison\n");
+        //printf("FOUND A comparison\n");
         expression_value_t *exprV2=evaluate_expression(cursor,expr);
         debug_expression_value(exprV2);
 
