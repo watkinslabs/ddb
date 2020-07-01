@@ -454,7 +454,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 case TOKEN_AND       : printf ("AND\n"); if(!bool_value1 || !bool_value2) bool_value1=0; break;
                 case TOKEN_OR        : printf ("OR\n"); if(bool_value1) { 
                                             printf("ESCAPE\n");
-                                            break; 
+                                            return 1; 
                                         } else bool_value1=bool_value2; break; //any successfull OR is valid
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
