@@ -23,7 +23,7 @@ SELECT
         and 2
         and 5
         or 1
-        and 5-1
+        and 5=-1
         /*
         or   t1.id=1.54
         and  t2.id=0x04F 
