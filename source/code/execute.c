@@ -399,13 +399,15 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
     //compare the expression
     expression_t *expr2=*expr;
+
+    if(!expr2) {
+        debug_expression_value(expr1);
+        if(expr1) return 1;
+        else return 0;
+    }
     
     if(expr2->comparison_operator) {
-        int comparison=*expr->comparison_operator;
-        if(!expr)  {
-            printf ("ERROR");
-            return 0;
-        }
+        int comparison=expr2->comparison_operator;
         printf("FOUND A comparison\n");
         if(expr==0) printf("EXPR EMPTY\n");
         expression_value_t *expr2=evaluate_expression(cursor,expr);
