@@ -394,7 +394,11 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     if(tempV) free(tempV);
 
     //update pointer if successfull
-    *expr=*temp_expr;
+    if(temp_expr) {
+        *expr=*temp_expr;
+    } else {
+        &expr=0;
+    }
 
     return exprV;
 }
