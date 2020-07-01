@@ -873,7 +873,10 @@ char * float_2_string(float value){
 }
 
 int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison){
-    
+    if(e1==0) {
+        printf("Error.. comparitor empty");
+        return 0;
+    }
     if(e1->type==EVAL_STRING){
         switch(comparison){
             case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; break;
