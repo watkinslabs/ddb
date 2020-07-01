@@ -547,7 +547,7 @@ int execute_select(cursor_t * cursor,select_t *select){
         
         for(int set=0;set<data_set_count;set++){
             printf ("SET %d\n",set);
-            //if(set>0 && data_sets[set-1]->position==-2) continue;
+            if(set>0 && data_sets[set-1]->position==-2) continue;
             for(long i=0;i<data_sets[set]->row_length;i++){
                 printf("%ld,",i);
                 data_sets[set]->position=i;
@@ -593,9 +593,9 @@ int execute_select(cursor_t * cursor,select_t *select){
                                     break;
                 }
                 //else        printf("where expression false\n");
-            }
+            } //end set inner loop (rows)
 
-        }
+        }//end set outer loop (source)
 
     }// end where/join
     
