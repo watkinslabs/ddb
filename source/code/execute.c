@@ -397,7 +397,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t *expr){
     if(temp_expr) {
         *expr=*temp_expr;
     } else {
-        &expr=0;
+        *expr=0;
     }
 
     return exprV;
