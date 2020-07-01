@@ -399,7 +399,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     printf("compare\n");
     expression_value_t *exprV1=evaluate_expression(cursor,expr);
 
-    debug_expression_value(exprV1);
+    //debug_expression_value(exprV1);
 
     //compare the expression
     expression_t *expr2=*expr;
@@ -413,7 +413,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     if(expr2->comparison_operator) {
         int comparison=expr2->comparison_operator;
         expression_value_t *exprV2=evaluate_expression(cursor,expr);
-        debug_expression_value(exprV2);
+        //debug_expression_value(exprV2);
 
         int results=compare_expression_value(exprV1,exprV2,comparison);
         printf("#2\n");
@@ -430,7 +430,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
 int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    debug_expr(expr,30);
+    //debug_expr(expr,30);
     // the default evaluation type
 
     int compare=0;
@@ -438,7 +438,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int bool_value1=0;   //start off false
     int bool_value2=0;
     bool_value1=compare_expressions(cursor,&temp_expr);
-    printf("%d res\n",bool_value1);
+    //printf("%d res\n",bool_value1);
     int bool_master=0;
     while(temp_expr) {
         if(!temp_expr) break;
@@ -451,26 +451,22 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
                 case TOKEN_SHORT_OR  :
-                case TOKEN_AND       : printf ("AND\n"); if(!bool_value1 || !bool_value2) bool_value1=0; break;
-                case TOKEN_OR        : printf ("OR\n"); if(bool_value1) { 
+                case TOKEN_AND       : if(!bool_value1 || !bool_value2) bool_value1=0; break;
+                case TOKEN_OR        : if(bool_value1) { 
                                             printf("ESCAPE\n");
                                             return 1; 
                                         } else bool_value1=bool_value2; break; //any successfull OR is valid
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
-            printf("%d res2\n",bool_value2);
+            //printf("%d res2\n",bool_value2);
         } else {
-            printf ("not sure\n");
+            //printf ("not sure\n");
             debug_expr(temp_expr,10);
             break;    
         }// end if logical operator
-        printf("calc bool %d\n",bool_value1);
+        //printf("calc bool %d\n",bool_value1);
         // advance pointer
-        if(temp_expr){
-            printf("Advancing pointer\n");
-//            temp_expr=temp_expr->expression;
-        }
 
     }
 
@@ -544,7 +540,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             if(set==0) row_count_max=data_sets[set]->row_length;
             else row_count_max*=data_sets[set]->row_length;
         }
-        
+
         printf("row_count_max:%d",row_count_max);
 
         for(int set=0;set<data_set_count;set++){
