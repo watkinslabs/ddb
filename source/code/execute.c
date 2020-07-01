@@ -27,6 +27,7 @@ char * long_2_string(long value);
 char * int_2_string(int value);
 char * float_2_string(float  value);
 int    compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison);
+long   return_match(cursor_t *cursor,select_t *select,int set);
 
 /* Function: validate_create_table
  * -----------------------
@@ -494,6 +495,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     data_set_t **data_sets=0;
     if(select->from) ++data_set_count;
     data_set_count+=select->join_length;
+    cursor->source_count=data_set_count;
 
     // for now we will load everything in 1 set of sets
     // phase 2 will be to cunk the data as needed
@@ -545,58 +547,52 @@ int execute_select(cursor_t * cursor,select_t *select){
         // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
         // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
         
-        for(int set=0;set<data_set_count;set++){
-            printf ("SET %d\n",set);
-            if(set>0 && data_sets[set-1]->position==-2) continue;
-            for(long i=0;i<data_sets[set]->row_length;i++){
-                printf("%ld,",i);
-                data_sets[set]->position=i;
-                expression_t *expressions=0;
+        long results=return_match(cursor,select,0);
+     
+     /*
+        // set data source
+        data_set_t *data_set=cursor->source[set];
+        int type=TOKEN_WHERE;
+        if(set>0) type=select->join[set-1].type;
+        
+        for(long i=0;i<data_set->row_length;i++){
+            printf("%ld,",i);
+    //        data_set[set]->position=i;
+            expression_t *expressions=0;
 
-                if(set==0) {
-                    expressions=select->where;
-                    results=evaluate_expressions(cursor,expressions);
-                    results=1;
-                    if(!results) {
-                        data_sets[set]->position=-2;
-                    }
-                    continue;
-                } 
+            int results=evaluate_expressions(cursor,expressions);
+            results=1;
+    
 
-                join_t *join=&select->join[set-1];
-                expressions=join->expression;
-                results=evaluate_expressions(cursor,expressions);
-                results=1;
+            // -2=skip everything
+            // -1 add blank row
+            // >-1 add row
+            
+            //results=evaluate_expressions(cursor,expressions);
+            
+            switch(type){
+                case TOKEN_WHERE:        if(!results) {
+                                            data_sets[set]->position=-2;
+                                            continue;
+                                        }
+                                        break;
+                case TOKEN_JOIN:        if(!results) {
+                                            data_sets[set]->position=-2;
+                                            continue;
+                                        }
+                                        break;
+                case TOKEN_LEFT_JOIN:   if(!results) {
+                                            data_sets[set]->position=-1;
+                                        }
+                                        break;
+                                break;
+            }
+        } //end set inner loop (rows)
 
-                // -2=skip everything
-                // -1 add blank row
-                // >-1 add row
-                
-                //results=evaluate_expressions(cursor,expressions);
-                switch(join->type){
-                    case TOKEN_JOIN:        if(!results) {
-                                                data_sets[set]->position=-2;
-                                                continue;
-                                            }
-                                            break;
-                    case TOKEN_LEFT_JOIN:   if(!results) {
-                                                data_sets[set]->position=-1;
-                                            }
-                                            break;
-                    //case TOKEN_RIGHT_JOIN:  if(!results) {
-                    //                            data_sets[set-1]->position=-1;
-                    //                        }
-                    //                break;
-                    //case TOKEN_FULL_OUTER_JOIN: if(!results) {
-                    //                             data_sets[set-1]->position=-1;
-                    //                            }
-                                    break;
-                }
-                //else        printf("where expression false\n");
-            } //end set inner loop (rows)
+
 
         }//end set outer loop (source)
-
+*/
     }// end where/join
     
     
@@ -613,6 +609,34 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     return 1;
 }
+
+long return_match(cursor_t *cursor,select_t *select,int set){
+    int type;
+    long results=0;
+    long length     =cursor->source[set]->row_length;
+    expression_value_t *expr=0;
+    if(set==0) {
+        type=TOKEN_WHERE;
+        expr=select->where;
+    }
+    else {
+        type=select->join[set-1].type;
+        expr=select->join[set-1].expression;
+    }
+    printf ("SET %d\n",set);
+    data_set_t *data_set=cursor->source[set];
+    long results;
+    for(long row=0;row<length;row++){
+        results+=evaluate_expressions(cursor,expr);
+        data_set->rows[row];
+        if(set<cursor->source[0]) {
+            results+=return_match(cursor,select,1+set);
+        }
+
+    }
+    return results;
+}
+
 
 char ** get_column_list(data_column_t *columns,int length){
     if(length>0){

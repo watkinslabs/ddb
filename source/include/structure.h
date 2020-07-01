@@ -4,6 +4,13 @@
 #if !defined(_STRUCTURE_H_)
     #define _STRUCTURE_H_ 1
 
+#define EVAL_STRING  1
+#define EVAL_INT     2
+#define EVAL_LONG    3
+#define EVAL_FLOAT   4
+#define EVAL_BOOL    5
+#define EVAL_NULL    6
+#define EVAL_DOUBLE  7
 
 #define DEFAULT_COLUMN_DEIMITER ','
 
@@ -55,13 +62,7 @@ typedef struct expression_t{
     struct expression_t *expression_tail;
 } expression_t;
 
-#define EVAL_STRING  1
-#define EVAL_INT     2
-#define EVAL_LONG    3
-#define EVAL_FLOAT   4
-#define EVAL_BOOL    5
-#define EVAL_NULL    6
-#define EVAL_DOUBLE  7
+
 
 typedef struct expression_value_t {
     char *STRING_V;
@@ -152,7 +153,8 @@ typedef struct cursor_t{
     int                   status;
     struct timespec       created;
     struct timespec       ended;
-    data_set_t         ** source;     //array of datasets that results is created from
+    data_set_t         ** source;           //array of datasets that results is created from
+    int                ** source_count;     //number of datasets in source
     data_set_t          * results;
 
 }cursor_t;
