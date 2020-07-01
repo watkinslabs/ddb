@@ -140,6 +140,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             case 2: printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
                     tempV=eval_token(temp_expr->literal); 
                     printf ("DONE\n");
+                    break;
             // logical operator
             case 6: 
                         if(tempV!=exprV) free(tempV);
