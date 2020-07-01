@@ -140,8 +140,11 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             case 2: printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
                     tempV=eval_token(temp_expr->literal); 
                     printf ("DONE\n");
+            // logical operator
+            case 6: 
+                        if(tempV!=exprV) free(tempV);
+                        return exprV;
                     
-                    break;
             default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
                      if(exprV) free(exprV);
                      if(tempV) free(tempV);
@@ -434,7 +437,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
 int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    debug_expr(expr,30);
+    //debug_expr(expr,30);
     // the default evaluation type
 
     int compare=0;
