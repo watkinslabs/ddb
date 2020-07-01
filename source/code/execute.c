@@ -822,7 +822,7 @@ char * long_2_string(long value){
     return buf;
 }
 
-char * int_2_string(long value){
+char * int_2_string(int value){
     const int n = snprintf(NULL, 0, "%d", value);
     assert(n > 0);
     char * buf=safe_malloc(sizeof(char)*(n+1),1);
@@ -831,7 +831,7 @@ char * int_2_string(long value){
     return buf;
 }
 
-char * float_2_string(long value){
+char * float_2_string(float value){
     const int n = snprintf(NULL, 0, "%lu", value);
     assert(n > 0);
     char *buf=safe_malloc(sizeof(char)*(n+1),1);
