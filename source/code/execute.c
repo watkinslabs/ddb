@@ -429,35 +429,38 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
 
     int compare=0;
     int logical_operator=0;
-    int bool_value=0;   //start off false
+    int bool_value1=0;   //start off false
+    int bool_value2=0;
     while(temp_expr) {
-        bool_value=compare_expressions(cursor,&temp_expr);
-        
-        if(!temp_expr) return bool_value;
-
+        bool_value1=compare_expressions(cursor,&temp_expr);
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
             // advance pointer
             temp_expr=temp_expr->expression;
-            int bool_value2=compare_expressions(cursor,&temp_expr);
+            bool_value2=compare_expressions(cursor,&temp_expr);
             
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
                 case TOKEN_SHORT_OR  :
-                case TOKEN_AND       : 
-                case TOKEN_OR        : break;
+                case TOKEN_AND       : if(!bool_value1 || !bool_value2) bool_value1=0; break;
+                case TOKEN_OR        : if(bool_value1 || bool_value2) bool_value1=1;
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
         }// end if logical operator
-        
-        
-        
         // advance pointer
         temp_expr=temp_expr->expression;
     }
-    return 0;
+
+    return bool_value1;
 }
+
+// i=1 or 
+// i=2 or 
+// i=3 or 
+// i=4 or 
+// i=5 and i=6 or
+// i=5 and i=7
 
 int execute_select(cursor_t * cursor,select_t *select){
     /*
