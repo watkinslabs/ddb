@@ -813,31 +813,31 @@ data_set_t * new_data_set(char **columns,int column_count,int row_count){
     return data_set;
 }
 
-char *long_2_string(long value){
+char * long_2_string(long value){
     const int n = snprintf(NULL, 0, "%lu", value);
     assert(n > 0);
-    char buf[n+1];
+    char * buf=safe_malloc(sizeof(char)*(n+1),1);
     int c = snprintf(buf, n+1, "%lu", value);
-    assert(buf[n] == '\0');
     assert(c == n);
+    return buf;
 }
 
-char *int_2_string(long value){
+char * int_2_string(long value){
     const int n = snprintf(NULL, 0, "%d", value);
     assert(n > 0);
-    char buf[n+1];
-    int c = snprintf(buf, n+1, "%d", value);
-    assert(buf[n] == '\0');
+    char * buf=safe_malloc(sizeof(char)*(n+1),1);
+    int c = snprintf(buf, n+1, "%lu", value);
     assert(c == n);
+    return buf;
 }
 
-char *float_2_string(long value){
+char * float_2_string(long value){
     const int n = snprintf(NULL, 0, "%lu", value);
     assert(n > 0);
-    char buf[n+1];
+    char *buf=safe_malloc(sizeof(char)*(n+1),1);
     int c = snprintf(buf, n+1, "%lu", value);
-    assert(buf[n] == '\0');
     assert(c == n);
+    return buf;
 }
 
 int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison){
