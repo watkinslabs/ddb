@@ -564,7 +564,7 @@ int execute_select(cursor_t * cursor,select_t *select){
                     } 
 
   
-                    expressions=select->join[set].expression;
+                    expressions=&select->join[set].expression;
                     //results=evaluate_expressions(cursor,expressions);
                     results=1;
 
