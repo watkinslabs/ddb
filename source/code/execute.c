@@ -143,6 +143,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     break;
             // logical operator
             case 6:     if(tempV!=exprV) free(tempV);
+                        temp_expr=temp_expr->expression;
                         *expr=temp_expr;
                         return exprV;
                     
