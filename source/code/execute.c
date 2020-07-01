@@ -215,21 +215,20 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     exprV->FLOAT_V=(float)exprV->LONG_V; 
                     exprV->LONG_V=0; 
                     exprV->type=EVAL_FLOAT; 
-                    printf ("converting t1 to FLOAT\n");
+                    //printf ("converting t1 to FLOAT\n");
                 }
                 if(t1==EVAL_INT && t2==EVAL_FLOAT)  { 
                     exprV->FLOAT_V=(float)exprV->INT_V; 
                     exprV->INT_V=0; 
                     exprV->type=EVAL_FLOAT; 
-                    printf ("converting t1 to FLOAT\n");
+                    //printf ("converting t1 to FLOAT\n");
                 }
 
                 if(t1==EVAL_INT && t2==EVAL_LONG)  { 
                     exprV->LONG_V=(long)exprV->INT_V; 
                     exprV->INT_V=0; 
                     exprV->type=EVAL_LONG; 
-                    printf ("converting t1 to LONG\n");
-
+                    //printf ("converting t1 to LONG\n");
                 }
             }
 
