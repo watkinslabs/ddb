@@ -613,6 +613,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
     long length     =cursor->source[set]->row_length;
+    long match[length];
     expression_value_t *expr=0;
     if(set==0) {
         type=TOKEN_WHERE;
@@ -625,18 +626,23 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
     data_set_t *data_set=cursor->source[set];
 
+
     for(long row=0;row<2;row++){
         //if(row%100==0) {
-            printf ("SET %d %ld of %ld count %d\n",set,row,length,cursor->source_count); 
+            printf (" SET %d %ld of %ld count %d\n",set,row,length,cursor->source_count); 
         //}
-        results+=evaluate_expressions(cursor,expr);
+        match[row]=evaluate_expressions(cursor,expr);
         data_set->rows[row];
-        if(set+1<cursor->source_count) {
-            results+=return_match(cursor,select,set+1);
-        }
-
     }
-    return results;
+    if(set+1<cursor->source_count) {
+        for(long row=0;row<2;row++){
+                results+=return_match(cursor,select,set+1);
+            }
+        }
+    }
+
+
+    return 1;
 }
 
 
