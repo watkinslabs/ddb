@@ -119,7 +119,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         // if not... its the first comparitor
         if(exprV && temp_expr->comparison_operator) {
             if(tempV!=exprV) free(tempV);
-            *expr=*temp_expr;
+            *expr=temp_expr;
             return exprV;
         }
                 // process token(s)/data point.. 
@@ -139,7 +139,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             default: printf ("No clue what this is evaluate expression %d\n",temp_expr->mode);
                      if(exprV) free(exprV);
                      if(tempV) free(tempV);
-                    *expr=*temp_expr;
+                    *expr=temp_expr;
                      return 0;
                      break;
         }// end switch 
@@ -152,12 +152,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     case TOKEN_STRING:  printf("cannot apply uinary operation to a string");
                                         if(exprV) free(exprV);
                                         if(tempV) free(tempV);
-                                        *expr=*temp_expr;
+                                        *expr=temp_expr;
                                         return 0;
                     case TOKEN_NULL:    printf("cannot apply uinary operation to a NULL");
                                         if(exprV) free(exprV);
                                         if(tempV) free(tempV);
-                                        *expr=*temp_expr;
+                                        *expr=temp_expr;
                                         return 0;
                     case TOKEN_NUMERIC: 
                     case TOKEN_HEX:     
@@ -175,7 +175,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 printf ("Eval Expression: cannot preform arithmetic on a string");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
-                *expr=*temp_expr;
+                *expr=temp_expr;
                 return 0;
             }
 
@@ -183,7 +183,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 printf ("Eval Expression: cannot preform arithmetic on a NULL");
                 if(exprV) free(exprV);
                 if(tempV) free(tempV);
-                *expr=*temp_expr;
+                *expr=temp_expr;
                 return 0;
             }
 
@@ -234,7 +234,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 default:    printf("Unknown arithmetic operation %d",temp_expr->arithmetic_operator);
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
-                            *expr=*temp_expr;
+                            *expr=temp_expr;
                             return 0;
             }
 
@@ -278,7 +278,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                                                 printf("Error in trype conversion");
                                                 if(exprV) free(exprV);
                                                 if(tempV) free(tempV);
-                                                *expr=*temp_expr;
+                                                *expr=temp_expr;
                                                 return 0;
                                 }// internal switch
                             break;
@@ -318,7 +318,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                                             printf("Error in trype conversion");
                                             if(exprV) free(exprV);
                                             if(tempV) free(tempV);
-                                            *expr=*temp_expr;
+                                            *expr=temp_expr;
                                             return 0;
                             }// internal switch
                             break;
@@ -357,14 +357,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                                 default :   printf("Error in trype conversion");
                                             if(exprV) free(exprV);
                                             if(tempV) free(tempV);
-                                            *expr=*temp_expr;
+                                            *expr=temp_expr;
                                             return 0;
                             }// internal switch
                             break;
                 default :   printf("Error in trype conversion");
                             if(exprV) free(exprV);
                             if(tempV) free(tempV);
-                            *expr=*temp_expr;
+                            *expr=temp_expr;
                             return 0;
             }// end master outer switch
         }
@@ -376,7 +376,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         //evalulate another expression
         if(temp_expr->logical_operator) {
             if(tempV) free(tempV);
-            *expr=*temp_expr;
+            *expr=temp_expr;
             return exprV;
         }
 
@@ -384,21 +384,11 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         // if this is a first cycle.. assign to root.. 
     }// end while...
 
-    if(next_operation){
-        printf("ERR: expression still doing arithmetic missing last expression");
-        if(exprV) free(exprV);
-        if(tempV) free(tempV);
-        *expr=*temp_expr;
-        return 0;
-    }
     if(tempV) free(tempV);
 
     //update pointer if successfull
-    if(temp_expr) {
-        *expr=*temp_expr;
-    } else {
-        *expr=0;
-    }
+    *expr=temp_expr;
+    
 
     return exprV;
 }
