@@ -350,7 +350,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                                                 break;
 
                                 case EVAL_LONG:
-                                                printf("%s %ld - %ld",token_type(temp_expr->arithmetic_operator),exprV->LONG_V,tempV->LONG_V);
                                                 switch(temp_expr->arithmetic_operator){
                                                     case TOKEN_MINUS    : exprV->LONG_V-=tempV->LONG_V; break;
                                                     case TOKEN_PLUS     : exprV->LONG_V+=tempV->LONG_V; break;
