@@ -634,8 +634,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         match[row]=evaluate_expressions(cursor,expr);
         data_set->rows[row];
     }
+    printf("---\n");
     if(set+1<cursor->source_count) {
-        printf("GOI\n");
+        printf("--->\n");
         for(long row=0;row<2;row++){
             results+=return_match(cursor,select,set+1);
         }
