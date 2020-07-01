@@ -23,9 +23,9 @@ SELECT
         and 2+2+41=4+1+5+35
         and 5
         and 4+1
-        or 1
-        or 2
-        and 5=-1
+        or 1=1+2
+        or 2+3
+        and 5=-1+6
         /*
         or   t1.id=1.54
         and  t2.id=0x04F 
