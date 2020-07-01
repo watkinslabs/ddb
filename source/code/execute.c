@@ -398,7 +398,9 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     debug_expression_value(expr1);
 
     //compare the expression
-    if(*expr->comparison_operator) {
+    expression_t *expr2=*expr;
+    
+    if(expr2->comparison_operator) {
         int comparison=expr->comparison_operator;
         if(!expr)  {
             printf ("ERROR");
