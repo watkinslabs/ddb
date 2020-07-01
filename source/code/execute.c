@@ -441,7 +441,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
             // advance pointer
-            //temp_expr=temp_expr->expression;
+            temp_expr=temp_expr->expression;
             bool_value2=compare_expressions(cursor,&temp_expr);
             printf("%d res2\n",bool_value2);
             
