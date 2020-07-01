@@ -447,7 +447,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 case TOKEN_SHORT_OR  :
                 case TOKEN_AND       : 
                 case TOKEN_OR        :
-                default:printf("Error Invalid Logical Operator");
+                default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
         }// end if logical operator
