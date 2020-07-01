@@ -13,8 +13,8 @@ SELECT
     t3.first as first3  --identifier
     
     FROM            test.mock1 as t1
-    JOIN                 mock1 as t2 ON t2.id=1 
-    JOIN                 mock3 as t3 ON t3.iid=1 
+    LEFT  JOIN                 mock1 as t2 ON t2.id=1 
+    RIGHT JOIN                 mock3 as t3 ON t3.iid=1 
     
     WHERE 
         1+15+6+8+456+123123+4=15+6+8+456+123123+4+11
