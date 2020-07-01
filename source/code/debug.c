@@ -444,5 +444,4 @@ void debug_expression_value(expression_value_t *expr){
     } else {
         printf("Expression: does not exist\n");
     }
-    return 1;
 }
