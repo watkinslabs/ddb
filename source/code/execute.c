@@ -549,6 +549,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             printf ("SET %d\n",set);
             //if(set>0 && data_sets[set-1]->position==-2) continue;
             for(long i=0;i<data_sets[set]->row_length;i++){
+                printf("%ld,",i);
                 data_sets[set]->position=i;
                 expression_t *expressions=0;
 
