@@ -453,6 +453,9 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                 default:printf("Error Invalid Logical Operator %d",logical_operator);
                             return 0;
             }
+        } else {
+            printf ("not sure\n");s
+            break;    
         }// end if logical operator
         printf("calc bool %d\n",bool_value1);
         // advance pointer
