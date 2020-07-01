@@ -156,7 +156,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 
        // process a prefix + or - 
         if(temp_expr->uinary_operator) {
-            printf("Uinary\n");
+            //printf("Uinary\n");
             //nothing to do for the "+" operator
             if(temp_expr->uinary_operator==TOKEN_MINUS){
                 switch(tempV->type){
@@ -248,14 +248,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             *expr=temp_expr;
                             return 0;
             }
-            printf("Doing arthmetic\n");
             
 
             printf ("\n%d\n",exprV->type);
             // do the math between the differing types
             switch(exprV->type){
                 case EVAL_INT:
-                            printf ("DOING INT...  \n");
                                 switch(t2){
                                     case EVAL_INT:   
                                                     switch(temp_expr->arithmetic_operator){
@@ -296,7 +294,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             break;
 
             case EVAL_FLOAT:
-                            printf ("DOING FLOAT...  \n");
                             switch(t2){
                                 case EVAL_INT:   
                                                 switch(temp_expr->arithmetic_operator){
@@ -337,7 +334,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                             break;
 
             case EVAL_LONG:
-                            printf ("DOING LONG...  \n");
                             switch(t2){
                                 case EVAL_INT:   
                                                 switch(temp_expr->arithmetic_operator){
