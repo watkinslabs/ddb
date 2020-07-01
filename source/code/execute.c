@@ -417,7 +417,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         return results;
     } // end if comparitor
 
-    printf ("Expression has stuff hanging ??");
+    if(exprV1) return 1;
     return 0;
 }
 
