@@ -547,7 +547,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
             // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
             
-            for(int set=1;set<data_set_count;set++){
+            for(int set=0;set<data_set_count;set++){
                 if(data_sets[set-1]->position==-2) continue;
                 for(long i=0;i<data_sets[set]->row_length;i++){
                     data_sets[set]->position=i;
