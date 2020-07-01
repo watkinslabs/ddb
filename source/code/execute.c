@@ -394,7 +394,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 }
 
 int compare_expressions(cursor_t *cursor,expression_t **expr){
-    expression_value_t *expr1=evaluate_expression(cursor,*expr);
+    expression_value_t *expr1=evaluate_expression(cursor,&expr);
     debug_expression_value(expr1);
 
     //compare the expression
@@ -406,7 +406,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         }
         printf("FOUND A comparison\n");
         if(expr==0) printf("EXPR EMPTY\n");
-        expression_value_t *expr2=evaluate_expression(cursor,*expr);
+        expression_value_t *expr2=evaluate_expression(cursor,&expr);
         debug_expression_value(expr2);
         printf("GOT IT\n");
 
