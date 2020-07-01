@@ -134,7 +134,10 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
-                    printf ("identifier\n");
+                    tempV=safe_malloc(sizeof(expression_value_t),1);
+                    tempV->type=EVAL_STRING;
+                    tempV->STRING_V="BOB";
+                    //printf ("identifier\n");
                     break;
                     // litteral
             case 2: //printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
