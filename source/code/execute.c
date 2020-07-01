@@ -433,12 +433,14 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int bool_value2=0;
     while(temp_expr) {
         bool_value1=compare_expressions(cursor,&temp_expr);
+        print("%d res\n",bool_value1);
         if(!temp_expr) break;
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
             // advance pointer
             temp_expr=temp_expr->expression;
             bool_value2=compare_expressions(cursor,&temp_expr);
+            print("%d res2\n",bool_value2);
             
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
