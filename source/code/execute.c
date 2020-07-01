@@ -431,8 +431,9 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int logical_operator=0;
     int bool_value1=0;   //start off false
     int bool_value2=0;
+    bool_value1=compare_expressions(cursor,&temp_expr);
+
     while(temp_expr) {
-        bool_value1=compare_expressions(cursor,&temp_expr);
         printf("%d res\n",bool_value1);
         if(!temp_expr) break;
         logical_operator=temp_expr->logical_operator;
