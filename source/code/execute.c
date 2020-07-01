@@ -143,7 +143,6 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     break;
             // logical operator
             case 6:     if(tempV!=exprV) free(tempV);
-                        temp_expr=temp_expr->expression;
                         *expr=temp_expr;
                         return exprV;
                     
@@ -426,7 +425,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
 int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    //debug_expr(expr,30);
+    debug_expr(expr,30);
     // the default evaluation type
 
     int compare=0;
