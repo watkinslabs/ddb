@@ -137,10 +137,10 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     tempV=safe_malloc(sizeof(expression_value_t),1);
                     tempV->type=EVAL_STRING;
                     tempV->STRING_V="BOB";
-                    //printf ("identifier\n");
+                    printf ("identifier\n");
                     break;
                     // litteral
-            case 2: //printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
+            case 2: printf ("EVAL->\"%s\"\n",temp_expr->literal->value);
                     tempV=eval_token(temp_expr->literal); 
                     //printf ("DONE\n");
                     break;
