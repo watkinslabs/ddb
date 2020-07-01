@@ -454,7 +454,7 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
                             return 0;
             }
         } else {
-            printf ("not sure\n");s
+            printf ("not sure\n");
             break;    
         }// end if logical operator
         printf("calc bool %d\n",bool_value1);
