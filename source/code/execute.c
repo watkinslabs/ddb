@@ -539,6 +539,9 @@ int execute_select(cursor_t * cursor,select_t *select){
 
         for(int set=0;set<data_set_count;set++){
             for(long i=0;i<data_sets[set]->row_length;i++){
+                data_sets[set]->position=i;
+                data_sets[set]->
+
                 int results=evaluate_expressions(cursor,select->where);
                 //if(results) printf("where expression true\n");
                 //else        printf("where expression false\n");
