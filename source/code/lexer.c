@@ -330,6 +330,7 @@ void token_combine(token_array_t *tokens,int *list){
     list=&list[2];
     for(int i=0;i<tokens->top;i++){
         if(tokens->array[i].type==list[list_index]) {
+             ++list_index;
              if(list_index==length){
                 int start_index=i-length+1;
 
@@ -353,9 +354,7 @@ void token_combine(token_array_t *tokens,int *list){
                 tokens->array[start_index].value=new_token;
                 i=-1;         //TOSO: FIX HACK fails after 1  match...
                 list_index=0;
-
             }
-          ++list_index;
          
         } else {
             list_index=0;
