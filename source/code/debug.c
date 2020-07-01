@@ -6,6 +6,9 @@
 #include "../include/structure.h"
 #include "../include/debug.h"
 
+#define stricmp strcasecmp
+
+
 #define DEBUG 1
 //#define PARSE_ENTRANCE 1
 
