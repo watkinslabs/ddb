@@ -379,8 +379,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             }// end master outer switch
         }
 
-        if(exprV==0) exprV=tempV;
-
+     
         
         //evalulate another expression
         if(temp_expr->logical_operator) {
@@ -389,6 +388,8 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             *expr=temp_expr;
             return exprV;
         }
+    
+       if(exprV==0) exprV=tempV;
 
         // if this is a first cycle.. assign to root.. 
     }// end while...
