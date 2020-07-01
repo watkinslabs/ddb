@@ -537,13 +537,26 @@ int execute_select(cursor_t * cursor,select_t *select){
 
         printf("row_count_max:%d",row_count_max);
 
-        for(int set=0;set<data_set_count;set++){
+        int results=0;
+        
+
+    // loop through WHERE
+    for(long i=0;i<data_sets[0]->row_length;i++){
+        results=evaluate_expressions(cursor,select->where);
+        // if where clause fails.. we skip this row
+        if(results==0) continue;
+
+        // loop through JOIN
+        for(int set=1;set<data_set_count;set++){
             for(long i=0;i<data_sets[set]->row_length;i++){
                 data_sets[set]->position=i;
-                data_sets[set]->
-
-                int results=evaluate_expressions(cursor,select->where);
-                //if(results) printf("where expression true\n");
+                expression_t *expressions=&select->join[set];
+                results=evaluate_expressions(cursor,expressions);
+                
+                
+                if(results) {
+                    
+                }
                 //else        printf("where expression false\n");
             }
         }

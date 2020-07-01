@@ -100,6 +100,7 @@ select_t * process_select(cursor_t *cursor,token_array_t *tokens,int *start){
                                         ++*start;
                                         add_join(select);
                                         join_t *join=&select->join[select->join_length-1];
+                                        //join->type=temp_token->type;
                                         join->identifier=process_identifier(cursor,tokens,start);
                                         join->alias=process_alias(cursor,tokens,start);
                                         temp_token=token_at(tokens,*start);
