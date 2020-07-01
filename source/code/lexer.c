@@ -330,8 +330,7 @@ void token_combine(token_array_t *tokens,int *list){
     list=&list[2];
     for(int i=0;i<tokens->top;i++){
         if(tokens->array[i].type==list[list_index]) {
-            ++list_index;
-            if(list_index==length){
+             if(list_index==length){
                 int start_index=i-length+1;
 
                 tokens->array[start_index].type=combo_token;
@@ -356,6 +355,8 @@ void token_combine(token_array_t *tokens,int *list){
                 list_index=0;
 
             }
+          ++list_index;
+         
         } else {
             list_index=0;
         }
