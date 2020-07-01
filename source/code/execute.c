@@ -637,7 +637,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     if(set+1<cursor->source_count) {
         for(long row=0;row<2;row++){
                 results+=return_match(cursor,select,set+1);
-            }
+            
         }
     }
 
