@@ -394,7 +394,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
 }
 
 int compare_expressions(cursor_t *cursor,expression_t **expr){
-    expression_value_t *expr1=evaluate_expression(cursor,&expr);
+    expression_value_t *expr1=evaluate_expression(cursor,expr);
     debug_expression_value(expr1);
 
     //compare the expression
@@ -406,7 +406,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         }
         printf("FOUND A comparison\n");
         if(expr==0) printf("EXPR EMPTY\n");
-        expression_value_t *expr2=evaluate_expression(cursor,&expr);
+        expression_value_t *expr2=evaluate_expression(cursor,expr);
         debug_expression_value(expr2);
         printf("GOT IT\n");
 
@@ -438,13 +438,13 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     int logical_operator=0;
     int bool_value=0;   //start off false
     while(temp_expr) {
-        bool_value=compare_expressions(cursor,temp_expr);
+        bool_value=compare_expressions(cursor,&temp_expr);
         
         logical_operator=temp_expr->logical_operator;
         if(logical_operator){
             // advance pointer
             temp_expr=temp_expr->expression;
-            int bool_value2=compare_expressions(cursor,temp_expr);
+            int bool_value2=compare_expressions(cursor,&temp_expr);
             
             switch(logical_operator) {
                 case TOKEN_SHORT_AND :
