@@ -434,7 +434,7 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
 
 int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
-    
+    debug_expr(expr,30);
     // the default evaluation type
 
     int compare=0;
