@@ -653,6 +653,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                     eval_row_set(cursor);
                                 }
                             break;            
+            case TOKEN_FULL_OUTER_JOIN: 
+            case TOKEN_RIGHT_JOIN: 
+            case TOKEN_LEFT_JOIN: 
             case TOKEN_JOIN: 
                             if(res) {
                                 if(set+1<cursor->source_count){
