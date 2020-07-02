@@ -632,12 +632,15 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     for(long row=0;row<2;row++){
         // visual check for the matrix
 
+        cursor->source[set]->position=row;
         if(set>0) {
             res=evaluate_expressions(cursor,expr);
         }
         res=1;
+
         if(set+1==cursor->source_count){
             eval_row_set(cursor);
+            
             continue;
         } 
 
