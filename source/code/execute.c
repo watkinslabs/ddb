@@ -644,7 +644,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             continue;
         } 
 
-
+        if (1==0)
         switch(type){
             case TOKEN_WHERE: 
                                 if(set+1<cursor->source_count){
