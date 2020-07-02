@@ -674,6 +674,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                     for(int s=set;s<cursor->source_count;s++) {
                         cursor->source[s]->position=-2;
                     }
+                }
             }
             //ok we have an exact filter.. eval the row        
             eval_row_set(cursor);
