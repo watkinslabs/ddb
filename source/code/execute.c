@@ -639,7 +639,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         if(set>0) {
             res=evaluate_expressions(cursor,expr);
         }
-        //res=1;
+        res=1;
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
