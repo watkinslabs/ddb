@@ -646,12 +646,13 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                             if(res) {
                                 if(set+1<cursor->source_count){
                                     return_match(cursor,select,set+1);
-                                } else {
-                                    for(int s=set;s<cursor->source_count;s++) {
-                                        cursor->source[s]->position=-2;
-                                    }
-                                    eval_row_set(cursor);
                                 }
+                            } else {
+                                for(int s=set;s<cursor->source_count;s++) {
+                                    cursor->source[s]->position=-2;
+                                }
+                                eval_row_set(cursor);
+                            }
                             break;
         }
     }
