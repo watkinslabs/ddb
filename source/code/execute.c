@@ -642,6 +642,13 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
 
         switch(type){
+            case TOKEN_WHERE: 
+                                if(set+1<cursor->source_count){
+                                    return_match(cursor,select,set+1);
+                                } else {
+                                    eval_row_set(cursor);
+                                }
+                            break;            
             case TOKEN_JOIN: 
                             if(res) {
                                 if(set+1<cursor->source_count){
