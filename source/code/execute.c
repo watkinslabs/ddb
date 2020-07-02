@@ -643,6 +643,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             
             continue;
         } 
+        if(set+1<cursor->source_count){
+            return_match(cursor,select,set+1);
+        } else {
 
         if (1==0)
         switch(type){
