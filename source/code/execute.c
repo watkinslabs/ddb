@@ -669,7 +669,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         if(last_join){
             // the where go's last
             if(select->where){
-                res=evaluate_expressions(cursor,select->where);
+                //res=evaluate_expressions(cursor,select->where);
             }
             //ok we have an exact filter.. eval the row        
             eval_row_set(cursor);
