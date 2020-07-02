@@ -626,18 +626,17 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
     data_set_t *data_set=cursor->source[set];
 
-
-
-    for(int s=0;s<3;s++) {
-        for(long row=0;row<2;row++){
-            //if(row%100==0) {
-                printf (" SET %d %ld of %ld count %d\n",set,row,length,cursor->source_count); 
-            //}
-            match[row]=evaluate_expressions(cursor,expr);
-            data_set->rows[row];
-        }
-    }
     
+
+    for(long row=0;row<2;row++){
+        cursor->source[set]->position=row;//evaluate_expressions(cursor,expr);
+        for(int s=0;s<set;s++) {
+            printf("%d-",cursor->source[s]->position);
+        } 
+        if(set>0) printf("%d\n");
+
+    }
+       
 
     return results;
 }
