@@ -683,7 +683,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 int loop=0;
 int eval_row_set(cursor_t *cursor) {
     ++loop;
-    loop%=100;
+    loop%=1000;
     if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld-",cursor->source[s]->position);
