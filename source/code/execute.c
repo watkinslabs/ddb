@@ -684,11 +684,12 @@ int loop=0;
 int eval_row_set(cursor_t *cursor) {
     ++loop;
     loop%=1000;
-    if(loop!=0) return;
-    for(int s=0;s<cursor->source_count;s++) {
-        printf("%ld-",cursor->source[s]->position);
-    } 
-    printf("\n");
+    if(loop==0){
+        for(int s=0;s<cursor->source_count;s++) {
+            printf("%ld-",cursor->source[s]->position);
+        } 
+        printf("\n");
+    }
 }
 
 char ** get_column_list(data_column_t *columns,int length){
