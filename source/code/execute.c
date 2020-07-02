@@ -637,7 +637,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
         cursor->source[set]->position=row;
         if(set>0) {
-            res=evaluate_expressions(cursor,expr);
+            //res=evaluate_expressions(cursor,expr);
         }
         res=1;
 
