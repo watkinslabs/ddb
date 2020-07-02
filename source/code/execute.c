@@ -629,7 +629,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
 
 
-    for(long row=0;row<1;row++){
+    for(long row=0;row<2;row++){
         //if(row%100==0) {
             printf (" SET %d %ld of %ld count %d\n",set,row,length,cursor->source_count); 
         //}
@@ -637,7 +637,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         data_set->rows[row];
     }
     if(set+2<cursor->source_count) {
-        for(long row=0;row<1;row++){
+        for(long row=0;row<2;row++){
             results+=return_match(cursor,select,set+1);
         }
     }
