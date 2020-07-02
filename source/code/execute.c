@@ -629,12 +629,11 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
 
     for(long row=0;row<2;row++){
-        cursor->source[set]->position=row;//evaluate_expressions(cursor,expr);
         for(int s=0;s<set;s++) {
             printf("%d-",cursor->source[s]->position);
         } 
-        if(set>0) printf("%d\n");
-
+        cursor->source[set]->position=row;//evaluate_expressions(cursor,expr);
+        printf("%d \n",row);
     }
        
 
