@@ -636,7 +636,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             res=evaluate_expressions(cursor,expr);
         }
         res=1;
-        if(set+1<cursor->source_count){
+        if(set+1==cursor->source_count){
             eval_row_set(cursor);
             continue;
         } 
