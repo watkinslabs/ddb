@@ -627,23 +627,43 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     data_set_t *data_set=cursor->source[set];
 
     
+    int res=0;
 
     for(long row=0;row<2;row++){
-        if(set+1==cursor->source_count) {
-            for(int s=0;s<set;s++) {
-                printf("%d-",cursor->source[s]->position);
-            } 
-            printf("%d \n",row);
-        }
-        cursor->source[set]->position=row;                 //evaluate_expressions(cursor,expr);
-        if(set+1<cursor->source_count)
-            return_match(cursor,select,set+1);
-    }
-    
+        // visual check for the matrix
 
+        if(set>0) {
+            res=evaluate_expressions(cursor,expr);
+        }
+        if(set+1<cursor->source_count){
+            eval_row_set(cursor);
+            continue;
+        } else {
+
+
+        switch(type){
+            case TOKEN_JOIN: 
+                            if(res) {
+                                if(set+1<cursor->source_count){
+                                    return_match(cursor,select,set+1);
+                                } else {
+                                    for(int s=set;s<cursor->source_count;s++) {
+                                        cursor->source[s]->position=-2;
+                                    }
+                                    eval_row_set(cursor);
+                                }
+                            break;
+        }
+    }
     return results;
 }
 
+int eval_row_set(cursor_t *cursor) {
+    for(int s=0;s<cursor->source_count;s++) {
+        printf("%ld-",cursor->source[s]->position);
+    } 
+    printf("\n");
+}
 
 char ** get_column_list(data_column_t *columns,int length){
     if(length>0){
