@@ -638,7 +638,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         if(set+1<cursor->source_count){
             eval_row_set(cursor);
             continue;
-        } else {
+        } 
 
 
         switch(type){
