@@ -632,7 +632,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
     if(set+1==cursor->source_count) last_join=1;
 
-      if(!res) {for(long row=0;row<length;row++){
+    for(long row=0;row<length;row++){
         // visual check for the matrix
 
         cursor->source[set]->position=row;
