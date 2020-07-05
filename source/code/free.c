@@ -123,6 +123,15 @@ int free_expression(expression_t *expr){
  return 1;
 }
 
+int free_expression_value(expression_value_t *expr){
+    if(expr) {
+        if(expr->STRING_V) free (expr->STRING_V);
+        free(expr);
+        return 1;
+    }
+    return 0;
+}
+
 /* Function: free_ident
  * -----------------------------
  * free the data structure of a identifier_t

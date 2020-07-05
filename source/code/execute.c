@@ -409,7 +409,10 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     expression_t *expr2=*expr;
 
     if(!expr2) {
-        if(exprV1) return 1;
+        if(exprV1) {
+            free_expression_value(exprV1);
+            return 1;
+        }
         else return 0;
     }
 
@@ -419,10 +422,15 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
         //debug_expression_value(exprV2);
 
         int results=compare_expression_value(exprV1,exprV2,comparison);
+        free_expression_value(exprV1);
+        free_expression_value(exprV2);
         return results;
     } // end if comparitor
 
-    if(exprV1) return 1;
+    if(exprV1) {
+        free_expression_value(exprV1);
+        return 1;
+    }
     return 0;
 }
 
