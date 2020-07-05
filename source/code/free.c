@@ -125,7 +125,7 @@ int free_expression(expression_t *expr){
 
 int free_expression_value(expression_value_t *expr){
     if(expr) {
-        if(expr->STRING_V!=0) free (expr->STRING_V);
+        if(expr->STRING_V) free(&expr->STRING_V);
         free(expr);
         return 1;
     }
