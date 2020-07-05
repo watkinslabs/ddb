@@ -7,6 +7,8 @@
 #include <sys/un.h>
 #include <math.h>
 #include <assert.h>
+#include <unistd.h> 
+#include <pthread.h> 
 
 #include "../include/errors.h"
 #include "../include/structure.h"
@@ -477,6 +479,8 @@ int evaluate_expressions(cursor_t *cursor,expression_t *expr){
 // i=4 or 
 // i=5 and i=6 or
 // i=5 and i=7
+#define NUMBER_OF_THREADS 10
+pthread_t thread_id[NUMBER_OF_THREADS];
 
 int execute_select(cursor_t * cursor,select_t *select){
     /*
@@ -608,6 +612,8 @@ int execute_select(cursor_t * cursor,select_t *select){
     
     return 1;
 }
+
+
 
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
