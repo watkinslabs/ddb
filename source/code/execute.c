@@ -123,6 +123,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
     
     while(temp_expr) {
 
+        if(tempV!=exprV) {
+            free(tempV); 
+        } 
+        tempV=0;
+
+
         // compare the expression (eject higher functions problem)
         // if found after the first element.. eject
         // if not... its the first comparitor
