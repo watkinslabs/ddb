@@ -489,7 +489,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         if(i==0) {
                             src_ident=select->from;
                         } else {
-                            src_ident=&select->join[i-1].identifier;
+                            src_ident=select->join[i-1].identifier;
                         }
                         table_ptr=get_table_by_identifier(cursor,src_ident);
 
