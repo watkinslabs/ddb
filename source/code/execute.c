@@ -144,7 +144,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             case 1: 
             
             
-                    debug_identifier(temp_expr->identifier);
+                    //debug_identifier(temp_expr->identifier);
                     char *value=get_value_at(cursor,temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
