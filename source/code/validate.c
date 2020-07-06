@@ -470,6 +470,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 
     //create lookup for identifiers.. speed things up
     if(select->from) {
+        cursor->identifier_count=select->column_length;
         cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),select->column_length);
         tmp_ptr=select->columns;
         int found=0;
