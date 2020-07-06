@@ -803,6 +803,7 @@ range_t * get_line(char *data,long *position,long fsize) {
     if(range->end==0) {
         range->end=fsize;
     }
+    
     *position=range->end+1;
     return range;
 }
@@ -942,7 +943,8 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         long index=0;
         long max_columns=0;
         while(range){
-            //printf("Range %ld-%ld\n",range->start,range->end);
+            if(index<5)
+            printf("Range %ld-%ld\n",range->start,range->end);
 
             row_t *row=build_row(data,range,delimiter);
             row->file_row=index;
