@@ -487,7 +487,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         if(i==0) {
                             table_ptr=get_table_by_identifier(cursor,select->from);
                         } else {
-                            table_ptr=get_table_by_identifier(cursor,&select->join[i-1]);
+                            table_ptr=get_table_by_identifier(cursor,&select->join[i]);
                         }
 
                         if(table_ptr==0) {
