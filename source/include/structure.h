@@ -143,7 +143,9 @@ typedef struct data_set_t{
 typedef struct identifier_lookup_t {
     identifier_t *identifier;
     long source;
-    long column;
+    long source_column;
+    long select_column;
+    int active;
 } identifier_lookup_t;
 
 
@@ -160,6 +162,8 @@ typedef struct cursor_t{
     int                   status;
     struct timespec       created;
     struct timespec       ended;
+    char               ** source_alias;     //array of source alias's
+    
     data_set_t         ** source;           //array of datasets that results is created from
     int                ** source_count;     //number of datasets in source
     data_set_t          * results;

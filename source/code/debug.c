@@ -418,6 +418,14 @@ void debug_select(select_t *select){
 
     if (select->has_limit_start) printf("LIMIT_START:   %d\n",select->limit_start);
     if (select->has_limit_length) printf("LIMIT_LENGTH : %d\n",select->limit_length);
+
+    if(select->from) {
+        debug_sub_header("-Source Aliases");
+        printf("- %d: %s  = %s.%s\n",0,select->alias,select->from->qualifier,select->from->source);
+        for(int i=0;i<select->join_length;i++) {
+            printf("- %d: %s = %s.%s\n",i+1,select->join[i].alias,select->join[i].identifier->qualifier,select->join[i].identifier->source);
+        }
+    }
 }
 
 /* Function: debug_use

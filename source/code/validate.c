@@ -410,6 +410,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     // all FROM/JOIN sources exist and are unique
     // all select columns are UNIQUE
     // now we validate that all SELECT identifiers exist in the FROM/JOIN
+
     if(select->from) {
         tmp_ptr=select->columns;
         int found=0;
@@ -418,16 +419,64 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 //debug_identifier((identifier_t*)tmp_ptr->object);
                 int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
-                debug_identifier((identifier_t*)tmp_ptr->object);
+
                 if(res==0) {
                     return 0;
                 }
             }
-           
             tmp_ptr=tmp_ptr->next;
         }
     }
-    return 0;
+
+    
+    // populate aliases of sources 
+    if(select->from) {
+        //init array block
+        cursor->source_alias=(char **)safe_malloc(sizeof(char*),select->join_length+1);
+        table_def_t *table_ptr=0;
+        table_ptr=get_table_by_identifier(cursor,select->from);
+        if(table_ptr==0) {
+            err_msg=malloc(1024);
+            sprintf(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
+            set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
+            return 0;
+        }
+        cursor->source_alias[0]=strdup(select->alias);
+        join_t *join_ptr=0;
+        for(int i=0;i<select->join_length;i++) {
+            join_ptr=&select->join[i];
+            table_ptr=get_table_by_identifier(cursor,join_ptr->identifier);
+            if(table_ptr==0) {
+                err_msg=malloc(1024);
+                sprintf(err_msg,"invalid JOIN table: %s.%s",join_ptr->identifier->qualifier,join_ptr->identifier->source);
+                set_error(cursor,ERR_INVALID_JOIN_TABLE,err_msg);
+                return 0;
+            }
+            cursor->source_alias[i+1]=strdup(select->join[i].alias);
+        }
+    }
+
+
+    //create lookup for identifiers.. speed things up
+    if(select->from) {
+        cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),select->column_length);
+        tmp_ptr=select->columns;
+        int found=0;
+        int index=0;
+        while(tmp_ptr){
+            // we only care about data sourced from tables
+            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                cursor->identifier_lookup[index].active=1;
+                cursor->identifier_lookup[index].source=0;
+                cursor->identifier_lookup[index].source_column=0;
+                cursor->identifier_lookup[index].select_column=index;
+                cursor->identifier_lookup[index].identifier=duplicate_identifier((identifier_t*)tmp_ptr->object);
+            }
+            ++index;
+            tmp_ptr=tmp_ptr->next;
+        }
+    }
+
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
 
