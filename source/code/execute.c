@@ -80,8 +80,9 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 //get the value of the item at this location in the dataset
 char *get_value_at(cursor_t *cursor,identifier_t *iden){
-    char *value=0;
+    char *value="BOB";
 
+    debug_identifier(iden);
     return value;
 }
 
@@ -140,12 +141,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 // process token(s)/data point.. 
         switch(temp_expr->mode){
             // identifier (lets just make this a token code)
-            case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
+            case 1: char *value=get_value_at(cursor,temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
                     tempV=safe_malloc(sizeof(expression_value_t),1);
                     tempV->type=EVAL_STRING;
-                    tempV->STRING_V="BOB";
+                    tempV->STRING_V=value;
                     //printf ("identifier\n");
                     break;
                     // litteral
