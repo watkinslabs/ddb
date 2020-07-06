@@ -210,7 +210,8 @@ int free_cursor(cursor_t *cursor){
     if(cursor->active_database) free(cursor->active_database);
     if(cursor->results)         free_data_set(cursor->results);
     if(cursor->source_alias) {
-        for(int i=0;i<cursor->source_count;i++) free(cursor->source_alias[i]);
+        int count=cursor->source_count;
+        for(int i=0;i<count;i++) free(cursor->source_alias[i]);
         free(cursor->source_alias);
     }
     if(cursor->identifier_lookup) {
