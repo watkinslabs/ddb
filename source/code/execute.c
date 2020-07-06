@@ -763,6 +763,7 @@ int eval_row_set(cursor_t *cursor) {
         } 
         printf("\n");
     }
+    return 1;
 }
 
 char ** get_column_list(data_column_t *columns,int length){
