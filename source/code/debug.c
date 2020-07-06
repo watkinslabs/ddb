@@ -305,8 +305,8 @@ void debug_dataset(data_set_t *data){
     printf(" - row_length: %ld\n",data->row_length);
     printf(" - position: %ld\n",data->position);
 
-    //for(long i=0;i<data->row_length;i++){
-    for(long i=0;i<5;i++){
+    for(long i=0;i<data->row_length;i++){
+    //for(long i=0;i<5;i++){
         row_t *temp_row=data->rows[i];
         for(long b=0;b<temp_row->column_length;b++){
             if(b!=0) printf(",    ");
