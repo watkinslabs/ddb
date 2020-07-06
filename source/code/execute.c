@@ -91,7 +91,7 @@ expression_value_t *eval_token(token_t *token){
     expression_value_t *expr=safe_malloc(sizeof(expression_value_t),1);
     expr->type=0;
     switch(token->type){
-        case TOKEN_STRING:  expr->STRING_V="BOB";//token->value; 
+        case TOKEN_STRING:  expr->STRING_V=token->value; 
                             expr->type=EVAL_STRING;
                             break;
         case TOKEN_NUMERIC: expr->LONG_V=atol(token->value); 
@@ -629,7 +629,7 @@ int execute_select(cursor_t * cursor,select_t *select){
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
-    long length     =100;//cursor->source[set]->row_length;
+    long length     =10;//cursor->source[set]->row_length;
     long match[length];
     expression_value_t *expr=0;
     if(set==0) {
