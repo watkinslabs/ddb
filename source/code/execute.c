@@ -638,7 +638,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     long results=0;
     long length     =50;//cursor->source[set]->row_length;
     long match[length];
-    expression_value_t *expr=0;
+    expression_t *expr=0;
     if(set==0) {
         type=TOKEN_WHERE;
         expr=select->where;
