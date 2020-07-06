@@ -1071,23 +1071,36 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         int e2_str_calc=0;
 
         switch(e2->type){
-            case EVAL_STRING : e2_str=e2->STRING_V; e2_str_calc=0; break;
-            case EVAL_INT    : e2_str=int_2_string(e2->INT_V);     e2_str_calc=1; break;
-            case EVAL_LONG   : e2_str=long_2_string(e2->LONG_V);   e2_str_calc=1; break;
-            case EVAL_FLOAT  : e2_str=float_2_string(e2->FLOAT_V); e2_str_calc=1; break;
+            case EVAL_STRING : e2_str=e2->STRING_V; e2_str_calc=0; 
+                               break;
+            case EVAL_INT    : e2_str=int_2_string(e2->INT_V);     e2_str_calc=1; 
+                               break;
+            case EVAL_LONG   : e2_str=long_2_string(e2->LONG_V);   e2_str_calc=1; 
+                               break;
+            case EVAL_FLOAT  : e2_str=float_2_string(e2->FLOAT_V); e2_str_calc=1; 
+                               break;
         }
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) { success=1; } break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) { success=1; } break;
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) { success=1; }
-                                    if(stricmp(e1->STRING_V,e2_str)==0) success=1; break;
-            case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=0) success=1; break;
-            case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=0) success=1; break;
-            case TOKEN_LESS       : if(stricmp(e1->STRING_V,e2_str)< 0) success=1; break;
-            case TOKEN_GREATER    : if(stricmp(e1->STRING_V,e2_str)> 0) success=1; break;
-            case TOKEN_NOT_EQ     : if(stricmp(e1->STRING_V,e2_str)!=0) success=1; break;
-            case TOKEN_ASSIGNMENT : if(stricmp(e1->STRING_V,e2_str)==0) success=1; break;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; 
+                                    break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; 
+                                    break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
+                                    if(stricmp(e1->STRING_V,e2_str)==0) success=1; 
+                                    break;
+            case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=0) success=1; 
+                                    break;
+            case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=0) success=1; 
+                                    break;
+            case TOKEN_LESS       : if(stricmp(e1->STRING_V,e2_str)< 0) success=1; 
+                                    break;
+            case TOKEN_GREATER    : if(stricmp(e1->STRING_V,e2_str)> 0) success=1; 
+                                    break;
+            case TOKEN_NOT_EQ     : if(stricmp(e1->STRING_V,e2_str)!=0) success=1; 
+                                    break;
+            case TOKEN_ASSIGNMENT : if(stricmp(e1->STRING_V,e2_str)==0) success=1; 
+                                    break;
         }
         if(e2_str_calc) free(e2_str);
 //        printf( "no match? string");
@@ -1107,8 +1120,10 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         char *e1_str=0;
         if(e2->type==EVAL_STRING) e1_str=int_2_string(e1->INT_V);
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; 
+                                    break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; 
+                                    break;
             case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;  
                                     if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==0) success=1;
                                     if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) success=1;
@@ -1158,8 +1173,10 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         if(e2->type==EVAL_STRING) e1_str=float_2_string(e1->FLOAT_V);
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; 
+                                    break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; 
+                                    break;
             case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
                                     if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==0) success=1;
                                     if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) success=1;
@@ -1210,8 +1227,10 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         if(e2->type==EVAL_STRING) e1_str=long_2_string(e1->LONG_V);
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; 
+                                    break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; 
+                                    break;
             case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
                                     if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==0) success=1;
                                     if(e2->type==EVAL_INT     && e1->LONG_V==e2->INT_V    ) success=1;
