@@ -1099,7 +1099,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
     }
     if(e1->type==EVAL_FLOAT){
         char *e1_str=0;
-        if(e2->type=EVAL_STRING) e1_str=float_2_string(e1->FLOAT_V);
+        if(e2->type==EVAL_STRING) e1_str=float_2_string(e1->FLOAT_V);
 
         switch(comparison){
             case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; 
