@@ -753,7 +753,7 @@ int eval_row_set(cursor_t *cursor) {
 
     if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
-            printf("%ld-",cursor->source[s]->position);
+            printf("%ld ",cursor->source[s]->position);
         } 
         printf("\n");
     }
