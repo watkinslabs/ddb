@@ -1078,9 +1078,9 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         }
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) { success=1; } break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) { success=1; } break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) { success=1; }
                                     if(stricmp(e1->STRING_V,e2_str)==0) success=1; break;
             case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=0) success=1; break;
             case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=0) success=1; break;
