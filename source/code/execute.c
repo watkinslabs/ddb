@@ -111,7 +111,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
     
 
     //debug_identifier(iden);
-    return "bob";
+    return "";
 }
 
 
