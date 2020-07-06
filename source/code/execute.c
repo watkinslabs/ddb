@@ -110,14 +110,9 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
             }
         }
     }
-
-    
-
     //debug_identifier(iden);
     return "";
 }
-
-
 
 expression_value_t *eval_token(token_t *token){
     expression_value_t *expr=safe_malloc(sizeof(expression_value_t),1);
@@ -490,8 +485,6 @@ int compare_expressions(cursor_t *cursor,expression_t **expr){
     return 0;
 }
 
-
-
 int evaluate_expressions(cursor_t *cursor,expression_t *expr){
     expression_t *temp_expr=expr;
     //debug_expr(expr,30);
@@ -677,8 +670,6 @@ int execute_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
-
-
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
@@ -709,7 +700,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         if(set>0) {
             res=evaluate_expressions(cursor,expr);
         }
-        res=1;
+        //res=1;
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
