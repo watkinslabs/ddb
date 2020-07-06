@@ -96,9 +96,10 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                     row_t *row=data_set->rows[row_index];
                     if(ident_lookup.source_column<data_set->column_length){
                         //found the colum in the row.. return the value
-                        char *value=row->columns[1];
+                        
+                        char *value=row->columns[ident_lookup.source_column];
                         //char *value="BOB";
-                        printf ("Pulling '%s'\n",value);
+                        printf ("Pulling %d ->'%s'\n",ident_lookup.source_column,value);
                         return value;
                     } else {
                         //the data DOES NOT EXIST
