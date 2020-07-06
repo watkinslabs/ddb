@@ -277,9 +277,14 @@ void debug_cursor(cursor_t *cursor){
         debug_dataset(cursor->results);
     }
 
+    for(int i=0;i<cursor->source_count;i++) {
+       printf("  Alias %d, %s\n",cursor->source_alias[i]);
+             
+    }
+
     for(int i=0;i<cursor->identifier_count;i++) {
         if(cursor->identifier_lookup[i].active==1) {
-            printf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
+            printf("- Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
             cursor->identifier_lookup[i].active,
             cursor->identifier_lookup[i].select_column,
             cursor->identifier_lookup[i].source_column,
