@@ -14,6 +14,7 @@ build-profile:
 run:
 	@echo builds/ddbc -d $(TEST_SQL)
 	@builds/ddbc t< $(TEST_SQL)
+	@gprof builds/ddbc gmon.out  > profile.txt
 
 go: build run
 
