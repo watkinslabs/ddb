@@ -141,12 +141,12 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 // process token(s)/data point.. 
         switch(temp_expr->mode){
             // identifier (lets just make this a token code)
-            case 1: char *value=get_value_at(cursor,temp_expr->identifier);
+            case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
                     tempV=safe_malloc(sizeof(expression_value_t),1);
                     tempV->type=EVAL_STRING;
-                    tempV->STRING_V=value;
+                    tempV->STRING_V="BOB";
                     //printf ("identifier\n");
                     break;
                     // litteral
