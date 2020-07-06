@@ -99,7 +99,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                         
                         printf ("Pulling ");
                         for(int i=0;i<row->column_length;i++) {
-                            char *value=row->columns[ident_lookup.source_column];
+                            char *value=row->columns[i];
 
                             //char *value="BOB";
                             printf ("%ld ->'%s'",i,value);
