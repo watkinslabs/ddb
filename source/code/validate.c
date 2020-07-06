@@ -491,7 +491,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         } else {
                             src_ident=&select->join[i-1].identifier;
                         }
-                        table_ptr=get_table_by_identifier(src_ident);
+                        table_ptr=get_table_by_identifier(cursor,src_ident);
 
                         if(table_ptr==0) {
                             err_msg=malloc(1024);
