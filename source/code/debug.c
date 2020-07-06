@@ -278,14 +278,16 @@ void debug_cursor(cursor_t *cursor){
     }
 
     for(int i=0;i<cursor->identifier_count;i++) {
-        printf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
-        cursor->identifier_lookup[i].active,
-        cursor->identifier_lookup[i].select_column,
-        cursor->identifier_lookup[i].source_column,
-        cursor->identifier_lookup[i].source,
-        cursor->identifier_lookup[i].identifier->qualifier,
-        cursor->identifier_lookup[i].identifier->source
-        );
+        if(cursor->identifier_lookup[i].active==1) {
+            printf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
+            cursor->identifier_lookup[i].active,
+            cursor->identifier_lookup[i].select_column,
+            cursor->identifier_lookup[i].source_column,
+            cursor->identifier_lookup[i].source,
+            cursor->identifier_lookup[i].identifier->qualifier,
+            cursor->identifier_lookup[i].identifier->source
+            );
+        }
     }
 
 }
