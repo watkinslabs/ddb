@@ -756,6 +756,7 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
             printf("%ld ",cursor->source[s]->position);
         } 
         data_column_t *next=select->columns;
+        char *value=0;
         while(next){
             if(next->object==0) debug_sub_header("Missing object in datacolumn");
             else 
@@ -765,23 +766,20 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
                 case TOKEN_HEX:
                 case TOKEN_BINARY:
                 case TOKEN_REAL:
-                case TOKEN_NULL: 
+                case TOKEN_NULL: value=(char*)next->object;
+                                 printf("LITT-'%s' , ",value);
+                                 break;
                 
-                 printf(" - %s: ",  token_type(next->type));
-                 printf(" %s \n", (char*)next->object);
-                            debug_alias(next->alias);
-                            debug_ordinal(next->ordinal);
-                                  break;
-                case TOKEN_IDENTIFIER: debug_identifier((identifier_t *)next->object); 
-                                       debug_alias(next->alias);
-                                       debug_ordinal(next->ordinal);
+                case TOKEN_IDENTIFIER: value=get_value_at(cursor,(identifier_t *)next->object);
+                                       printf("-'%s' , ",value);
+                                       
                                     break;
                 default:   debug_value(token_type(next->type));
                             break;
             }//end switch
             next=next->next;
         }//end while
-        
+       
         printf("\n");
     }
     return 1;
