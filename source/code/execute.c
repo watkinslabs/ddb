@@ -98,8 +98,8 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                         //found the colum in the row.. return the value
                         char *value=row->columns[ident_lookup.source_column];
                         //char *value="BOB";
-                        printf ("%ld ->'%s'",i,value);
-                        printf ("Pulling \n");
+                        //printf ("%ld ->'%s'",i,value);
+                        //printf ("Pulling \n");
                         return value;
                     } else {
                         //the data DOES NOT EXIST
@@ -943,8 +943,8 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         long index=0;
         long max_columns=0;
         while(range){
-            if(index<5)
-            printf("Range %ld-%ld\n",range->start,range->end);
+            //if(index<5)
+            //  printf("Range %ld-%ld\n",range->start,range->end);
 
             row_t *row=build_row(data,range,delimiter);
             row->file_row=index;
@@ -1005,7 +1005,6 @@ int lock_file(char *file){
     }
     return 1;
 }
-
 
 data_set_t * new_data_set(char **columns,int column_count,int row_count){
 
