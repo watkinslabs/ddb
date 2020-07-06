@@ -215,7 +215,7 @@ int free_cursor(cursor_t *cursor){
     }
     if(cursor->identifier_lookup) {
         //loop
-        for(int i=0;i<cursor->identifier_count;i++) {
+        for(int i=0;i<*cursor.identifier_count;i++) {
             if(cursor->identifier_lookup[i].identifier) free_ident(cursor->identifier_lookup[i].identifier);
         }
         free(cursor->identifier_lookup);
