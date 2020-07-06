@@ -168,6 +168,7 @@ typedef struct cursor_t{
     int                ** source_count;     //number of datasets in source
     data_set_t          * results;
     identifier_lookup_t * identifier_lookup;
+    int                   identifier_count;
 
 }cursor_t;
 

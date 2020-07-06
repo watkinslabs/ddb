@@ -277,6 +277,17 @@ void debug_cursor(cursor_t *cursor){
         debug_dataset(cursor->results);
     }
 
+    for(int i=0;i<cursor->identifier_count;i++) {
+        prtinf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
+        cursor->identifier_lookup[i].active,
+        cursor->identifier_lookup[i].select_column,
+        cursor->identifier_lookup[i].source_column,
+        cursor->identifier_lookup[i].source,
+        cursor->identifier_lookup[i].identifier->qualifier,
+        cursor->identifier_lookup[i].identifier->source
+        );
+    }
+
 }
 
 void debug_dataset(data_set_t *data){
@@ -426,6 +437,8 @@ void debug_select(select_t *select){
             printf("- %d: %s = %s.%s\n",i+1,select->join[i].alias,select->join[i].identifier->qualifier,select->join[i].identifier->source);
         }
     }
+    debug_sub_header("Identifier Lookup");
+      
 }
 
 /* Function: debug_use
