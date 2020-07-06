@@ -468,7 +468,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 cursor->identifier_lookup[index].active=1;
                 for(int i=0;i<select->join_length+1;i++) {
-                    if(strcmp((identifier_t*)tmp_ptr->object->qualifier,cursor->source_alias[i])==1) {;
+                    if(strcmp(((identifier_t*)tmp_ptr->object)->qualifier,cursor->source_alias[i])==1) {;
                         cursor->identifier_lookup[index].source=i;
                         break;
                     }
