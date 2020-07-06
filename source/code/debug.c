@@ -285,7 +285,7 @@ void debug_cursor(cursor_t *cursor){
 
     debug_sub_header("Identifier Lookup");
     for(int i=0;i<cursor->identifier_count;i++) {
-        if(cursor->identifier_lookup[i].active==1) {
+        if(cursor->identifier_lookup[i].active==1 && cursor->identifier_lookup[i].identifier) {
             printf("- Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
             cursor->identifier_lookup[i].active,
             cursor->identifier_lookup[i].select_column,
