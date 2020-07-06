@@ -96,8 +96,8 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                     row_t *row=data_set->rows[row_index];
                     if(ident_lookup.source_column<data_set->column_length){
                         //found the colum in the row.. return the value
-                        //char *value=*row->columns[ident_lookup.source_column];
-                        char *value="BOB";
+                        char *value=row->columns[ident_lookup.source_column];
+                        //char *value="BOB";
                         printf ("Pulling '%s'\n",value);
                         return value;
                     } else {
@@ -978,7 +978,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         // rows will have whatever they find
         // this refers to mas possible per row
         data_set->column_length=max_columns;
-        debug_dataset(data_set);
+        //debug_dataset(data_set);
         return data_set;
     }
     return 0;
