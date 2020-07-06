@@ -147,10 +147,10 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     // if i do not test the value and use it..
                     // it segfaults...
                     if(temp_expr->identifier==0) {
-                        if(exprV) free(exprV);
-                        if(tempV) free(tempV);
-                        *expr=temp_expr;
-                        return 0;
+                        //if(exprV) free(exprV);
+                        //if(tempV) free(tempV);
+                        //*expr=temp_expr;
+                        //return 0;
                     }
                     
                     char *value=get_value_at(cursor,temp_expr->identifier);
