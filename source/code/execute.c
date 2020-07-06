@@ -391,7 +391,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         // if this is a first cycle.. assign to root.. 
     }// end while...
 
-    //if(tempV && tempV!=exprV) free(tempV);
+    if(tempV && tempV!=exprV) free(tempV);
 
     //update pointer if successfull
     *expr=temp_expr;
