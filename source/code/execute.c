@@ -978,7 +978,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         // rows will have whatever they find
         // this refers to mas possible per row
         data_set->column_length=max_columns;
-        debug_dataset(data_set);
+        //debug_dataset(data_set);
         return data_set;
     }
     return 0;

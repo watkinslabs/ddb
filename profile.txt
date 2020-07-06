@@ -14,12 +14,12 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00       52     0.00     0.00  debug_expr
   0.00      0.00     0.00       48     0.00     0.00  free_column_list
   0.00      0.00     0.00       43     0.00     0.00  process_expression
-  0.00      0.00     0.00       30     0.00     0.00  free_data_columns
+  0.00      0.00     0.00       20     0.00     0.00  free_data_columns
   0.00      0.00     0.00       16     0.00     0.00  debug_create_table
+  0.00      0.00     0.00       14     0.00     0.00  compare_expression_value
   0.00      0.00     0.00       13     0.00     0.00  debug_cursor
   0.00      0.00     0.00       13     0.00     0.00  validate_select
   0.00      0.00     0.00        9     0.00     0.00  free_cursor
-  0.00      0.00     0.00        7     0.00     0.00  compare_expression_value
   0.00      0.00     0.00        7     0.00     0.00  debug_dataset
   0.00      0.00     0.00        6     0.00     0.00  free_select
   0.00      0.00     0.00        6     0.00     0.00  lex
@@ -86,7 +86,7 @@ index % time    self  children    called     name
                 0.00    0.00      70             debug_select <cycle 1> [6]
                 0.00    0.00      52             debug_expr <cycle 1> [8]
                 0.00    0.00      16+3           debug_create_table <cycle 1> [12]
-                0.00    0.00       9             free_cursor <cycle 1> [15]
+                0.00    0.00       9             free_cursor <cycle 1> [16]
                 0.00    0.00       4             duplicate_cursor <cycle 1> [24]
                 0.00    0.00       3             duplicate_token <cycle 1> [29]
                 0.00    0.00       3             compare_identifiers <cycle 1> [27]
@@ -94,11 +94,11 @@ index % time    self  children    called     name
                 0.00    0.00       6/566         process_select [21]
                 0.00    0.00       6/566         process_create_table [20]
                 0.00    0.00       6/566         process_use [23]
-                0.00    0.00     224/566         validate_select [14]
+                0.00    0.00     224/566         validate_select [15]
                 0.00    0.00     324/566         consolidate_tokens <cycle 1> [4]
 [2]      0.0    0.00    0.00     566         process_boolean_primary [2]
 -----------------------------------------------
-                0.00    0.00     524/524         validate_select [14]
+                0.00    0.00     524/524         validate_select [15]
 [3]      0.0    0.00    0.00     524         error [3]
 -----------------------------------------------
                                  373             consolidate_tokens <cycle 1> [4]
@@ -111,7 +111,7 @@ index % time    self  children    called     name
                 0.00    0.00       2/292         validate_create_table [131]
                 0.00    0.00       2/292         process_select_list [104]
                 0.00    0.00       3/292         debug_expression_value [28]
-                0.00    0.00       3/292         validate_select [14]
+                0.00    0.00       3/292         validate_select [15]
                 0.00    0.00       3/292         get_table_by_identifier [83]
                 0.00    0.00       5/292         lex [19]
                 0.00    0.00       6/292         free_select [18]
@@ -129,12 +129,12 @@ index % time    self  children    called     name
                 0.00    0.00       3/48          free_column_list [9]
                 0.00    0.00       2/2           is_identifier_valid [33]
                 0.00    0.00       1/7           debug_dataset [17]
-                0.00    0.00       1/7           compare_expression_value [16]
+                0.00    0.00       1/14          compare_expression_value [13]
                 0.00    0.00       1/2           free_data_set [32]
                 0.00    0.00       1/1           process_expr_list [35]
                                   58             debug_select <cycle 1> [6]
                                    4             duplicate_cursor <cycle 1> [24]
-                                   3             free_cursor <cycle 1> [15]
+                                   3             free_cursor <cycle 1> [16]
                                    3             debug_create_table <cycle 1> [12]
                                  373             consolidate_tokens <cycle 1> [4]
 -----------------------------------------------
@@ -144,12 +144,12 @@ index % time    self  children    called     name
 [5]      0.0    0.00    0.00      95         process_alias <cycle 1> [5]
                                    3             consolidate_tokens <cycle 1> [4]
 -----------------------------------------------
-                                   3             free_cursor <cycle 1> [15]
+                                   3             free_cursor <cycle 1> [16]
                                   58             consolidate_tokens <cycle 1> [4]
                 0.00    0.00       9/292         read_file [105]
 [6]      0.0    0.00    0.00      70         debug_select <cycle 1> [6]
                 0.00    0.00       6/7           debug_dataset [17]
-                0.00    0.00       4/13          debug_cursor [13]
+                0.00    0.00       4/13          debug_cursor [14]
                                   51             consolidate_tokens <cycle 1> [4]
                                    3             debug_expr <cycle 1> [8]
                                    2             process_alias <cycle 1> [5]
@@ -170,15 +170,14 @@ index % time    self  children    called     name
                 0.00    0.00      42/48          free_data_columns [11]
 [9]      0.0    0.00    0.00      48         free_column_list [9]
 -----------------------------------------------
-                0.00    0.00      13/43          validate_select [14]
+                0.00    0.00      13/43          validate_select [15]
                 0.00    0.00      30/43          lex [19]
 [10]     0.0    0.00    0.00      43         process_expression [10]
 -----------------------------------------------
                                    2             free_data_columns [11]
-                0.00    0.00       1/30          duplicate_cursor <cycle 1> [24]
-                0.00    0.00      12/30          free_data_set [32]
-                0.00    0.00      17/30          compare_expression_value [16]
-[11]     0.0    0.00    0.00      30+2       free_data_columns [11]
+                0.00    0.00       6/20          free_data_set [32]
+                0.00    0.00      14/20          compare_expression_value [13]
+[11]     0.0    0.00    0.00      20+2       free_data_columns [11]
                 0.00    0.00      42/48          free_column_list [9]
                                    2             free_data_columns [11]
 -----------------------------------------------
@@ -186,21 +185,29 @@ index % time    self  children    called     name
                                    1             debug_select <cycle 1> [6]
                                    3             consolidate_tokens <cycle 1> [4]
                 0.00    0.00       6/292         debug_tuple [51]
-                0.00    0.00       6/292         validate_select [14]
+                0.00    0.00       6/292         validate_select [15]
 [12]     0.0    0.00    0.00      16+3       debug_create_table <cycle 1> [12]
                                   49             debug_expr <cycle 1> [8]
                                    9             process_alias <cycle 1> [5]
                                    3             debug_create_table <cycle 1> [12]
 -----------------------------------------------
+                                   4             compare_expression_value [13]
+                0.00    0.00       1/14          duplicate_cursor <cycle 1> [24]
+                0.00    0.00       1/14          consolidate_tokens <cycle 1> [4]
+                0.00    0.00      12/14          free_data_set [32]
+[13]     0.0    0.00    0.00      14+4       compare_expression_value [13]
+                0.00    0.00      14/20          free_data_columns [11]
+                                   4             compare_expression_value [13]
+-----------------------------------------------
                 0.00    0.00       1/13          process_select_list [104]
                 0.00    0.00       2/13          debug_dataset [17]
                 0.00    0.00       4/13          debug_select <cycle 1> [6]
                 0.00    0.00       6/13          debug_value [53]
-[13]     0.0    0.00    0.00      13         debug_cursor [13]
+[14]     0.0    0.00    0.00      13         debug_cursor [14]
 -----------------------------------------------
-                                   1             validate_select [14]
+                                   1             validate_select [15]
                 0.00    0.00      13/13          lex [19]
-[14]     0.0    0.00    0.00      13+1       validate_select [14]
+[15]     0.0    0.00    0.00      13+1       validate_select [15]
                 0.00    0.00     524/524         error [3]
                 0.00    0.00     224/566         process_boolean_primary [2]
                 0.00    0.00      13/43          process_expression [10]
@@ -208,35 +215,29 @@ index % time    self  children    called     name
                 0.00    0.00       6/292         debug_create_table <cycle 1> [12]
                 0.00    0.00       3/292         consolidate_tokens <cycle 1> [4]
                 0.00    0.00       1/1           process_litteral [36]
-                                   1             validate_select [14]
+                                   1             validate_select [15]
 -----------------------------------------------
                                    3             consolidate_tokens <cycle 1> [4]
                 0.00    0.00       6/292         free_select [18]
-[15]     0.0    0.00    0.00       9         free_cursor <cycle 1> [15]
+[16]     0.0    0.00    0.00       9         free_cursor <cycle 1> [16]
                                    3             debug_select <cycle 1> [6]
------------------------------------------------
-                                   1             compare_expression_value [16]
-                0.00    0.00       1/7           consolidate_tokens <cycle 1> [4]
-                0.00    0.00       6/7           free_data_set [32]
-[16]     0.0    0.00    0.00       7+1       compare_expression_value [16]
-                0.00    0.00      17/30          free_data_columns [11]
-                                   1             compare_expression_value [16]
 -----------------------------------------------
                 0.00    0.00       1/7           consolidate_tokens <cycle 1> [4]
                 0.00    0.00       6/7           debug_select <cycle 1> [6]
 [17]     0.0    0.00    0.00       7         debug_dataset [17]
-                0.00    0.00       2/13          debug_cursor [13]
+                0.00    0.00       2/13          debug_cursor [14]
 -----------------------------------------------
-                0.00    0.00       6/6           validate_select [14]
+                0.00    0.00       6/6           validate_select [15]
 [18]     0.0    0.00    0.00       6         free_select [18]
                 0.00    0.00       6/292         consolidate_tokens <cycle 1> [4]
-                0.00    0.00       6/292         free_cursor <cycle 1> [15]
+                0.00    0.00       6/292         free_cursor <cycle 1> [16]
 -----------------------------------------------
                 0.00    0.00       1/6           process_select_list [104]
                 0.00    0.00       5/6           token_combine [119]
 [19]     0.0    0.00    0.00       6         lex [19]
                 0.00    0.00      30/43          process_expression [10]
-                0.00    0.00      13/13          validate_select [14]
+                0.00    0.00      13/13          validate_select [15]
+                0.00    0.00       6/6           process_select [21]
                 0.00    0.00       5/292         consolidate_tokens <cycle 1> [4]
 -----------------------------------------------
                 0.00    0.00       6/6           token_combine [119]
@@ -245,7 +246,7 @@ index % time    self  children    called     name
                 0.00    0.00       6/566         process_boolean_primary [2]
                 0.00    0.00       3/3           add_data_column [26]
 -----------------------------------------------
-                0.00    0.00       6/6           token_combine [119]
+                0.00    0.00       6/6           lex [19]
 [21]     0.0    0.00    0.00       6         process_select [21]
                 0.00    0.00      24/292         consolidate_tokens <cycle 1> [4]
                 0.00    0.00       6/566         process_boolean_primary [2]
@@ -264,7 +265,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                                    4             consolidate_tokens <cycle 1> [4]
 [24]     0.0    0.00    0.00       4         duplicate_cursor <cycle 1> [24]
-                0.00    0.00       1/30          free_data_columns [11]
+                0.00    0.00       1/14          compare_expression_value [13]
                 0.00    0.00       1/64          sub_str_cpy [7]
                                    3             duplicate_token <cycle 1> [29]
 -----------------------------------------------
@@ -304,8 +305,8 @@ index % time    self  children    called     name
                 0.00    0.00       1/2           consolidate_tokens <cycle 1> [4]
                 0.00    0.00       1/2           process_select_list [104]
 [32]     0.0    0.00    0.00       2         free_data_set [32]
-                0.00    0.00      12/30          free_data_columns [11]
-                0.00    0.00       6/7           compare_expression_value [16]
+                0.00    0.00      12/14          compare_expression_value [13]
+                0.00    0.00       6/20          free_data_columns [11]
                 0.00    0.00       3/48          free_column_list [9]
 -----------------------------------------------
                 0.00    0.00       2/2           consolidate_tokens <cycle 1> [4]
@@ -318,7 +319,7 @@ index % time    self  children    called     name
                 0.00    0.00       1/1           consolidate_tokens <cycle 1> [4]
 [35]     0.0    0.00    0.00       1         process_expr_list [35]
 -----------------------------------------------
-                0.00    0.00       1/1           validate_select [14]
+                0.00    0.00       1/1           validate_select [15]
 [36]     0.0    0.00    0.00       1         process_litteral [36]
 -----------------------------------------------
 
@@ -414,13 +415,13 @@ Index by function name
 
   [26] add_data_column        [24] duplicate_cursor        [2] process_boolean_primary
   [31] add_join               [29] duplicate_token        [20] process_create_table
-  [16] compare_expression_value [3] error                 [35] process_expr_list
+  [13] compare_expression_value [3] error                 [35] process_expr_list
   [27] compare_identifiers     [9] free_column_list       [10] process_expression
-   [4] consolidate_tokens     [15] free_cursor            [36] process_litteral
+   [4] consolidate_tokens     [16] free_cursor            [36] process_litteral
   [34] copy_token_value_at    [11] free_data_columns      [30] process_queries
   [12] debug_create_table     [32] free_data_set          [21] process_select
-  [13] debug_cursor           [18] free_select            [22] process_simple_expr
+  [14] debug_cursor           [18] free_select            [22] process_simple_expr
   [17] debug_dataset          [33] is_identifier_valid    [23] process_use
    [8] debug_expr             [25] join_init               [7] sub_str_cpy
-  [28] debug_expression_value [19] lex                    [14] validate_select
+  [28] debug_expression_value [19] lex                    [15] validate_select
    [6] debug_select            [5] process_alias           [1] <cycle 1>
