@@ -208,6 +208,10 @@ int free_cursor(cursor_t *cursor){
     if(cursor->active_table)    cursor->active_table=0;
     if(cursor->active_database) free(cursor->active_database);
     if(cursor->results)         free_data_set(cursor->results);
+    if(cursor->source_alias) {
+        for(int i=0;i<cursor->source_count;i++) free(cursor->source_alias[i]);
+        free(cursor->source_alias);
+    }
     if(cursor) free(cursor);
     return 1;
 }
