@@ -5,6 +5,7 @@ USE test;
 
 SELECT 
     DISTINCT 
+    1 as prefix,
     t1.id as id1,       --identifier
     t2.id as id2,       --identifier
     t3.iid as id3,       --identifier
