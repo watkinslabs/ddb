@@ -484,11 +484,14 @@ int validate_select(cursor_t * cursor,select_t *select){
                         cursor->identifier_lookup[index].active=1;
                         cursor->identifier_lookup[index].source=i;
                         table_def_t *table_ptr;
+                        identifier_t *src_ident=0;
+                        
                         if(i==0) {
-                            table_ptr=get_table_by_identifier(cursor,select->from);
+                            src_ident=select->from;
                         } else {
-                            table_ptr=get_table_by_identifier(cursor,&select->join[i-1].identifier);
+                            src_ident=&select->join[i-1].identifier;
                         }
+                        table_ptr=get_table_by_identifier(src_ident);
 
                         if(table_ptr==0) {
                             err_msg=malloc(1024);
