@@ -767,11 +767,11 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
                 case TOKEN_BINARY:
                 case TOKEN_REAL:
                 case TOKEN_NULL: value=(char*)next->object;
-                                 printf("LITT-'%s' , ",value);
+                                 printf("'%s' ,",value);
                                  break;
                 
                 case TOKEN_IDENTIFIER: value=get_value_at(cursor,(identifier_t *)next->object);
-                                       printf("-'%s' , ",value);
+                                       printf("'%s' ,",value);
                                        
                                     break;
                 default:   debug_value(token_type(next->type));
