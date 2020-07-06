@@ -125,7 +125,6 @@ int free_expression(expression_t *expr){
 
 int free_expression_value(expression_value_t *expr){
     if(expr) {
-        printf("FEV\n");
         //if(expr->STRING_V) free(&expr->STRING_V);
         free(expr);
         return 1;
