@@ -107,6 +107,17 @@ int table_has_column(table_def_t *table,char *column){
     return 0;
 }
 
+int column_index_in_table(table_def_t *table,char *column){
+    data_column_t *tmp_ptr=table->columns;
+    while(tmp_ptr){                            
+        if(strcmp(tmp_ptr->object,column)==0){
+            return 1;
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+    return -1;
+}
+
 /* Function: validate_create_table
  * -----------------------
  * validate a create_table structures logic
@@ -466,18 +477,33 @@ int validate_select(cursor_t * cursor,select_t *select){
         while(tmp_ptr){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-                cursor->identifier_lookup[index].active=1;
                 for(int i=0;i<select->join_length+1;i++) {
-                    if(strcmp(((identifier_t*)tmp_ptr->object)->qualifier,cursor->source_alias[i])==1) {;
+                    identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
+                    if(strcmp(sel_ident->qualifier,cursor->source_alias[i])==1) {;
+                        cursor->identifier_lookup[index].active=1;
                         cursor->identifier_lookup[index].source=i;
+                        table_def_t *table_ptr;
+                        if(i==0) {
+                            table_ptr=get_table_by_identifier(cursor,select->from);
+                        } else {
+                            table_ptr=get_table_by_identifier(cursor,&select->join[i-1]);
+                        }
+
+                        if(table_ptr==0) {
+                            err_msg=malloc(1024);
+                            sprintf(err_msg,"invalid table");
+                            set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
+                            return 0;
+                        }
+                        
+                        cursor->identifier_lookup[index].select_column=index;
+                        cursor->identifier_lookup[index].identifier=duplicate_identifier((identifier_t*)tmp_ptr->object);
+                        cursor->identifier_lookup[index].source_column=column_index_in_table(table_ptr,sel_ident->source);
                         break;
                     }
 
                 }
                 
-                cursor->identifier_lookup[index].source_column=0;
-                cursor->identifier_lookup[index].select_column=index;
-                cursor->identifier_lookup[index].identifier=duplicate_identifier((identifier_t*)tmp_ptr->object);
             }
             ++index;
             tmp_ptr=tmp_ptr->next;
