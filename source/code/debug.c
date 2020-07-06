@@ -278,7 +278,7 @@ void debug_cursor(cursor_t *cursor){
     }
 
     for(int i=0;i<cursor->source_count;i++) {
-       printf("  Alias %d, %s\n",i,*cursor->source_alias[i]);
+       printf("  Alias %d, %s\n",i,cursor->source_alias[i]);
              
     }
 
