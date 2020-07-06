@@ -80,7 +80,7 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 //get the value of the item at this location in the dataset
 char *get_value_at(cursor_t *cursor,identifier_t *iden){
-    char *value="BOB";
+    char *value=safe_malloc(5,1);
 
     //debug_identifier(iden);
     return value;
