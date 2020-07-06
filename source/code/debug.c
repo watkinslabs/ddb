@@ -278,7 +278,7 @@ void debug_cursor(cursor_t *cursor){
     }
 
     for(int i=0;i<cursor->identifier_count;i++) {
-        prtinf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
+        printf(" Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
         cursor->identifier_lookup[i].active,
         cursor->identifier_lookup[i].select_column,
         cursor->identifier_lookup[i].source_column,
