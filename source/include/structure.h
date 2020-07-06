@@ -140,6 +140,13 @@ typedef struct data_set_t{
 } data_set_t;
 
 
+typedef struct identifier_lookup_t {
+    identifier_t *identifier;
+    long source;
+    long column;
+} identifier_lookup_t;
+
+
 typedef struct cursor_t{
     //struct * variables;
     struct table_def_t  * active_table;
@@ -156,6 +163,7 @@ typedef struct cursor_t{
     data_set_t         ** source;           //array of datasets that results is created from
     int                ** source_count;     //number of datasets in source
     data_set_t          * results;
+    identifier_lookup_t * identifier_lookup;
 
 }cursor_t;
 

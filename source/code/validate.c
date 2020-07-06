@@ -349,6 +349,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if(join_ptr->alias==0) join_ptr->alias=string_duplicate((char *)join_ptr->identifier->source);
         }
     }
+
     
     // validate join/from ambiguity
     if(select->from) {
@@ -417,6 +418,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 //debug_identifier((identifier_t*)tmp_ptr->object);
                 int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
+                debug_identifier((identifier_t*)tmp_ptr->object);
                 if(res==0) {
                     return 0;
                 }
@@ -445,7 +447,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
-    //join identifire check
+    //join identifier check
     // identifier must be in from/target
     if(select->join) {
          for(int i=0;i<select->join_length;i++) {

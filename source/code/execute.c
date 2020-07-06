@@ -145,12 +145,14 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     // this is failing and i have no CLUE why.
                     // if i test the value.. it always works
                     // if i do not test the value and use it..
-                    // it segfaults...
+                    // it segfaults... doesnt matter if i do 
+                    // anything in the "if" at all ? 
+                    // profiling or address leak modules?
                     if(temp_expr->identifier==0) {
-                        //if(exprV) free(exprV);
-                        //if(tempV) free(tempV);
-                        //*expr=temp_expr;
-                        //return 0;
+                        if(exprV) free(exprV);
+                        if(tempV) free(tempV);
+                        *expr=temp_expr;
+                        return 0;
                     }
                     
                     char *value=get_value_at(cursor,temp_expr->identifier);
@@ -159,7 +161,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                     //exprV=
                     tempV=safe_malloc(sizeof(expression_value_t),1);
                     tempV->type=EVAL_STRING;
-                    tempV->STRING_V="BOB";
+                    tempV->STRING_V=value;
                     //printf ("identifier\n");
                     break;
                     // litteral
