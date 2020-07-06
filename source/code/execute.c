@@ -91,7 +91,7 @@ expression_value_t *eval_token(token_t *token){
     expression_value_t *expr=safe_malloc(sizeof(expression_value_t),1);
     expr->type=0;
     switch(token->type){
-        case TOKEN_STRING:  expr->STRING_V=token->value; 
+        case TOKEN_STRING:  expr->STRING_V="BOB";//token->value; 
                             expr->type=EVAL_STRING;
                             break;
         case TOKEN_NUMERIC: expr->LONG_V=atol(token->value); 
@@ -1026,9 +1026,9 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         }
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; break;
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; break;
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
                                     if(stricmp(e1->STRING_V,e2_str)==1) success=1; break;
             case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=1) success=1; break;
             case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=1) success=1; break;
@@ -1092,6 +1092,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) success=1;
                                     if(e2->type==EVAL_LONG    && e1->INT_V==e2->LONG_V   ) success=1;
                                     if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) success=1;
+                                    break;
                                     
         }
         if(e1_str) free(e1_str);
