@@ -79,11 +79,37 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 
 //get the value of the item at this location in the dataset
-char *get_value_at(cursor_t *cursor,identifier_t *iden){
-    char *value=safe_malloc(5,1);
+char *get_value_at(cursor_t *cursor,identifier_t *ident){
+    for(int i=0;i<cursor->identifier_count;i++) {
+        if(cursor->identifier_lookup[i].active==1) {
+            //,match ident to lookup
+            identifier_lookup_t ident_lookup=cursor->identifier_lookup[i];
+            if(compare_identifiers(ident,ident_lookup.identifier)) {
+                //ok we know what source/position to look at.. fetch the data and return
+                data_set_t *data_set=cursor->source[ident_lookup.source];
+                //grab the curent position from the cursor.. (saved in dataset)
+                int row_index=data_set->position;
+                
+                //is it a valid row...
+                if(row_index>=0 && row_index<data_set->row_length) {
+                    row_t *row=data_set->rows[row_index];
+                    if(ident_lookup.source_column<data_set->column_length){
+                        //found the colum in the row.. return the value
+                        return row->columns[ident_lookup.source_column];
+                    } else {
+                        //the data DOES NOT EXIST
+                        return "";
+                    }
+                }
+
+            }
+        }
+    }
+
+    
 
     //debug_identifier(iden);
-    return value;
+    return "";
 }
 
 
