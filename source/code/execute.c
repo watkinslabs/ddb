@@ -1132,7 +1132,10 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     if(e2->type==EVAL_LONG    && e1->FLOAT_V!=e2->LONG_V   ) return 1;
                                     if(e2->type==EVAL_FLOAT   && e1->FLOAT_V!=e2->FLOAT_V  ) return 1;
                                     break;
-            case TOKEN_ASSIGNMENT : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
+            case TOKEN_ASSIGNMENT : 
+                                    printf(" e2: %s \n",e2->STRING_V);
+                                    printf(" e1: %s \n",e1_str);
+                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
                                     if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) return 1;
                                     if(e2->type==EVAL_LONG    && e1->FLOAT_V==e2->LONG_V   ) return 1;
                                     if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) return 1;
