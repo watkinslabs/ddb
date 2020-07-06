@@ -845,7 +845,8 @@ row_t * build_row(char *data,range_t *range,char delimiter){
         }
 
         if(data[pos]==',' || pos+1==range->end) {
-            int len=pos-start_pos+1;
+            int len=pos-start_pos;
+            if(pos+1==range->end) ++len;
             if(len>=0) {
                 char *value=(char*)safe_malloc(len+1,1);
                 if(len>0) {
