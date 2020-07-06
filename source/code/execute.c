@@ -89,23 +89,18 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 //ok we know what source/position to look at.. fetch the data and return
                 data_set_t *data_set=cursor->source[ident_lookup.source];
                 //grab the curent position from the cursor.. (saved in dataset)
-                int row_index=0;//data_set->position;
+                int row_index=data_set->position;
                 
                 //is it a valid row...
                 if(row_index>=0 && row_index<data_set->row_length) {
                     row_t *row=data_set->rows[row_index];
                     if(ident_lookup.source_column<data_set->column_length){
                         //found the colum in the row.. return the value
-                        
-                        printf ("Pulling ");
-                        for(int i=0;i<row->column_length;i++) {
-                            char *value=row->columns[i];
-
-                            //char *value="BOB";
-                            printf ("%ld ->'%s'",i,value);
-                        }
+                        char *value=row->columns[ident_lookup.source_column];
+                        //char *value="BOB";
+                        printf ("%ld ->'%s'",i,value);
                         printf ("Pulling \n");
-                        return "";
+                        return value;
                     } else {
                         //the data DOES NOT EXIST
                         return "";
