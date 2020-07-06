@@ -143,7 +143,7 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
             // identifier (lets just make this a token code)
             case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
                     if(temp_expr->identifier) {
-                        printfg ("NO IDENT\n");
+                        printf ("NO IDENT\n");
                     }
                     debug_identifier(temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
