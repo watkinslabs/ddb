@@ -1014,6 +1014,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         return 0;
     }
     if(e1->type==EVAL_STRING){
+        int success=0;
         char *e2_str;
         int e2_str_calc=0;
 
@@ -1028,17 +1029,17 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
             case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; break;
             case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; break;
             case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
-                                    if(stricmp(e1->STRING_V,e2_str)==1) return 1; break;
-            case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=1) return 1; break;
-            case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=1) return 1; break;
-            case TOKEN_LESS       : if(stricmp(e1->STRING_V,e2_str)< 1) return 1; break;
-            case TOKEN_GREATER    : if(stricmp(e1->STRING_V,e2_str)> 1) return 1; break;
-            case TOKEN_NOT_EQ     : if(stricmp(e1->STRING_V,e2_str)!=1) return 1; break;
-            case TOKEN_ASSIGNMENT : if(stricmp(e1->STRING_V,e2_str)==1) return 1; break;
+                                    if(stricmp(e1->STRING_V,e2_str)==1) success=1; break;
+            case TOKEN_LESS_EQ    : if(stricmp(e1->STRING_V,e2_str)<=1) success=1; break;
+            case TOKEN_GREATER_EQ : if(stricmp(e1->STRING_V,e2_str)>=1) success=1; break;
+            case TOKEN_LESS       : if(stricmp(e1->STRING_V,e2_str)< 1) success=1; break;
+            case TOKEN_GREATER    : if(stricmp(e1->STRING_V,e2_str)> 1) success=1; break;
+            case TOKEN_NOT_EQ     : if(stricmp(e1->STRING_V,e2_str)!=1) success=1; break;
+            case TOKEN_ASSIGNMENT : if(stricmp(e1->STRING_V,e2_str)==1) success=1; break;
         }
         if(e2_str_calc) free(e2_str);
 //        printf( "no match? string");
-        return 0;
+        return success;
     }
 
     if(e1->type==EVAL_NULL){
@@ -1050,151 +1051,154 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
         return 0;
     }
     if(e1->type==EVAL_INT){
+        int success=0;
         char *e1_str=0;
         if(e2->type==EVAL_STRING) e1_str=int_2_string(e1->INT_V);
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; 
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; 
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
-                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) return 1;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;  
+                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V<=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V<=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V<=e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V<=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V<=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V<=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V>=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V>=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V>=e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V>=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V>=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V>=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V<e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V<e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V<e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V<e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V<e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V<e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V>e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V>e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V>e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V>e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V>e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V>e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V!=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V!=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V!=e2->FLOAT_V  ) return 1;
+            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V!=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V!=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V!=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_ASSIGNMENT : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->INT_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) return 1;
+            case TOKEN_ASSIGNMENT : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->INT_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->INT_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->INT_V==e2->FLOAT_V  ) success=1;
                                     
         }
         if(e1_str) free(e1_str);
 
 //        printf( "no match? int");
-        return 0;
+        return success;
     }
     if(e1->type==EVAL_FLOAT){
+        int success=0;
         char *e1_str=0;
         if(e2->type==EVAL_STRING) e1_str=float_2_string(e1->FLOAT_V);
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; 
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; 
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
-                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) return 1;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
+                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V<=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V<=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V<=e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V<=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V<=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V<=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V>=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V>=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V>=e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V>=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V>=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V>=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V<e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V<e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V<e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V<e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V<e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V<e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V>e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V>e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V>e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V>e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V>e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V>e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V!=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V!=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V!=e2->FLOAT_V  ) return 1;
+            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V!=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V!=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V!=e2->FLOAT_V  ) success=1;
                                     break;
             case TOKEN_ASSIGNMENT : 
                                     //printf(" e2: %s \n",e2->STRING_V);
                                     //printf(" e1: %s \n",e1_str);
-                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) return 1;
+                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->FLOAT_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->FLOAT_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->FLOAT_V==e2->FLOAT_V  ) success=1;
                                     
         }
         if(e1_str) free(e1_str);
 //        printf( "no match? float");
-        return 0;
+        return success;
     }
     if(e1->type==EVAL_LONG){
+        int success=0;
         char *e1_str=0;
         if(e2->type==EVAL_STRING) e1_str=long_2_string(e1->LONG_V);
 
         switch(comparison){
-            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) return 1; 
-            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) return 1; 
-            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) return 1;  
-                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V==e2->FLOAT_V  ) return 1;
+            case TOKEN_IS_NOT_NULL: if(e1->type!=EVAL_NULL) success=1; break;
+            case TOKEN_IS_NULL    : if(e1->type==EVAL_NULL) success=1; break;
+            case TOKEN_NULL_EQ    : if(e2->type==EVAL_NULL) success=1;
+                                    if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V==e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V<=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V<=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V<=e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS_EQ    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V<=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V<=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V<=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V>=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V>=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V>=e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER_EQ : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V>=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V>=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V>=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V<e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V<e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V<e2->FLOAT_V  ) return 1;
+            case TOKEN_LESS       : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)<1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V<e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V<e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V<e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V>e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V>e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V>e2->FLOAT_V  ) return 1;
+            case TOKEN_GREATER    : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)>1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V>e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V>e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V>e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V!=e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V!=e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V!=e2->FLOAT_V  ) return 1;
+            case TOKEN_NOT_EQ     : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)!=1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V!=e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V!=e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V!=e2->FLOAT_V  ) success=1;
                                     break;
-            case TOKEN_ASSIGNMENT : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) return 1;
-                                    if(e2->type==EVAL_INT     && e1->LONG_V==e2->INT_V    ) return 1;
-                                    if(e2->type==EVAL_LONG    && e1->LONG_V==e2->LONG_V   ) return 1;
-                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V==e2->FLOAT_V  ) return 1;
+            case TOKEN_ASSIGNMENT : if(e2->type==EVAL_STRING  && stricmp(e2->STRING_V,e1_str)==1) success=1;
+                                    if(e2->type==EVAL_INT     && e1->LONG_V==e2->INT_V    ) success=1;
+                                    if(e2->type==EVAL_LONG    && e1->LONG_V==e2->LONG_V   ) success=1;
+                                    if(e2->type==EVAL_FLOAT   && e1->LONG_V==e2->FLOAT_V  ) success=1;
                                     break;
         }
         if(e1_str) free(e1_str);
 //        printf( "no match? long");
-        return 0;
+        return success;
     }
     printf("NO CLUE WHATS UP WITH THIS TYPE COMPARISON %d\n",comparison);
 
