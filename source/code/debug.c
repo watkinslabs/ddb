@@ -363,7 +363,6 @@ void debug_select(select_t *select){
             if(next->object==0) debug_sub_header("Missing object in datacolumn");
             else 
             switch(next->type){
-
                 case TOKEN_STRING:
                 case TOKEN_NUMERIC:
                 case TOKEN_HEX:

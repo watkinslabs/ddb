@@ -30,7 +30,7 @@ char * int_2_string(int value);
 char * float_2_string(float  value);
 int    compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison);
 long   return_match(cursor_t *cursor,select_t *select,int set);
-int eval_row_set(cursor_t *cursor);
+int    eval_row_set(cursor_t *cursor,select_t *select);
 
 /* Function: validate_create_table
  * -----------------------
@@ -738,7 +738,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 }
             }
             //ok we have an exact filter.. eval the row        
-            eval_row_set(cursor);
+            eval_row_set(cursor,select);
         }  else {
             return_match(cursor,select,set+1);
         }
@@ -747,7 +747,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 }
 
 int loop=0;
-int eval_row_set(cursor_t *cursor) {
+int eval_row_set(cursor_t *cursor,select_t *select) {
    // ++loop;
     loop%=10000;
 
@@ -755,6 +755,33 @@ int eval_row_set(cursor_t *cursor) {
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld ",cursor->source[s]->position);
         } 
+        data_column_t *next=select->columns;
+        while(next){
+            if(next->object==0) debug_sub_header("Missing object in datacolumn");
+            else 
+            switch(next->type){
+                case TOKEN_STRING:
+                case TOKEN_NUMERIC:
+                case TOKEN_HEX:
+                case TOKEN_BINARY:
+                case TOKEN_REAL:
+                case TOKEN_NULL: 
+                
+                 printf(" - %s: ",  token_type(next->type));
+                 printf(" %s \n", (char*)next->object);
+                            debug_alias(next->alias);
+                            debug_ordinal(next->ordinal);
+                                  break;
+                case TOKEN_IDENTIFIER: debug_identifier((identifier_t *)next->object); 
+                                       debug_alias(next->alias);
+                                       debug_ordinal(next->ordinal);
+                                    break;
+                default:   debug_value(token_type(next->type));
+                            break;
+            }//end switch
+            next=next->next;
+        }//end while
+        
         printf("\n");
     }
     return 1;
