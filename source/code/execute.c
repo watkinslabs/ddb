@@ -142,10 +142,10 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
         switch(temp_expr->mode){
             // identifier (lets just make this a token code)
             case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
-                    if(temp_expr->identifier) {
-                        printf ("NO IDENT\n");
-                    }
-                    debug_identifier(temp_expr->identifier);
+                    //if(temp_expr->identifier) {
+                    //    printf ("NO IDENT\n");
+                    //}
+                    //debug_identifier(temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
                     tempV=safe_malloc(sizeof(expression_value_t),1);
