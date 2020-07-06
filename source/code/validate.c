@@ -467,7 +467,14 @@ int validate_select(cursor_t * cursor,select_t *select){
             // we only care about data sourced from tables
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 cursor->identifier_lookup[index].active=1;
-                cursor->identifier_lookup[index].source=0;
+                for(int i=0;i<select->join_length+1;i++) {
+                    if(strcmp((identifier_t*)tmp_ptr->object->qualifier,cursor->source_alias[i])==1) {;
+                        cursor->identifier_lookup[index].source=i;
+                        break;
+                    }
+
+                }
+                
                 cursor->identifier_lookup[index].source_column=0;
                 cursor->identifier_lookup[index].select_column=index;
                 cursor->identifier_lookup[index].identifier=duplicate_identifier((identifier_t*)tmp_ptr->object);
