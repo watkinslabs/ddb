@@ -212,6 +212,10 @@ int free_cursor(cursor_t *cursor){
         for(int i=0;i<cursor->source_count;i++) free(cursor->source_alias[i]);
         free(cursor->source_alias);
     }
+    if(cursor->identifier_lookup) {
+        //loop
+        free(cursor->identifier_lookup);
+    }
     if(cursor) free(cursor);
     return 1;
 }
