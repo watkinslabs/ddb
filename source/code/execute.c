@@ -30,6 +30,7 @@ char * int_2_string(int value);
 char * float_2_string(float  value);
 int    compare_expression_value(expression_value_t *e1,expression_value_t *e2,int comparison);
 long   return_match(cursor_t *cursor,select_t *select,int set);
+int eval_row_set(cursor_t *cursor);
 
 /* Function: validate_create_table
  * -----------------------
