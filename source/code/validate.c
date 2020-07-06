@@ -427,7 +427,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             tmp_ptr=tmp_ptr->next;
         }
     }
-
+    return 0;
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
 
