@@ -109,10 +109,12 @@ int table_has_column(table_def_t *table,char *column){
 
 int column_index_in_table(table_def_t *table,char *column){
     data_column_t *tmp_ptr=table->columns;
+    long column_index=0;
     while(tmp_ptr){                            
         if(strcmp(tmp_ptr->object,column)==0){
-            return 1;
+            return column_index;
         }
+        ++column_index;
         tmp_ptr=tmp_ptr->next;
     }
     return -1;
