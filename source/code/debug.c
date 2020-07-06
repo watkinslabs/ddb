@@ -277,11 +277,13 @@ void debug_cursor(cursor_t *cursor){
         debug_dataset(cursor->results);
     }
 
+    debug_sub_header("Alias");
     for(int i=0;i<cursor->source_count;i++) {
-       printf("  Alias %d, %s\n",i,cursor->source_alias[i]);
+       printf("- Alias %d, %s\n",i,cursor->source_alias[i]);
              
     }
 
+    debug_sub_header("Identifier Lookup");
     for(int i=0;i<cursor->identifier_count;i++) {
         if(cursor->identifier_lookup[i].active==1) {
             printf("- Active %d, SEL COL %d, SRC COL %d, SRC %d, %s.%s\n",
