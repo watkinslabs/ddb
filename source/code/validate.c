@@ -494,6 +494,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         table_ptr=get_table_by_identifier(cursor,src_ident);
 
                         if(table_ptr==0) {
+                            debug_identifier(src_ident);
                             err_msg=malloc(1024);
                             sprintf(err_msg,"invalid table");
                             set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
