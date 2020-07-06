@@ -141,10 +141,11 @@ expression_value_t *evaluate_expression(cursor_t *cursor,expression_t **expr){
                 // process token(s)/data point.. 
         switch(temp_expr->mode){
             // identifier (lets just make this a token code)
-            case 1: //char *value=get_value_at(cursor,temp_expr->identifier);
+            case 1: 
                     if(temp_expr->identifier==0) {
                         printf ("NO IDENT\n");
                     }
+                    char *value=get_value_at(cursor,temp_expr->identifier);
                     //debug_identifier(temp_expr->identifier);
                     //type=TOKEN_IDENTIFIER;
                     //exprV=
