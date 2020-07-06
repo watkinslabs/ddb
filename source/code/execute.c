@@ -592,7 +592,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     // PHASE 2 LIKE IN % %
     // PHASE 3 SUB QUERY
     
-    if(select->where) {
+    if(select->where || selct->join) {
         long row_count_max=0;
         for(int set=0;set<data_set_count;set++){ 
             if(set==0) row_count_max=data_sets[set]->row_length;
