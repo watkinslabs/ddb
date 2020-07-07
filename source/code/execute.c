@@ -749,14 +749,14 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 int loop=0;
 int eval_row_set(cursor_t *cursor,select_t *select) {
    // ++loop;
-    loop%=1001;
+    //loop%=1001;
     
-    if(loop==0){
+    //if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld ",cursor->source[s]->position);
         } 
         printf("\n");
-    }
+   // }
     return 1;
        if(1==2){
         data_column_t *next=select->columns;
