@@ -753,8 +753,11 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
     return 1;
     if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
-            //printf("%ld ",cursor->source[s]->position);
+            printf("%ld ",cursor->source[s]->position);
         } 
+    }
+    return 1;
+       if(1==2){
         data_column_t *next=select->columns;
         char *value=0;
         while(next){
