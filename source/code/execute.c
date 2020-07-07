@@ -98,8 +98,9 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                     if(ident_lookup.source_column<data_set->column_length && 
                        ident_lookup.source_column<row->column_length){
                         //found the colum in the row.. return the value
-                        printf ("**%d-%d,%d**\n",data_set->column_length ,row->column_length, ident_lookup.source_column);
-                        char *value=row->columns[ident_lookup.source_column];
+                        //printf ("**%d-%d,%d**\n",data_set->column_length ,row->column_length, ident_lookup.source_column);
+                        //char *value=row->columns[ident_lookup.source_column];
+                        return "BOB";
                         //char *value="BOB";
                         //printf ("%ld ->'%s'",i,value);
                         //printf ("Pulling \n");
