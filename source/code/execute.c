@@ -755,6 +755,7 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld ",cursor->source[s]->position);
         } 
+        printf("\n");
     }
     return 1;
        if(1==2){
