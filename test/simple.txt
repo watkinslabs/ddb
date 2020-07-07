@@ -7,12 +7,12 @@ SELECT  1 as prefix,
         first,
         last, 
         t1.ip,
-        ip.octet_a,
-        ip.octet_b,
-        ip.octet_c,
-        ip.octet_d
+        ip2.octet_a,
+        ip2.octet_b,
+        ip2.octet_c,
+        ip2.octet_d
 
 
 FROM            test.user as t1
-JOIN            test.ipaddress as ip ON ip.ip=t1.ip
+JOIN            test.ipaddress as ip2 ON ip2.ip=t1.ip
     
