@@ -7,10 +7,10 @@ SELECT  1 as prefix,
         first,
         last, 
         t1.ip,
-        t2.octet_a,
-        t2.octet_b,
-        t2.octet_c,
-        t2.octet_d
+        ip.octet_a,
+        ip.octet_b,
+        ip.octet_c,
+        ip.octet_d
 
 
 FROM            test.user as t1
