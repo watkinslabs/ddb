@@ -20,6 +20,7 @@
 #define LINE_ENDING '\n'
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''
+#define DATA_NULL "(null)"
 
 data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident);
 data_set_t * new_data_set(char **columns,int column_count,int row_count);
@@ -96,6 +97,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                     row_t *row=data_set->rows[row_index];
                     if(ident_lookup.source_column<data_set->column_length){
                         //found the colum in the row.. return the value
+                        if(ident_lookup.source_column>row->column_length) return DATA_NULL;
                         char *value=row->columns[ident_lookup.source_column];
                         //char *value="BOB";
                         //printf ("%ld ->'%s'",i,value);
