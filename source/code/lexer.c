@@ -106,58 +106,76 @@ token_array_t *lex(char * query){
                     if(new_token) { 
                         //new_token=sub_str_cpy(query,i,query_length-i);
                         //skip=query_length-i-1;
-                    
+                        int token_len=strlen(new_token);
+ 
                          
-                        if (0==strncasecmp(new_token,"DISTINCT"  ,8 ) ) { t=TOKEN_DISTINCT;         } else
-                        if (0==strncasecmp(new_token,"UNKNOWN"   ,7 ) ) { t=TOKEN_UNKNOWN;          } else
-                        if (0==strncasecmp(new_token,"SELECT"    ,6 ) ) { t=TOKEN_SELECT;           } else
-                        if (0==strncasecmp(new_token,"WHERE"     ,5 ) ) { t=TOKEN_WHERE;            } else
-                        if (0==strncasecmp(new_token,"ORDER"     ,5 ) ) { t=TOKEN_ORDER;            } else
-                        if (0==strncasecmp(new_token,"GROUP"     ,5 ) ) { t=TOKEN_GROUP;            } else
-                        if (0==strncasecmp(new_token,"LIMIT"     ,5 ) ) { t=TOKEN_LIMIT;            } else
-                        if (0==strncasecmp(new_token,"OUTER"     ,5 ) ) { t=TOKEN_OUTER;            } else
-                        if (0==strncasecmp(new_token,"INNER"     ,5 ) ) { t=TOKEN_INNER;            } else
-                        if (0==strncasecmp(new_token,"RIGHT"     ,5 ) ) { t=TOKEN_RIGHT;            } else
-                        if (0==strncasecmp(new_token,"FALSE"     ,5 ) ) { t=TOKEN_FALSE;            } else
-                        if (0==strncasecmp(new_token,"LEFT"      ,4 ) ) { t=TOKEN_LEFT;             } else
-                        if (0==strncasecmp(new_token,"FULL"      ,4 ) ) { t=TOKEN_FULL;             } else
-                        if (0==strncasecmp(new_token,"DESC"      ,4 ) ) { t=TOKEN_DESC;             } else
-                        if (0==strncasecmp(new_token,"JOIN"      ,4 ) ) { t=TOKEN_JOIN;             } else
-                        if (0==strncasecmp(new_token,"LIKE"      ,4 ) ) { t=TOKEN_LIKE;             } else
-                        if (0==strncasecmp(new_token,"FROM"      ,4 ) ) { t=TOKEN_FROM;             } else
-                        if (0==strncasecmp(new_token,"NULL"      ,4 ) ) { t=TOKEN_NULL;             } else
-                        if (0==strncasecmp(new_token,"TRUE"      ,4 ) ) { t=TOKEN_TRUE;             } else
-                        if (0==strncasecmp(new_token,"AND"       ,3 ) ) { t=TOKEN_AND;              } else
-                        if (0==strncasecmp(new_token,"USE"       ,0) ) { t=TOKEN_USE;              } else
-                        if (0==strncasecmp(new_token,"ASC"       ,3 ) ) { t=TOKEN_ASC;              } else
-                        if (0==strncasecmp(new_token,"NOT"       ,3 ) ) { t=TOKEN_NOT;              } else
-                        if (0==strncasecmp(new_token,"BY"        ,2 ) ) { t=TOKEN_BY;               } else
-                        if (0==strncasecmp(new_token,"AS"        ,2 ) ) { t=TOKEN_AS;               } else
-                        if (0==strncasecmp(new_token,"OR"        ,2 ) ) { t=TOKEN_OR;               } else
-                        if (0==strncasecmp(new_token,"ON"        ,2 ) ) { t=TOKEN_ON;               } else
-                        if (0==strncasecmp(new_token,"IS"        ,2 ) ) { t=TOKEN_IS;               } else
-                        if (0==strncasecmp(new_token,"IN"        ,2 ) ) { t=TOKEN_IN;               } else 
-                        if (0==strncasecmp(new_token,"DELIMITER" ,9 ) ) { t=TOKEN_COLUMN_DELIMITER; } else
-                        if (0==strncasecmp(new_token,"PASSWORD"  ,8 ) ) { t=TOKEN_PASSWORD;         } else
-                        if (0==strncasecmp(new_token,"ACCOUNT"   ,7 ) ) { t=TOKEN_ACCOUNT;          } else
-                        if (0==strncasecmp(new_token,"COMMIT"    ,6 ) ) { t=TOKEN_COMMIT;           } else
-                        if (0==strncasecmp(new_token,"COLUMN"    ,6 ) ) { t=TOKEN_COLUMN;           } else
-                        if (0==strncasecmp(new_token,"QUOTED"    ,6 ) ) { t=TOKEN_QUOTED;           } else
-                        if (0==strncasecmp(new_token,"STRICT"    ,6 ) ) { t=TOKEN_STRICT;           } else
-                        if (0==strncasecmp(new_token,"CREATE"    ,6 ) ) { t=TOKEN_CREATE;           } else
-                        if (0==strncasecmp(new_token,"ARRAY"     ,5 ) ) { t=TOKEN_ARRAY_DELIMITER;  } else
-                        if (0==strncasecmp(new_token,"TABLE"     ,5 ) ) { t=TOKEN_TABLE;            } else
-                        if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
-                        if (0==strncasecmp(new_token,"FIFO"      ,4 ) ) { t=TOKEN_FIFO;             } else
-                        if (0==strncasecmp(new_token,"REPO"      ,4 ) ) { t=TOKEN_REPO;             } else
-                        if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
-                        if (0==strncasecmp(new_token,"BASE"      ,4 ) ) { t=TOKEN_BASE;             } else
-                        if (0==strncasecmp(new_token,"PATH"      ,4 ) ) { t=TOKEN_PATH;             } else
-                        if (0==strncasecmp(new_token,"PUSH"      ,4 ) ) { t=TOKEN_PUSH;             } else
-                        if (0==strncasecmp(new_token,"PULL"      ,4 ) ) { t=TOKEN_PULL;             } else
-                        if (0==strncasecmp(new_token,"READ"      ,4 ) ) { t=TOKEN_READ;             } else
-                        if (0==strncasecmp(new_token,"URL"       ,3 ) ) { t=TOKEN_URL;              } 
-
+                        switch(token_len) {
+                            case 9:
+                                    if (0==strncasecmp(new_token,"DELIMITER" ,9 ) ) { t=TOKEN_COLUMN_DELIMITER; } 
+                                    break;
+                            case 8:
+                                    if (0==strncasecmp(new_token,"DISTINCT"  ,8 ) ) { t=TOKEN_DISTINCT;         } else
+                                    if (0==strncasecmp(new_token,"PASSWORD"  ,8 ) ) { t=TOKEN_PASSWORD;         } 
+                                    break;
+                            case 7:
+                                    if (0==strncasecmp(new_token,"ACCOUNT"   ,7 ) ) { t=TOKEN_ACCOUNT;          } else
+                                    if (0==strncasecmp(new_token,"UNKNOWN"   ,7 ) ) { t=TOKEN_UNKNOWN;          } 
+                                    break;
+                            case 6:
+                                    if (0==strncasecmp(new_token,"SELECT"    ,6 ) ) { t=TOKEN_SELECT;           } else
+                                    if (0==strncasecmp(new_token,"COMMIT"    ,6 ) ) { t=TOKEN_COMMIT;           } else
+                                    if (0==strncasecmp(new_token,"COLUMN"    ,6 ) ) { t=TOKEN_COLUMN;           } else
+                                    if (0==strncasecmp(new_token,"QUOTED"    ,6 ) ) { t=TOKEN_QUOTED;           } else
+                                    if (0==strncasecmp(new_token,"STRICT"    ,6 ) ) { t=TOKEN_STRICT;           } else
+                                    if (0==strncasecmp(new_token,"CREATE"    ,6 ) ) { t=TOKEN_CREATE;           } 
+                                    break;
+                            case 5:
+                                    if (0==strncasecmp(new_token,"ARRAY"     ,5 ) ) { t=TOKEN_ARRAY_DELIMITER;  } else
+                                    if (0==strncasecmp(new_token,"TABLE"     ,5 ) ) { t=TOKEN_TABLE;            } else
+                                    if (0==strncasecmp(new_token,"WHERE"     ,5 ) ) { t=TOKEN_WHERE;            } else
+                                    if (0==strncasecmp(new_token,"ORDER"     ,5 ) ) { t=TOKEN_ORDER;            } else
+                                    if (0==strncasecmp(new_token,"GROUP"     ,5 ) ) { t=TOKEN_GROUP;            } else
+                                    if (0==strncasecmp(new_token,"LIMIT"     ,5 ) ) { t=TOKEN_LIMIT;            } else
+                                    if (0==strncasecmp(new_token,"OUTER"     ,5 ) ) { t=TOKEN_OUTER;            } else
+                                    if (0==strncasecmp(new_token,"INNER"     ,5 ) ) { t=TOKEN_INNER;            } else
+                                    if (0==strncasecmp(new_token,"RIGHT"     ,5 ) ) { t=TOKEN_RIGHT;            } else
+                                    if (0==strncasecmp(new_token,"FALSE"     ,5 ) ) { t=TOKEN_FALSE;            } 
+                                    break;
+                            case 4:
+                                    if (0==strncasecmp(new_token,"LEFT"      ,4 ) ) { t=TOKEN_LEFT;             } else
+                                    if (0==strncasecmp(new_token,"FULL"      ,4 ) ) { t=TOKEN_FULL;             } else
+                                    if (0==strncasecmp(new_token,"DESC"      ,4 ) ) { t=TOKEN_DESC;             } else
+                                    if (0==strncasecmp(new_token,"JOIN"      ,4 ) ) { t=TOKEN_JOIN;             } else
+                                    if (0==strncasecmp(new_token,"LIKE"      ,4 ) ) { t=TOKEN_LIKE;             } else
+                                    if (0==strncasecmp(new_token,"FROM"      ,4 ) ) { t=TOKEN_FROM;             } else
+                                    if (0==strncasecmp(new_token,"NULL"      ,4 ) ) { t=TOKEN_NULL;             } else
+                                    if (0==strncasecmp(new_token,"TRUE"      ,4 ) ) { t=TOKEN_TRUE;             } else
+                                    if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
+                                    if (0==strncasecmp(new_token,"FIFO"      ,4 ) ) { t=TOKEN_FIFO;             } else
+                                    if (0==strncasecmp(new_token,"REPO"      ,4 ) ) { t=TOKEN_REPO;             } else
+                                    if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
+                                    if (0==strncasecmp(new_token,"BASE"      ,4 ) ) { t=TOKEN_BASE;             } else
+                                    if (0==strncasecmp(new_token,"PATH"      ,4 ) ) { t=TOKEN_PATH;             } else
+                                    if (0==strncasecmp(new_token,"PUSH"      ,4 ) ) { t=TOKEN_PUSH;             } else
+                                    if (0==strncasecmp(new_token,"PULL"      ,4 ) ) { t=TOKEN_PULL;             } else
+                                    if (0==strncasecmp(new_token,"READ"      ,4 ) ) { t=TOKEN_READ;             } 
+                                    break;
+                            case 3:
+                                    if (0==strncasecmp(new_token,"URL"       ,3 ) ) { t=TOKEN_URL;              } else
+                                    if (0==strncasecmp(new_token,"AND"       ,3 ) ) { t=TOKEN_AND;              } else
+                                    if (0==strncasecmp(new_token,"USE"       ,3 ) ) { t=TOKEN_USE;              } else
+                                    if (0==strncasecmp(new_token,"ASC"       ,3 ) ) { t=TOKEN_ASC;              } else
+                                    if (0==strncasecmp(new_token,"NOT"       ,3 ) ) { t=TOKEN_NOT;              } 
+                                    break;
+                            case 2:
+                                    if (0==strncasecmp(new_token,"BY"        ,2 ) ) { t=TOKEN_BY;               } else
+                                    if (0==strncasecmp(new_token,"AS"        ,2 ) ) { t=TOKEN_AS;               } else
+                                    if (0==strncasecmp(new_token,"OR"        ,2 ) ) { t=TOKEN_OR;               } else
+                                    if (0==strncasecmp(new_token,"ON"        ,2 ) ) { t=TOKEN_ON;               } else
+                                    if (0==strncasecmp(new_token,"IS"        ,2 ) ) { t=TOKEN_IS;               } else
+                                    if (0==strncasecmp(new_token,"IN"        ,2 ) ) { t=TOKEN_IN;               } 
+                                    break;
+                        }//end switch
 
 
 
