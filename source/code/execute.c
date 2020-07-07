@@ -608,51 +608,7 @@ int execute_select(cursor_t * cursor,select_t *select){
         // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
         
         long results=return_match(cursor,select,0);
-     
-     /*
-        // set data source
-        data_set_t *data_set=cursor->source[set];
-        int type=TOKEN_WHERE;
-        if(set>0) type=select->join[set-1].type;
-        
-        for(long i=0;i<data_set->row_length;i++){
-            printf("%ld,",i);
-    //        data_set[set]->position=i;
-            expression_t *expressions=0;
 
-            int results=evaluate_expressions(cursor,expressions);
-            results=1;
-    
-
-            // -2=skip everything
-            // -1 add blank row
-            // >-1 add row
-            
-            //results=evaluate_expressions(cursor,expressions);
-            
-            switch(type){
-                case TOKEN_WHERE:        if(!results) {
-                                            data_sets[set]->position=-2;
-                                            continue;
-                                        }
-                                        break;
-                case TOKEN_JOIN:        if(!results) {
-                                            data_sets[set]->position=-2;
-                                            continue;
-                                        }
-                                        break;
-                case TOKEN_LEFT_JOIN:   if(!results) {
-                                            data_sets[set]->position=-1;
-                                        }
-                                        break;
-                                break;
-            }
-        } //end set inner loop (rows)
-
-
-
-        }//end set outer loop (source)
-*/
     }// end where/join
     
     
@@ -673,7 +629,7 @@ int execute_select(cursor_t * cursor,select_t *select){
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
-    long length     =cursor->source[set]->row_length;
+    long length     =100;//cursor->source[set]->row_length;
     long match[length];
     expression_t *expr=0;
     if(set==0) {
