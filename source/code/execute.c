@@ -95,9 +95,10 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 //is it a valid row...
                 if(row_index>=0 && row_index<data_set->row_length) {
                     row_t *row=data_set->rows[row_index];
-                    if(ident_lookup.source_column<data_set->column_length){
+                    if(ident_lookup.source_column<data_set->column_length && 
+                       ident_lookup.source_column<row->column_length){
                         //found the colum in the row.. return the value
-                        if(ident_lookup.source_column>row->column_length) return DATA_NULL;
+                        printf ("%d-%d,%d\n",data_set->column_length ,row->column_length, ident_lookup.source_column)
                         char *value=row->columns[ident_lookup.source_column];
                         //char *value="BOB";
                         //printf ("%ld ->'%s'",i,value);
@@ -105,7 +106,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                         return value;
                     } else {
                         //the data DOES NOT EXIST
-                        return "";
+                        return DATA_NULL;
                     }
                 }
 
@@ -113,7 +114,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
         }
     }
     //debug_identifier(iden);
-    return "";
+    return DATA_NULL;
 }
 
 expression_value_t *eval_token(token_t *token){
