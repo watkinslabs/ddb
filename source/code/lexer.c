@@ -333,6 +333,7 @@ token_array_t *lex(char * query){
         }//end new word
     }
     consolidate_tokens(tokens);
+    token_print(tokens);
     return tokens;
 
 }
