@@ -704,22 +704,22 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
-                                                cursor->source[set]->position=-1;
+                                                cursor->source[set]->success=-1;
                                             }
                                             break;
 
             case TOKEN_RIGHT_JOIN:          if(!res) {
-                                                cursor->source[set]->position=-1;
+                                                cursor->source[set]->success=-1;
                                             }
                                             break;
             case TOKEN_LEFT_JOIN:           if(!res) {
-                                                cursor->source[set]->position=-1;
+                                                cursor->source[set]->success=-1;
                                             }
                                             break;
 
             case TOKEN_JOIN:                if(!res) {
                                                 for(int s=set;s<cursor->source_count;s++) {
-                                                    cursor->source[s]->position=-2;
+                                                    cursor->source[s]->success=-2;
                                                 }
                                                 last_join=1;
                                             }
@@ -733,7 +733,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 res=evaluate_expressions(cursor,select->where);
                 if(!res) {
                     for(int s=set;s<cursor->source_count;s++) {
-                        cursor->source[s]->position=-2;
+                        cursor->source[s]->success=-2;
                     }
                 }
             }
@@ -753,7 +753,7 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
     
     //if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
-            printf("%ld ",cursor->source[s]->position);
+            printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
         } 
         printf("\n");
    // }

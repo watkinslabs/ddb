@@ -137,6 +137,7 @@ typedef struct data_set_t{
     long      row_length;
     row_t  ** rows;
     long      position;
+    int       success;
 } data_set_t;
 
 
