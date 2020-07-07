@@ -710,44 +710,42 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
 int loop=0;
 int eval_row_set(cursor_t *cursor,select_t *select) {
-   // ++loop;
-    //loop%=1001;
+     ++loop;
+    loop%=1001;
     
-    //if(loop==0){
+/*    if(loop==0){
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
         } 
         printf("\n");
-   // }
-    return 1;
-       if(1==2){
-        data_column_t *next=select->columns;
-        char *value=0;
-        while(next){
-            if(next->object==0) debug_sub_header("Missing object in datacolumn");
-            else 
-            switch(next->type){
-                case TOKEN_STRING:
-                case TOKEN_NUMERIC:
-                case TOKEN_HEX:
-                case TOKEN_BINARY:
-                case TOKEN_REAL:
-                case TOKEN_NULL: value=(char*)next->object;
-                                 printf("'%s' ,",value);
-                                 break;
-                
-                case TOKEN_IDENTIFIER: value=get_value_at(cursor,(identifier_t *)next->object);
-                                       printf("'%s' ,",value);
-                                       
-                                    break;
-                default:   debug_value(token_type(next->type));
-                            break;
-            }//end switch
-            next=next->next;
-        }//end while
-       
-        printf("\n");
     }
+    */
+    data_column_t *next=select->columns;
+    char *value=0;
+    while(next){
+        if(next->object==0) debug_sub_header("Missing object in datacolumn");
+        else 
+        switch(next->type){
+            case TOKEN_STRING:
+            case TOKEN_NUMERIC:
+            case TOKEN_HEX:
+            case TOKEN_BINARY:
+            case TOKEN_REAL:
+            case TOKEN_NULL: value=(char*)next->object;
+                                printf("'%s' ,",value);
+                                break;
+            
+            case TOKEN_IDENTIFIER: value=get_value_at(cursor,(identifier_t *)next->object);
+                                    printf("'%s' ,",value);
+                                    
+                                break;
+            default:   debug_value(token_type(next->type));
+                        break;
+        }//end switch
+        next=next->next;
+    }//end while
+    
+    printf("\n");
     return 1;
 }
 

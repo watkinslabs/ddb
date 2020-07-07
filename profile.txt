@@ -8,10 +8,9 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00       64     0.00     0.00  compare_expressions
   0.00      0.00     0.00       52     0.00     0.00  execute_select
   0.00      0.00     0.00       10     0.00     0.00  eval_row_set
-  0.00      0.00     0.00        7     0.00     0.00  long_2_string
+  0.00      0.00     0.00        9     0.00     0.00  int_2_string
+  0.00      0.00     0.00        9     0.00     0.00  long_2_string
   0.00      0.00     0.00        6     0.00     0.00  compare_expression_value
-  0.00      0.00     0.00        6     0.00     0.00  float_2_string
-  0.00      0.00     0.00        5     0.00     0.00  int_2_string
   0.00      0.00     0.00        3     0.00     0.00  free_column_list
   0.00      0.00     0.00        2     0.00     0.00  evaluate_expression
   0.00      0.00     0.00        1     0.00     0.00  _fini
@@ -58,46 +57,42 @@ index % time    self  children    called     name
                 0.00    0.00       1/64          validate_select [130]
                 0.00    0.00       3/64          free_data_set [54]
                 0.00    0.00       3/64          free_select [59]
-                0.00    0.00      57/64          compare_expression_value [5]
+                0.00    0.00      57/64          compare_expression_value [6]
 [1]      0.0    0.00    0.00      64         compare_expressions [1]
 -----------------------------------------------
-                0.00    0.00       3/52          compare_expression_value [5]
+                0.00    0.00       3/52          compare_expression_value [6]
                 0.00    0.00      49/52          eval_row_set [3]
 [2]      0.0    0.00    0.00      52         execute_select [2]
 -----------------------------------------------
                 0.00    0.00       3/10          get_line [67]
-                0.00    0.00       7/10          compare_expression_value [5]
+                0.00    0.00       7/10          compare_expression_value [6]
 [3]      0.0    0.00    0.00      10         eval_row_set [3]
                 0.00    0.00      49/52          execute_select [2]
 -----------------------------------------------
-                0.00    0.00       7/7           compare_expression_value [5]
-[4]      0.0    0.00    0.00       7         long_2_string [4]
+                0.00    0.00       1/9           float_2_string [50]
+                0.00    0.00       8/9           compare_expression_value [6]
+[4]      0.0    0.00    0.00       9         int_2_string [4]
+-----------------------------------------------
+                0.00    0.00       1/9           float_2_string [50]
+                0.00    0.00       8/9           compare_expression_value [6]
+[5]      0.0    0.00    0.00       9         long_2_string [5]
 -----------------------------------------------
                 0.00    0.00       3/6           free_data_set [54]
                 0.00    0.00       3/6           free_select [59]
-[5]      0.0    0.00    0.00       6         compare_expression_value [5]
+[6]      0.0    0.00    0.00       6         compare_expression_value [6]
                 0.00    0.00      57/64          compare_expressions [1]
+                0.00    0.00       8/9           long_2_string [5]
+                0.00    0.00       8/9           int_2_string [4]
                 0.00    0.00       7/10          eval_row_set [3]
-                0.00    0.00       7/7           long_2_string [4]
-                0.00    0.00       6/6           float_2_string [6]
-                0.00    0.00       3/5           int_2_string [7]
                 0.00    0.00       3/52          execute_select [2]
 -----------------------------------------------
-                0.00    0.00       6/6           compare_expression_value [5]
-[6]      0.0    0.00    0.00       6         float_2_string [6]
-                0.00    0.00       2/5           int_2_string [7]
------------------------------------------------
-                0.00    0.00       2/5           float_2_string [6]
-                0.00    0.00       3/5           compare_expression_value [5]
-[7]      0.0    0.00    0.00       5         int_2_string [7]
------------------------------------------------
                 0.00    0.00       3/3           validate_create_table [129]
-[8]      0.0    0.00    0.00       3         free_column_list [8]
+[7]      0.0    0.00    0.00       3         free_column_list [7]
 -----------------------------------------------
-                                   4             evaluate_expression [9]
-                0.00    0.00       2/2           debug_cursor [25]
-[9]      0.0    0.00    0.00       2+4       evaluate_expression [9]
-                                   4             evaluate_expression [9]
+                                   4             evaluate_expression [8]
+                0.00    0.00       2/2           debug_cursor [24]
+[8]      0.0    0.00    0.00       2+4       evaluate_expression [8]
+                                   4             evaluate_expression [8]
 -----------------------------------------------
                                   82             _fini [133]
                 0.00    0.00       1/1           validate_use [131]
@@ -195,7 +190,6 @@ notice and this notice are preserved.
 
 Index by function name
 
- [133] _fini                   [9] evaluate_expression     [7] int_2_string
-   [5] compare_expression_value [2] execute_select         [4] long_2_string
-   [1] compare_expressions     [6] float_2_string
-   [3] eval_row_set            [8] free_column_list
+ [133] _fini                   [3] eval_row_set            [7] free_column_list
+   [6] compare_expression_value [8] evaluate_expression    [4] int_2_string
+   [1] compare_expressions     [2] execute_select          [5] long_2_string
