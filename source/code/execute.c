@@ -78,7 +78,7 @@ int execute_use(cursor_t *cursor,use_t *use){
 
 
 //get the value of the item at this location in the dataset
-char *get_value_at(cursor_t *cursor,identifier_t *ident){
+inline char *get_value_at(cursor_t *cursor,identifier_t *ident){
     for(int i=0;i<cursor->identifier_count;i++) {
         if(cursor->identifier_lookup[i].active==1) {
             //,match ident to lookup
