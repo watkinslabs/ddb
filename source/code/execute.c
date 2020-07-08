@@ -76,6 +76,12 @@ int execute_use(cursor_t *cursor,use_t *use){
     return 0;
 }
 
+void debug_row_positions(cursor_t *cursor){
+    for(int s=0;s<cursor->source_count;s++) {
+        printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
+    } 
+    printf("\n");
+}
 
 //get the value of the item at this location in the dataset
 char *get_value_at(cursor_t *cursor,identifier_t *ident){
@@ -704,10 +710,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         if(last_join==1){
             if(res==1) {
                 // the where go's last
-                for(int s=0;s<cursor->source_count;s++) {
-                    printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
-                } 
-                printf("\n");
+                //        debug_row_positions(cursor);
 
                 if(select->where){
                     res=evaluate_expressions(cursor,select->where);
@@ -742,10 +745,7 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
     
     
     if(loop==0){
-        for(int s=0;s<cursor->source_count;s++) {
-            printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
-        } 
-        printf("\n");
+        debug_row_positions(cursor);
     }
    for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success<-1) return 0;
     
