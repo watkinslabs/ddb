@@ -99,9 +99,9 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                        ident_lookup.source_column<row->column_length){
                         //found the colum in the row.. return the value
                         //printf ("**%d-%d,%d**\n",data_set->column_length ,row->column_length, ident_lookup.source_column);
-                        //char *value=row->columns[ident_lookup.source_column];
+                        char *value=row->columns[ident_lookup.source_column];
                         
-                        char *value="BOB";
+                        //char *value="BOB";
                         //printf ("%ld ->'%s'",i,value);
                         //printf ("Pulling \n");
                         return value;
