@@ -562,7 +562,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             
             if (temp_expr->mode==1) {
                 debug_identifier(temp_expr->identifier);
-                
+
                 add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
             }
             temp_expr=temp_expr->expression;
@@ -692,7 +692,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 int add_idenfifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier_t *ident){
     int index=cursor->identifier_count;
     ++cursor->identifier_count;
-    debug_identifier(ident);
+    //debug_identifier(ident);
     for(int i=0;i<select->join_length+1;i++) {
         if(strcmp(ident->qualifier,cursor->source_alias[i])==0) {
             cursor->identifier_lookup[index].active=1;
