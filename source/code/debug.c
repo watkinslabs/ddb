@@ -251,8 +251,9 @@ void debug_cursor(cursor_t *cursor){
     printf("- Created : %lld.%.9ld\n", (long long)cursor->created.tv_sec, cursor->created.tv_nsec);
     printf("- Ended   : %lld.%.9ld\n", (long long)cursor->ended.tv_sec, cursor->ended.tv_nsec);
     
-    printf("- Ellapsed: %ld.%09ld\n", (long)(cursor->ended.tv_sec - cursor->created.tv_sec),
-        cursor->ended.tv_nsec - cursor->created.tv_nsec);
+    printf("- Ellapsed: %ld\n",
+    
+    (cursor->ended.tv_sec + 1.0e-9*cursor->ended.tv_nsec) - (cursor->created.tv_sec + 1.0e-9*cursor->created.tv_nsec) );
         
     int                 data_length;
     if(cursor->status==EXIT_SUCCESS){
