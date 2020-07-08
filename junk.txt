@@ -1,0 +1,91 @@
+
+long return_match(cursor_t *cursor,select_t *select,int set){
+    int type;
+    long results=0;
+    long length     =100;//cursor->source[set]->row_length;
+    long match[length];
+    expression_t *expr=0;
+    if(set==0) {
+        type=TOKEN_WHERE;
+        expr=select->where;
+    }
+    else {
+        type=select->join[set-1].type;
+        expr=select->join[set-1].expression;
+    }
+    
+    data_set_t *data_set=cursor->source[set];
+    
+    if(set==0) {
+        //reset success counters 
+        for(int i=0;i<cursor->source_count;i++) cursor->source[i]->success=0;
+    } else {
+        //if anything on this row is a failure -2 then skip further evaluation
+        //for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success==-2) return 0;
+    }
+    int res=0;
+    int last_join=0;
+    
+    if(set+1==cursor->source_count) last_join=1;
+
+    for(long row=0;row<length;row++){
+        // visual check for the matrix
+
+        cursor->source[set]->position=row;
+        if(set>0) {
+            res=evaluate_expressions(cursor,expr);
+        
+        }
+        
+
+        switch(type){
+            case TOKEN_FULL_OUTER_JOIN:     if(!res) {
+                                                cursor->source[set]->success=-5;
+                                            } else {
+                                                cursor->source[set]->success=1;
+                                            }
+                                            break;
+
+            case TOKEN_RIGHT_JOIN:          if(!res) {
+                                                cursor->source[set]->success=-4;
+                                            } else {
+                                                cursor->source[set]->success=1;
+                                            }
+                                            break;
+            case TOKEN_LEFT_JOIN:           if(!res) {
+                                                cursor->source[set]->success=-3;
+                                            } else {
+                                                cursor->source[set]->success=1;
+                                            }
+                                            break;
+
+            case TOKEN_JOIN:                if(!res) {
+                                                for(int s=set;s<cursor->source_count;s++) {
+                                                    cursor->source[s]->success=-2;
+                                                }
+                                                last_join=1;
+                                            } else {
+                                                cursor->source[set]->success=1;
+                                            }
+                                            break;
+        }// end switch
+
+
+        if(last_join){
+            // the where go's last
+            if(select->where){
+                res=evaluate_expressions(cursor,select->where);
+                if(!res) {
+                    for(int s=set;s<cursor->source_count;s++) {
+                        cursor->source[s]->success=-2;
+                    }
+                }
+            }
+            //ok we have an exact filter.. eval the row        
+            eval_row_set(cursor,select);
+        }  else {
+            return_match(cursor,select,set+1);
+        }
+    }
+    return results;
+}

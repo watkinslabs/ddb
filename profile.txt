@@ -5,9 +5,9 @@ Each sample counts as 0.01 seconds.
 
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
-  0.00      0.00     0.00   133650     0.00     0.00  compare_identifiers
+  0.00      0.00     0.00   133614     0.00     0.00  compare_identifiers
   0.00      0.00     0.00    37112     0.00     0.00  safe_malloc
-  0.00      0.00     0.00    20800     0.00     0.00  get_value_at
+  0.00      0.00     0.00    20792     0.00     0.00  get_value_at
   0.00      0.00     0.00    20000     0.00     0.00  evaluate_expression
   0.00      0.00     0.00    20000     0.00     0.00  free_expression_value
   0.00      0.00     0.00    10000     0.00     0.00  compare_expression_value
@@ -121,10 +121,10 @@ notice and this notice are preserved.
 granularity: each sample hit covers 2 byte(s) no time propagated
 
 index % time    self  children    called     name
-                0.00    0.00       1/133650      validate_create_table [50]
-                0.00    0.00      49/133650      get_table_by_identifier [17]
-                0.00    0.00  133600/133650      get_value_at [3]
-[1]      0.0    0.00    0.00  133650         compare_identifiers [1]
+                0.00    0.00       1/133614      validate_create_table [50]
+                0.00    0.00      49/133614      get_table_by_identifier [17]
+                0.00    0.00  133564/133614      get_value_at [3]
+[1]      0.0    0.00    0.00  133614         compare_identifiers [1]
 -----------------------------------------------
                 0.00    0.00       1/37112       process_select [37]
                 0.00    0.00       1/37112       process_use [38]
@@ -150,14 +150,14 @@ index % time    self  children    called     name
                 0.00    0.00   20000/37112       evaluate_expression [4]
 [2]      0.0    0.00    0.00   37112         safe_malloc [2]
 -----------------------------------------------
-                0.00    0.00     800/20800       eval_row_set [8]
-                0.00    0.00   20000/20800       evaluate_expression [4]
-[3]      0.0    0.00    0.00   20800         get_value_at [3]
-                0.00    0.00  133600/133650      compare_identifiers [1]
+                0.00    0.00     792/20792       eval_row_set [8]
+                0.00    0.00   20000/20792       evaluate_expression [4]
+[3]      0.0    0.00    0.00   20792         get_value_at [3]
+                0.00    0.00  133564/133614      compare_identifiers [1]
 -----------------------------------------------
                 0.00    0.00   20000/20000       compare_expressions [7]
 [4]      0.0    0.00    0.00   20000         evaluate_expression [4]
-                0.00    0.00   20000/20800       get_value_at [3]
+                0.00    0.00   20000/20792       get_value_at [3]
                 0.00    0.00   20000/37112       safe_malloc [2]
 -----------------------------------------------
                 0.00    0.00   20000/20000       compare_expressions [7]
@@ -174,7 +174,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00   10000/10000       return_match [72]
 [8]      0.0    0.00    0.00   10000         eval_row_set [8]
-                0.00    0.00     800/20800       get_value_at [3]
+                0.00    0.00     792/20792       get_value_at [3]
 -----------------------------------------------
                 0.00    0.00   10000/10000       return_match [72]
 [9]      0.0    0.00    0.00   10000         evaluate_expressions [9]
@@ -228,7 +228,7 @@ index % time    self  children    called     name
                 0.00    0.00      10/33          add_idenfifier_to_cursor_lookup [28]
                 0.00    0.00      17/33          is_identifier_valid [30]
 [17]     0.0    0.00    0.00      33         get_table_by_identifier [17]
-                0.00    0.00      49/133650      compare_identifiers [1]
+                0.00    0.00      49/133614      compare_identifiers [1]
 -----------------------------------------------
                 0.00    0.00       1/31          process_use [38]
                 0.00    0.00       1/31          process_select_list [71]
@@ -412,7 +412,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       2/2           process_queries [70]
 [50]     0.0    0.00    0.00       2         validate_create_table [50]
-                0.00    0.00       1/133650      compare_identifiers [1]
+                0.00    0.00       1/133614      compare_identifiers [1]
 -----------------------------------------------
                 0.00    0.00       1/1           process_boolean_primary [68]
 [51]     0.0    0.00    0.00       1         add_expr [51]
