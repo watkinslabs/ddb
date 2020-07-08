@@ -721,6 +721,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         }//end res
     }
     if(matches==0 && last_join==0) return_match(cursor,select,set+1);
+    if(matches==0 && last_join==1) eval_row_set(cursor,select);
     return results;
 }
 
