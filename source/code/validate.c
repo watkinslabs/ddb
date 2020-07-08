@@ -72,7 +72,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
                 temp_table=get_table_by_identifier(cursor,tmp_join[i].identifier);
                 int res=table_has_column(temp_table,ident->source);
                 found+=res;
-                if(found==1) qualifier=tmp_join[i].alias;
+                if(res==1) qualifier=tmp_join[i].alias;
             }
             //printf("%d\n",found);
             if(found==0) {
