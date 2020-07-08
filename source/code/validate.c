@@ -556,7 +556,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             }
         }
     }
-    if(select->where) {
+ /*   if(select->where) {
         tmp_ptr=select->where;
         while(tmp_ptr){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
@@ -565,7 +565,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             tmp_ptr=tmp_ptr->next;
         }
     }
-
+*/
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
 
