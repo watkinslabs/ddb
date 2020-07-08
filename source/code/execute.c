@@ -709,9 +709,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                     //matches+=res;
 
                     if(!res) {
-                        for(int s=set;s<cursor->source_count;s++) {
-                            cursor->source[s]->success=-33;
-                        }
+                        cursor->source[0]->success=-33;
                     } else {
                         cursor->source[0]->success=1;
                     }
@@ -736,9 +734,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         // matches+=res;
 
             if(!res) {
-                for(int s=set;s<cursor->source_count;s++) {
-                    cursor->source[s]->success=-3;
-                }
+                cursor->source[0]->success=-3;
             } else {
                 cursor->source[0]->success=1;
             }
