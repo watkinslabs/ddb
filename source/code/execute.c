@@ -595,8 +595,7 @@ int execute_select(cursor_t * cursor,select_t *select){
             else row_count_max*=data_sets[set]->row_length;
         }
 
-        printf("row_count_max: %ld\n",row_count_max);
-
+        
         // loop through JOIN
         // (INNER) JOIN: Returns records that have matching values in both tables
         // LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
