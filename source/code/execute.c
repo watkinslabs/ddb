@@ -86,7 +86,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
             if(compare_identifiers(ident,ident_lookup.identifier)) {
                 //ok we know what source/position to look at.. fetch the data and return
                 data_set_t *data_set=cursor->source[ident_lookup.source];
-                debug_identifier(ident);
+                //debug_identifier(ident);
                 if (data_set->success==-1) return DATA_NULL;
                 //grab the curent position from the cursor.. (saved in dataset)
                 long row_index=data_set->position;
