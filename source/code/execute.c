@@ -713,9 +713,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     return results;
 }
 
-int loop=0;
+int loop=1;
 int eval_row_set(cursor_t *cursor,select_t *select) {
-   // for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success==-2) return 0;
+   for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success==-2) return 0;
 
      //++loop;
     //loop%=1001;
@@ -727,7 +727,7 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
         } 
         printf("\n");
     }
-    return 0;
+    //return 0;
     data_column_t *next=select->columns;
     char *value=0;
     while(next){
