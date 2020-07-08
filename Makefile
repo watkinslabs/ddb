@@ -8,7 +8,7 @@ build:
 	@./build.sh
 
 	@/usr/bin/gcc  
-	 -O -lm -ggdb -Wno-unused-variable -Wall -g  builds/ddb.c -o builds/ddbc    \
+	 -lm  builds/ddb.c -o builds/ddbc    \
 	 -funroll-loops \
      -pg  \
 	 -fsanitize=address -fno-omit-frame-pointer 
