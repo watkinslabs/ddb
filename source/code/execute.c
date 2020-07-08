@@ -733,7 +733,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         return_match(cursor,select,set+1);
     }//end last join
 
-    if(evaled==0) {
+    if(last_join==1 && evaled==0) {
         // the where go's last
         for(int s=0;s<cursor->source_count;s++) {
             printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
