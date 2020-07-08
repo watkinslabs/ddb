@@ -532,6 +532,25 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }*/
 
+    // At this point the select list, from and join sources have 
+    // been validated to be legal, and non ambiguious.
+
+    // where identifier check
+    // identifier must be in from/target
+    if(select->where){
+        expression_t *temp_expr=select->where;
+
+        while(temp_expr){
+            if(temp_expr->mode==1) {
+                int res=is_identifier_valid(cursor,select,temp_expr->identifier,"where");
+                if(res==0) {
+                    return 0;                    
+                }
+            }
+            temp_expr=temp_expr->expression;
+        }
+    }
+
     cursor->identifier_count=100;
     cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),cursor->identifier_count);
     cursor->identifier_count=0;
@@ -568,24 +587,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             temp_expr=temp_expr->expression;
         }
     }
-    // At this point the select list, from and join sources have 
-    // been validated to be legal, and non ambiguious.
 
-    // where identifier check
-    // identifier must be in from/target
-    if(select->where){
-        expression_t *temp_expr=select->where;
-
-        while(temp_expr){
-            if(temp_expr->mode==1) {
-                int res=is_identifier_valid(cursor,select,temp_expr->identifier,"where");
-                if(res==0) {
-                    return 0;                    
-                }
-            }
-            temp_expr=temp_expr->expression;
-        }
-    }
 
     //join identifier check
     // identifier must be in from/target
