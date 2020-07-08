@@ -15,7 +15,7 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00     2938     0.00     0.00  evaluate_expressions
   0.00      0.00     0.00     2008     0.00     0.00  get_line
   0.00      0.00     0.00     2005     0.00     0.00  build_row
-  0.00      0.00     0.00      337     0.00     0.00  sub_str_cpy
+  0.00      0.00     0.00      342     0.00     0.00  sub_str_cpy
   0.00      0.00     0.00      245     0.00     0.00  valid_token_index
   0.00      0.00     0.00      233     0.00     0.00  eval_token
   0.00      0.00     0.00      181     0.00     0.00  token_at
@@ -189,8 +189,8 @@ index % time    self  children    called     name
 [10]     0.0    0.00    0.00    2005         build_row [10]
                 0.00    0.00   15027/23355       safe_malloc [2]
 -----------------------------------------------
-                0.00    0.00     337/337         lex [70]
-[11]     0.0    0.00    0.00     337         sub_str_cpy [11]
+                0.00    0.00     342/342         lex [70]
+[11]     0.0    0.00    0.00     342         sub_str_cpy [11]
 -----------------------------------------------
                 0.00    0.00       5/245         process_select [44]
                 0.00    0.00       5/245         process_create_table [43]
@@ -514,7 +514,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/1           process_queries [72]
 [70]     0.0    0.00    0.00       1         lex [70]
-                0.00    0.00     337/337         sub_str_cpy [11]
+                0.00    0.00     342/342         sub_str_cpy [11]
                 0.00    0.00     155/155         token_push [15]
                 0.00    0.00       1/1           token_array [75]
                 0.00    0.00       1/1           consolidate_tokens [59]
