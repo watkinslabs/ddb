@@ -8,9 +8,9 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00       64     0.00     0.00  compare_expressions
   0.00      0.00     0.00       52     0.00     0.00  execute_select
   0.00      0.00     0.00       10     0.00     0.00  return_match
-  0.00      0.00     0.00        3     0.00     0.00  free_expression
-  0.00      0.00     0.00        3     0.00     0.00  free_select
-  0.00      0.00     0.00        3     0.00     0.00  free_use
+  0.00      0.00     0.00        3     0.00     0.00  free_ident
+  0.00      0.00     0.00        3     0.00     0.00  free_table_def
+  0.00      0.00     0.00        3     0.00     0.00  is_identifier_valid
   0.00      0.00     0.00        2     0.00     0.00  evaluate_expression
   0.00      0.00     0.00        1     0.00     0.00  _fini
 
@@ -54,31 +54,33 @@ granularity: each sample hit covers 2 byte(s) no time propagated
 
 index % time    self  children    called     name
                 0.00    0.00       1/64          validate_select [131]
-                0.00    0.00       3/64          free_select [5]
-                0.00    0.00       3/64          free_expression [4]
-                0.00    0.00       6/64          is_identifier_valid [77]
-                0.00    0.00      51/64          free_data_set [57]
+                0.00    0.00       3/64          free_litteral [60]
+                0.00    0.00       3/64          free_table_def [5]
+                0.00    0.00       6/64          is_identifier_valid [6]
+                0.00    0.00      51/64          free_select [61]
 [1]      0.0    0.00    0.00      64         compare_expressions [1]
 -----------------------------------------------
                 0.00    0.00       3/52          compare_expression_value [15]
                 0.00    0.00      49/52          return_match [3]
 [2]      0.0    0.00    0.00      52         execute_select [2]
 -----------------------------------------------
-                0.00    0.00       3/10          eval_row_set [47]
+                0.00    0.00       3/10          new_data_set [85]
                 0.00    0.00       7/10          compare_expression_value [15]
 [3]      0.0    0.00    0.00      10         return_match [3]
                 0.00    0.00      49/52          execute_select [2]
 -----------------------------------------------
-                0.00    0.00       3/3           free_token [63]
-[4]      0.0    0.00    0.00       3         free_expression [4]
-                0.00    0.00       3/64          compare_expressions [1]
+                0.00    0.00       3/3           is_identifier_valid [6]
+[4]      0.0    0.00    0.00       3         free_ident [4]
 -----------------------------------------------
-                0.00    0.00       3/3           is_identifier_valid [77]
-[5]      0.0    0.00    0.00       3         free_select [5]
+                0.00    0.00       3/3           is_identifier_valid [6]
+[5]      0.0    0.00    0.00       3         free_table_def [5]
                 0.00    0.00       3/64          compare_expressions [1]
 -----------------------------------------------
                 0.00    0.00       3/3           validate_select [131]
-[6]      0.0    0.00    0.00       3         free_use [6]
+[6]      0.0    0.00    0.00       3         is_identifier_valid [6]
+                0.00    0.00       6/64          compare_expressions [1]
+                0.00    0.00       3/3           free_table_def [5]
+                0.00    0.00       3/3           free_ident [4]
 -----------------------------------------------
                                    4             evaluate_expression [7]
                 0.00    0.00       2/2           debug_cursor [25]
@@ -187,6 +189,6 @@ notice and this notice are preserved.
 
 Index by function name
 
- [134] _fini                   [2] execute_select          [6] free_use
-   [1] compare_expressions     [4] free_expression         [3] return_match
-   [7] evaluate_expression     [5] free_select
+ [134] _fini                   [2] execute_select          [6] is_identifier_valid
+   [1] compare_expressions     [4] free_ident              [3] return_match
+   [7] evaluate_expression     [5] free_table_def
