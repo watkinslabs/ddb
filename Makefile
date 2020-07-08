@@ -8,14 +8,13 @@ build:
 	@./build.sh
 
 
-	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc   -pg  
-	#-ggdb -Wno-unused-variable -Wall 
+	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc   -pg  -fsanitize=address -fno-omit-frame-pointer 
+	#-ggdb -Wno-unused-variable 
+	#-Wall 
 	#-funroll-loops \
-     #-pg  \
-	 #-fsanitize=address -fno-omit-frame-pointer 
-	#  -fsanitize=address -fno-omit-frame-pointer
-	#
-
+    #-pg  \
+	#-fsanitize=address -fno-omit-frame-pointer 
+	
 build-profile: 
 	@/usr/bin/gcc -Wno-unused-variable -Wall -pg  builds/ddb.c  -o builds/ddbc
 
