@@ -5,16 +5,16 @@ Each sample counts as 0.01 seconds.
 
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
-  0.00      0.00     0.00    17952     0.00     0.00  safe_malloc
-  0.00      0.00     0.00     9629     0.00     0.00  compare_identifiers
-  0.00      0.00     0.00     2008     0.00     0.00  get_line
-  0.00      0.00     0.00     2005     0.00     0.00  build_row
-  0.00      0.00     0.00      926     0.00     0.00  get_value_at
-  0.00      0.00     0.00      800     0.00     0.00  evaluate_expression
-  0.00      0.00     0.00      800     0.00     0.00  free_expression_value
-  0.00      0.00     0.00      400     0.00     0.00  compare_expression_value
-  0.00      0.00     0.00      400     0.00     0.00  compare_expressions
-  0.00      0.00     0.00      400     0.00     0.00  evaluate_expressions
+  0.00      0.00     0.00    18157     0.00     0.00  safe_malloc
+  0.00      0.00     0.00    12129     0.00     0.00  compare_identifiers
+  0.00      0.00     0.00     2009     0.00     0.00  get_line
+  0.00      0.00     0.00     2006     0.00     0.00  build_row
+  0.00      0.00     0.00     1126     0.00     0.00  get_value_at
+  0.00      0.00     0.00     1000     0.00     0.00  evaluate_expression
+  0.00      0.00     0.00     1000     0.00     0.00  free_expression_value
+  0.00      0.00     0.00      500     0.00     0.00  compare_expression_value
+  0.00      0.00     0.00      500     0.00     0.00  compare_expressions
+  0.00      0.00     0.00      500     0.00     0.00  evaluate_expressions
   0.00      0.00     0.00      310     0.00     0.00  sub_str_cpy
   0.00      0.00     0.00      203     0.00     0.00  valid_token_index
   0.00      0.00     0.00      145     0.00     0.00  token_at
@@ -122,68 +122,68 @@ notice and this notice are preserved.
 granularity: each sample hit covers 2 byte(s) no time propagated
 
 index % time    self  children    called     name
-                0.00    0.00       1/17952       process_select [41]
-                0.00    0.00       1/17952       process_use [43]
-                0.00    0.00       1/17952       execute_select [59]
-                0.00    0.00       1/17952       get_column_list [65]
-                0.00    0.00       1/17952       init_cursor [68]
-                0.00    0.00       1/17952       token_array [74]
-                0.00    0.00       2/17952       join_list_init [56]
-                0.00    0.00       2/17952       new_data_set [70]
-                0.00    0.00       2/17952       validate_select [76]
-                0.00    0.00       3/17952       process_create_table [38]
-                0.00    0.00       3/17952       duplicate_table [47]
-                0.00    0.00       4/17952       process_simple_expr [42]
-                0.00    0.00       5/17952       add_command [34]
-                0.00    0.00       9/17952       load_file [49]
-                0.00    0.00      13/17952       duplicate_token [28]
-                0.00    0.00      13/17952       duplicate_columns [46]
-                0.00    0.00      16/17952       duplicate_identifier [25]
-                0.00    0.00      19/17952       process_identifier [24]
-                0.00    0.00      23/17952       add_data_column [23]
-                0.00    0.00     800/17952       evaluate_expression [6]
-                0.00    0.00    2005/17952       get_line [3]
-                0.00    0.00   15027/17952       build_row [4]
-[1]      0.0    0.00    0.00   17952         safe_malloc [1]
+                0.00    0.00       1/18157       process_select [41]
+                0.00    0.00       1/18157       process_use [43]
+                0.00    0.00       1/18157       execute_select [59]
+                0.00    0.00       1/18157       get_column_list [65]
+                0.00    0.00       1/18157       init_cursor [68]
+                0.00    0.00       1/18157       token_array [74]
+                0.00    0.00       2/18157       join_list_init [56]
+                0.00    0.00       2/18157       new_data_set [70]
+                0.00    0.00       2/18157       validate_select [76]
+                0.00    0.00       3/18157       process_create_table [38]
+                0.00    0.00       3/18157       duplicate_table [47]
+                0.00    0.00       4/18157       process_simple_expr [42]
+                0.00    0.00       5/18157       add_command [34]
+                0.00    0.00       9/18157       load_file [49]
+                0.00    0.00      13/18157       duplicate_token [28]
+                0.00    0.00      13/18157       duplicate_columns [46]
+                0.00    0.00      16/18157       duplicate_identifier [25]
+                0.00    0.00      19/18157       process_identifier [24]
+                0.00    0.00      23/18157       add_data_column [23]
+                0.00    0.00    1000/18157       evaluate_expression [6]
+                0.00    0.00    2006/18157       get_line [3]
+                0.00    0.00   15031/18157       build_row [4]
+[1]      0.0    0.00    0.00   18157         safe_malloc [1]
 -----------------------------------------------
-                0.00    0.00       3/9629        validate_create_table [52]
-                0.00    0.00      96/9629        get_table_by_identifier [18]
-                0.00    0.00    9530/9629        get_value_at [5]
-[2]      0.0    0.00    0.00    9629         compare_identifiers [2]
+                0.00    0.00       3/12129       validate_create_table [52]
+                0.00    0.00      96/12129       get_table_by_identifier [18]
+                0.00    0.00   12030/12129       get_value_at [5]
+[2]      0.0    0.00    0.00   12129         compare_identifiers [2]
 -----------------------------------------------
-                0.00    0.00    2008/2008        load_file [49]
-[3]      0.0    0.00    0.00    2008         get_line [3]
-                0.00    0.00    2005/17952       safe_malloc [1]
+                0.00    0.00    2009/2009        load_file [49]
+[3]      0.0    0.00    0.00    2009         get_line [3]
+                0.00    0.00    2006/18157       safe_malloc [1]
 -----------------------------------------------
-                0.00    0.00    2005/2005        load_file [49]
-[4]      0.0    0.00    0.00    2005         build_row [4]
-                0.00    0.00   15027/17952       safe_malloc [1]
+                0.00    0.00    2006/2006        load_file [49]
+[4]      0.0    0.00    0.00    2006         build_row [4]
+                0.00    0.00   15031/18157       safe_malloc [1]
 -----------------------------------------------
-                0.00    0.00     126/926         eval_row_set [15]
-                0.00    0.00     800/926         evaluate_expression [6]
-[5]      0.0    0.00    0.00     926         get_value_at [5]
-                0.00    0.00    9530/9629        compare_identifiers [2]
+                0.00    0.00     126/1126        eval_row_set [15]
+                0.00    0.00    1000/1126        evaluate_expression [6]
+[5]      0.0    0.00    0.00    1126         get_value_at [5]
+                0.00    0.00   12030/12129       compare_identifiers [2]
 -----------------------------------------------
-                0.00    0.00     800/800         compare_expressions [9]
-[6]      0.0    0.00    0.00     800         evaluate_expression [6]
-                0.00    0.00     800/926         get_value_at [5]
-                0.00    0.00     800/17952       safe_malloc [1]
+                0.00    0.00    1000/1000        compare_expressions [9]
+[6]      0.0    0.00    0.00    1000         evaluate_expression [6]
+                0.00    0.00    1000/1126        get_value_at [5]
+                0.00    0.00    1000/18157       safe_malloc [1]
 -----------------------------------------------
-                0.00    0.00     800/800         compare_expressions [9]
-[7]      0.0    0.00    0.00     800         free_expression_value [7]
+                0.00    0.00    1000/1000        compare_expressions [9]
+[7]      0.0    0.00    0.00    1000         free_expression_value [7]
 -----------------------------------------------
-                0.00    0.00     400/400         compare_expressions [9]
-[8]      0.0    0.00    0.00     400         compare_expression_value [8]
+                0.00    0.00     500/500         compare_expressions [9]
+[8]      0.0    0.00    0.00     500         compare_expression_value [8]
 -----------------------------------------------
-                0.00    0.00     400/400         evaluate_expressions [10]
-[9]      0.0    0.00    0.00     400         compare_expressions [9]
-                0.00    0.00     800/800         evaluate_expression [6]
-                0.00    0.00     800/800         free_expression_value [7]
-                0.00    0.00     400/400         compare_expression_value [8]
+                0.00    0.00     500/500         evaluate_expressions [10]
+[9]      0.0    0.00    0.00     500         compare_expressions [9]
+                0.00    0.00    1000/1000        evaluate_expression [6]
+                0.00    0.00    1000/1000        free_expression_value [7]
+                0.00    0.00     500/500         compare_expression_value [8]
 -----------------------------------------------
-                0.00    0.00     400/400         return_match [73]
-[10]     0.0    0.00    0.00     400         evaluate_expressions [10]
-                0.00    0.00     400/400         compare_expressions [9]
+                0.00    0.00     500/500         return_match [73]
+[10]     0.0    0.00    0.00     500         evaluate_expressions [10]
+                0.00    0.00     500/500         compare_expressions [9]
 -----------------------------------------------
                 0.00    0.00     310/310         lex [69]
 [11]     0.0    0.00    0.00     310         sub_str_cpy [11]
@@ -216,7 +216,7 @@ index % time    self  children    called     name
                 0.00    0.00     140/140         return_match [73]
 [15]     0.0    0.00    0.00     140         eval_row_set [15]
                 0.00    0.00     140/140         debug_row_positions [14]
-                0.00    0.00     126/926         get_value_at [5]
+                0.00    0.00     126/1126        get_value_at [5]
 -----------------------------------------------
                 0.00    0.00     137/137         lex [69]
 [16]     0.0    0.00    0.00     137         token_push [16]
@@ -233,7 +233,7 @@ index % time    self  children    called     name
                 0.00    0.00      13/51          add_idenfifier_to_cursor_lookup [26]
                 0.00    0.00      29/51          is_identifier_valid [29]
 [18]     0.0    0.00    0.00      51         get_table_by_identifier [18]
-                0.00    0.00      96/9629        compare_identifiers [2]
+                0.00    0.00      96/12129       compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00       1/43          process_use [43]
                 0.00    0.00       1/43          process_select_list [72]
@@ -260,7 +260,7 @@ index % time    self  children    called     name
                 0.00    0.00      10/23          process_select_list [72]
                 0.00    0.00      13/23          process_column_list [51]
 [23]     0.0    0.00    0.00      23         add_data_column [23]
-                0.00    0.00      23/17952       safe_malloc [1]
+                0.00    0.00      23/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       3/20          process_select [41]
                 0.00    0.00       3/20          process_create_table [38]
@@ -269,13 +269,13 @@ index % time    self  children    called     name
 [24]     0.0    0.00    0.00      20         process_identifier [24]
                 0.00    0.00      30/43          copy_token_value_at [19]
                 0.00    0.00      20/145         token_at [13]
-                0.00    0.00      19/17952       safe_malloc [1]
+                0.00    0.00      19/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       3/16          duplicate_table [47]
                 0.00    0.00      13/16          add_idenfifier_to_cursor_lookup [26]
 [25]     0.0    0.00    0.00      16         duplicate_identifier [25]
                 0.00    0.00      32/60          string_duplicate [17]
-                0.00    0.00      16/17952       safe_malloc [1]
+                0.00    0.00      16/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00      13/13          validate_select [76]
 [26]     0.0    0.00    0.00      13         add_idenfifier_to_cursor_lookup [26]
@@ -288,7 +288,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00      13/13          process_column_list [51]
 [28]     0.0    0.00    0.00      13         duplicate_token [28]
-                0.00    0.00      13/17952       safe_malloc [1]
+                0.00    0.00      13/18157       safe_malloc [1]
                 0.00    0.00      13/60          string_duplicate [17]
 -----------------------------------------------
                 0.00    0.00      13/13          validate_select [76]
@@ -318,7 +318,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       5/5           process_queries [71]
 [34]     0.0    0.00    0.00       5         add_command [34]
-                0.00    0.00       5/17952       safe_malloc [1]
+                0.00    0.00       5/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       5/5           process_queries [71]
 [35]     0.0    0.00    0.00       5         compare_token [35]
@@ -337,7 +337,7 @@ index % time    self  children    called     name
                 0.00    0.00      22/145         token_at [13]
                 0.00    0.00       6/43          copy_token_value_at [19]
                 0.00    0.00       5/203         valid_token_index [12]
-                0.00    0.00       3/17952       safe_malloc [1]
+                0.00    0.00       3/18157       safe_malloc [1]
                 0.00    0.00       3/20          process_identifier [24]
                 0.00    0.00       3/3           process_column_list [51]
 -----------------------------------------------
@@ -357,7 +357,7 @@ index % time    self  children    called     name
                 0.00    0.00       3/13          process_alias [30]
                 0.00    0.00       2/2           add_join [54]
                 0.00    0.00       2/2           process_expression [57]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
                 0.00    0.00       1/1           process_select_list [72]
 -----------------------------------------------
                 0.00    0.00       5/5           process_bit_expr [37]
@@ -365,13 +365,13 @@ index % time    self  children    called     name
                 0.00    0.00       5/145         token_at [13]
                 0.00    0.00       5/5           process_litteral [39]
                 0.00    0.00       5/20          process_identifier [24]
-                0.00    0.00       4/17952       safe_malloc [1]
+                0.00    0.00       4/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       5/5           process_queries [71]
 [43]     0.0    0.00    0.00       5         process_use [43]
                 0.00    0.00       5/203         valid_token_index [12]
                 0.00    0.00       5/145         token_at [13]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
                 0.00    0.00       1/43          copy_token_value_at [19]
 -----------------------------------------------
                 0.00    0.00       1/4           free_cursor [62]
@@ -389,12 +389,12 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       3/3           duplicate_table [47]
 [46]     0.0    0.00    0.00       3         duplicate_columns [46]
-                0.00    0.00      13/17952       safe_malloc [1]
+                0.00    0.00      13/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       3/3           execute_create_table [48]
 [47]     0.0    0.00    0.00       3         duplicate_table [47]
                 0.00    0.00       6/60          string_duplicate [17]
-                0.00    0.00       3/17952       safe_malloc [1]
+                0.00    0.00       3/18157       safe_malloc [1]
                 0.00    0.00       3/3           duplicate_columns [46]
                 0.00    0.00       3/16          duplicate_identifier [25]
 -----------------------------------------------
@@ -404,9 +404,9 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       3/3           execute_select [59]
 [49]     0.0    0.00    0.00       3         load_file [49]
-                0.00    0.00    2008/2008        get_line [3]
-                0.00    0.00    2005/2005        build_row [4]
-                0.00    0.00       9/17952       safe_malloc [1]
+                0.00    0.00    2009/2009        get_line [3]
+                0.00    0.00    2006/2006        build_row [4]
+                0.00    0.00       9/18157       safe_malloc [1]
                 0.00    0.00       3/51          get_table_by_identifier [18]
 -----------------------------------------------
                 0.00    0.00       3/3           process_expression [57]
@@ -423,7 +423,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       3/3           process_queries [71]
 [52]     0.0    0.00    0.00       3         validate_create_table [52]
-                0.00    0.00       3/9629        compare_identifiers [2]
+                0.00    0.00       3/12129       compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00       2/2           process_boolean_primary [50]
 [53]     0.0    0.00    0.00       2         add_expr [53]
@@ -438,7 +438,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       2/2           add_join [54]
 [56]     0.0    0.00    0.00       2         join_list_init [56]
-                0.00    0.00       2/17952       safe_malloc [1]
+                0.00    0.00       2/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       2/2           process_select [41]
 [57]     0.0    0.00    0.00       2         process_expression [57]
@@ -454,7 +454,7 @@ index % time    self  children    called     name
 [59]     0.0    0.00    0.00       1         execute_select [59]
                 0.00    0.00       3/3           load_file [49]
                 0.00    0.00       3/4           free_data_set [44]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
                 0.00    0.00       1/1           get_column_list [65]
                 0.00    0.00       1/1           new_data_set [70]
                 0.00    0.00       1/1           free_column_list [61]
@@ -486,7 +486,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/1           execute_select [59]
 [65]     0.0    0.00    0.00       1         get_column_list [65]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       1/1           init_cursor [68]
 [66]     0.0    0.00    0.00       1         get_current_database [66]
@@ -496,7 +496,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/1           main [116]
 [68]     0.0    0.00    0.00       1         init_cursor [68]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
                 0.00    0.00       1/1           get_current_database [66]
 -----------------------------------------------
                 0.00    0.00       1/1           process_queries [71]
@@ -508,7 +508,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/1           execute_select [59]
 [70]     0.0    0.00    0.00       1         new_data_set [70]
-                0.00    0.00       2/17952       safe_malloc [1]
+                0.00    0.00       2/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       1/1           main [116]
 [71]     0.0    0.00    0.00       1         process_queries [71]
@@ -540,13 +540,13 @@ index % time    self  children    called     name
                                  110             return_match [73]
                 0.00    0.00       1/1           execute_select [59]
 [73]     0.0    0.00    0.00       1+110     return_match [73]
-                0.00    0.00     400/400         evaluate_expressions [10]
+                0.00    0.00     500/500         evaluate_expressions [10]
                 0.00    0.00     140/140         eval_row_set [15]
                                  110             return_match [73]
 -----------------------------------------------
                 0.00    0.00       1/1           lex [69]
 [74]     0.0    0.00    0.00       1         token_array [74]
-                0.00    0.00       1/17952       safe_malloc [1]
+                0.00    0.00       1/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       1/1           process_queries [71]
 [75]     0.0    0.00    0.00       1         tokens_destroy [75]
@@ -557,7 +557,7 @@ index % time    self  children    called     name
                 0.00    0.00      13/13          add_idenfifier_to_cursor_lookup [26]
                 0.00    0.00       8/60          string_duplicate [17]
                 0.00    0.00       6/51          get_table_by_identifier [18]
-                0.00    0.00       2/17952       safe_malloc [1]
+                0.00    0.00       2/18157       safe_malloc [1]
 -----------------------------------------------
                 0.00    0.00       1/1           process_queries [71]
 [77]     0.0    0.00    0.00       1         validate_use [77]
