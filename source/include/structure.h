@@ -4,6 +4,8 @@
     #include <time.h>
     #include "tokens.h"
 
+//#define DEBUG_ME 1
+
 #define LINE_ENDING '\n'
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''

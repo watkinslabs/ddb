@@ -614,27 +614,42 @@ int process_queries(cursor_t *cursor,char *queries){
     // free all data structures
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
+
+#if !defined(DEBUG_ME)
+
     // free resources;
     while(tmp_ptr){
         switch(tmp_ptr->type){
-            case TOKEN_SELECT:       //debug_select((select_t*)tmp_ptr->command);
-                                     free_select((select_t*)tmp_ptr->command); 
+            case TOKEN_SELECT:       debug_select((select_t*)tmp_ptr->command);
                                      break;
-            case TOKEN_USE:          //debug_use((use_t*)tmp_ptr->command);
-                                     free_use((use_t*)tmp_ptr->command); 
+            case TOKEN_USE:          debug_use((use_t*)tmp_ptr->command);
                                      break;
-            case TOKEN_CREATE_TABLE: //debug_create_table((table_def_t*)tmp_ptr->command);
-                                     free_table_def((table_def_t*)tmp_ptr->command); 
+            case TOKEN_CREATE_TABLE: debug_create_table((table_def_t*)tmp_ptr->command);
                                      break;
-            case TOKEN_BLANK:        printf("\n");
+    
+            default: printf("UNKOWN COMMAND\n");
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+#endif
+    tmp_ptr=commands;
+    
+    // free resources;
+    while(tmp_ptr){
+        switch(tmp_ptr->type){
+            case TOKEN_SELECT:       free_select((select_t*)tmp_ptr->command); 
                                      break;
-
+            case TOKEN_USE:          free_use((use_t*)tmp_ptr->command); 
+                                     break;
+            case TOKEN_CREATE_TABLE: free_table_def((table_def_t*)tmp_ptr->command); 
+                                     break;
             default: printf("UNKOWN COMMAND\n");
         }
         tmp_ptr2=tmp_ptr;
         tmp_ptr=tmp_ptr->next;
         free(tmp_ptr2);
     }
+
     cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
     clock_gettime(CLOCK_REALTIME,&cursor->ended);
