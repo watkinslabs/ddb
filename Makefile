@@ -6,7 +6,7 @@ TEST_SQL=test/simple.txt
 build: 
 	@clear
 	@./build.sh
-	@/usr/bin/gcc   -lm -ggdb -Wno-unused-variable -Wall -g  builds/ddb.c -o builds/ddbc   -fsanitize=address -fno-omit-frame-pointer  -pg
+	@/usr/bin/gcc   -lm -ggdb -Wno-unused-variable -Wall -g  builds/ddb.c -o builds/ddbc   -fsanitize=address -fno-omit-frame-pointer  -pg -funroll-loops
 	#  -fsanitize=address -fno-omit-frame-pointer
 	#
 
