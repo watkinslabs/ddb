@@ -620,7 +620,7 @@ int execute_select(cursor_t * cursor,select_t *select){
     // free data sets
     if(data_set_count>0) {
         //ok we have the data we need. clear out the loaded data sets
-        for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
+        //for(int i=0;i<data_set_count;i++) free_data_set(data_sets[i]);
         free(data_sets);
         cursor->source=0;
     }
