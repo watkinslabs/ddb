@@ -693,7 +693,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                                 for(int s=set;s<cursor->source_count;s++) {
                                                     cursor->source[set]->success=-22;
                                                 }
-                                                //last_join=1;
                                             } else {
                                                 cursor->source[set]->success=50;
                                             }
@@ -721,7 +720,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         }//end last join
     }
     //joins dont get a second chance at data
-    if(type==TOKEN_JOIN) return results;
+    //if(type==TOKEN_JOIN) return results;
 
     return results;
 }
