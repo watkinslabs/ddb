@@ -721,10 +721,10 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             }//end last join
         }//end res
         else {
-            for(int s=0;s<cursor->source_count;s++) {
+            /*for(int s=0;s<cursor->source_count;s++) {
                 printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
             } 
-            printf("\n");
+            printf("\n");*/
         }
     }
    
