@@ -723,7 +723,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     //joins dont get a second chance at data
     if(type==TOKEN_JOIN) return results;
 
-    if(evaled==0) {
+    if(evaled==-110) {
         //if(last_join==0) return_match(cursor,select,set+1);
         if(last_join==1) {
             if(select->where){
