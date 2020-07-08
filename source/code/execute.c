@@ -706,9 +706,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 // the where go's last
                 if(select->where){
                     res=evaluate_expressions(cursor,select->where);
-                    //printf ("WHERE %d\n",res);
-                    //matches+=res;
-
                     if(!res) {
                         cursor->source[0]->success=-33;
                     } else {
@@ -722,6 +719,10 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 return_match(cursor,select,set+1);
             }//end last join
         }//end res
+        else {
+
+            printf ("UGH\n");
+        }
     }
    
     if(evaled==0) {
