@@ -723,6 +723,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             for(int s=0;s<cursor->source_count;s++) {
                 printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
             } 
+            printf("\n");
         }
     }
    
