@@ -1,5 +1,7 @@
 CREATE TABLE test.user ('id','first','last','email','gender','ip')         file='/home/nd/repos/wlddb/test/test.mock.csv' column=',' strict=true;
 CREATE TABLE test.ipaddress ('ip','octet_a','octet_b','octet_c','octet_d') file='/home/nd/repos/wlddb/test/test.ip_address.csv' column=',' strict=true;
+CREATE TABLE test.gender ('gender','message') file='/home/nd/repos/wlddb/test/test.gender.csv' column=',' strict=true;
+
 USE test;
 
 SELECT  1 as prefix,
@@ -10,12 +12,13 @@ SELECT  1 as prefix,
         octet_a,
         octet_b,
         octet_c,
-        octet_d
+        octet_d,
+        message
 
 
 FROM            test.user as t1
 Left JOIN       test.ipaddress as ipa ON ipa.ip=t1.ip
-Left JOIN       test.ipaddress as ipa2 ON ipa2.ip=t1.ip
+Left JOIN       test.gender as g1 ON g1.gender=t1.gender
 WHERE           t1.first="TimI" or t1.first='The'  or t1.ip=2
 
 
