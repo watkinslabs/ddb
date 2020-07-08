@@ -683,7 +683,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                             break;
             case TOKEN_LEFT_JOIN:           if(res==0) {
                                                  cursor->source[set]->success=-1;
-                                                 continue;
                                             } else {
                                                  cursor->source[set]->success=60;
                                             }
@@ -703,24 +702,26 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         //if(last_join==1) printf("*");
 
         if(last_join==1){
-            printf ("LASE LOOP\n");
-            // the where go's last
-        for(int s=0;s<cursor->source_count;s++) {
-            printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
-        } 
-        printf("\n");
+            if(res==1) {
+                printf ("LASE LOOP\n");
+                // the where go's last
+                for(int s=0;s<cursor->source_count;s++) {
+                    printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
+                } 
+                printf("\n");
 
-            if(select->where){
-                res=evaluate_expressions(cursor,select->where);
-                if(!res) {
-                    cursor->source[0]->success=-33;
-                } else {
-                    cursor->source[0]->success=11;
+                if(select->where){
+                    res=evaluate_expressions(cursor,select->where);
+                    if(!res) {
+                        cursor->source[0]->success=-33;
+                    } else {
+                        cursor->source[0]->success=11;
+                    }
                 }
+                //ok we have an exact filter.. eval the row        
+                eval_row_set(cursor,select);
+                ++evaled;
             }
-            //ok we have an exact filter.. eval the row        
-            eval_row_set(cursor,select);
-            ++evaled;
         }  
         if(last_join==0){
             return_match(cursor,select,set+1);
