@@ -701,6 +701,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         //if(res==1) printf("+1");
         //if(last_join==1) printf("*");
 
+        if(res==1)
 
         if(last_join){
             // the where go's last
