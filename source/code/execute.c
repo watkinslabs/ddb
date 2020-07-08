@@ -602,7 +602,7 @@ int execute_select(cursor_t * cursor,select_t *select){
         // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
         // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
         
-        long results=return_match(cursor,select,0);
+        long results=return_match(cursor,select,1);
 
     }// end where/join
     
