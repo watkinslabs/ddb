@@ -88,6 +88,8 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 data_set_t *data_set=cursor->source[ident_lookup.source];
                 //grab the curent position from the cursor.. (saved in dataset)
                 long row_index=data_set->position;
+
+                printf("INDEX %d\n",row_index);
                 if (row_index==-1) return DATA_NULL;
                 row_t *row=data_set->rows[row_index];
                 //is it a valid row...
