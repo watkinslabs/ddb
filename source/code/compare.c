@@ -1,3 +1,15 @@
+
+
+long mycmp(const unsigned char *cmp1, const unsigned char *cmp2, unsigned long length) {
+    if(length >= 4) {
+        long difference = *(unsigned long *)cmp1 - *(unsigned long *)cmp2;
+        if(difference)
+            return difference;
+    }
+    
+    return memcmp(cmp1,cmp2,length);
+}
+
 int compare_identifiers(identifier_t *source,identifier_t *dest){
     if(source==0) return 0;
     if(dest  ==0) return 0;
@@ -8,7 +20,8 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     //printf("\n - COMPARE IDENTIFIER \n");
     //debug_identifier(source);
     //debug_identifier(dest);
-
+    if(strlen(source->source)!=strlen(dest->source)) return 0;
+    if(strlen(source->qualifier)!=strlen(dest->qualifier)) return 0;
     if (strcmp(source->qualifier,dest->qualifier)==0 && 
         strcmp(source->source,dest->source)==0) return 1;
     return 0;
