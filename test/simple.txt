@@ -14,5 +14,5 @@ SELECT  1 as prefix,
 
 
 FROM            test.user as t1
-JOIN            test.ipaddress as t2 ON t2.ip=t1.ip
+JOIN            test.ipaddress ON ipaddress.ip=t1.ip
     
