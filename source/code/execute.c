@@ -868,6 +868,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
             case TOKEN_ASSIGNMENT : if(stricmp(e1->STRING_V,e2_str)==0) success=1; 
                                     break;
         }
+        printf("compare %s-%s\n",e1->STRING_V,e2_str);
         if(e2_str_calc) free(e2_str);
 //        printf( "no match? string");
         return success;
