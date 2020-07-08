@@ -96,6 +96,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
         }// end else
 
     }// end if for
+    printf("Err\n");
     return 0;
 }// end func
 
