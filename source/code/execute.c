@@ -702,6 +702,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         //if(last_join==1) printf("*");
 
         if(last_join==1){
+            printf ("LASE LOOP\n");
             // the where go's last
             if(select->where){
                 res=evaluate_expressions(cursor,select->where);
