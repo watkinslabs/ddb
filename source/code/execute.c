@@ -624,7 +624,9 @@ int execute_select(cursor_t * cursor,select_t *select){
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
-    long length     =100;//cursor->source[set]->row_length;
+    long length     =cursor->source[set]->row_length;
+    #define MAX_ROWS 100
+    if(length>MAX_ROWS) length=MAX_ROWS;
     long match[length];
     expression_t *expr=0;
     if(set==0) {
