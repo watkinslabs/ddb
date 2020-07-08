@@ -723,22 +723,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     //joins dont get a second chance at data
     if(type==TOKEN_JOIN) return results;
 
-    if(evaled==-110) {
-        //if(last_join==0) return_match(cursor,select,set+1);
-        if(last_join==1) {
-            if(select->where){
-                res=evaluate_expressions(cursor,select->where);
-                if(!res) {
-                    cursor->source[0]->success=-3;
-                } else {
-                    cursor->source[0]->success=12;
-                }
-            }
-            //ok we have an exact filter.. eval the row        
-            eval_row_set(cursor,select);
-        }
-    }
-   
     return results;
 }
 
