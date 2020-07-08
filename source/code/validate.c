@@ -547,7 +547,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     }
     if(select->join) {
         for(int i=0;i<select->join_length;i++) {
-            expression_t *temp_expr=&select->join[i].expression;
+            expression_t *temp_expr=select->join[i].expression;
             while(temp_expr){
                 if (temp_expr->mode==1) {
                     add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
