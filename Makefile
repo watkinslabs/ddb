@@ -7,8 +7,7 @@ build:
 	@clear
 	@./build.sh
 
-	@/usr/bin/gcc   -lm -ggdb -Wno-unused-variable -Wall -g  builds/ddb.c -o builds/ddbc 
-	#   -funroll-loops
+	@/usr/bin/gcc   -lm -ggdb -Wno-unused-variable -Wall -g  builds/ddb.c -o builds/ddbc  -funroll-loops
 	# -pg 
 	# -fsanitize=address -fno-omit-frame-pointer 
 	#  -fsanitize=address -fno-omit-frame-pointer
