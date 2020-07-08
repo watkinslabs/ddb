@@ -706,7 +706,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 if(select->where){
                     res=evaluate_expressions(cursor,select->where);
                     //printf ("WHERE %d\n",res);
-                    matches+=res;
+                    //matches+=res;
 
                     if(!res) {
                         for(int s=set;s<cursor->source_count;s++) {
