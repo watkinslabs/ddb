@@ -1,8 +1,13 @@
-#include <time.h>
-#include "tokens.h"
 
 #if !defined(_STRUCTURE_H_)
     #define _STRUCTURE_H_ 1
+    #include <time.h>
+    #include "tokens.h"
+
+#define LINE_ENDING '\n'
+#define DOUBLE_QUOTE '\"'
+#define SINGLE_QUOTE '\''
+#define DATA_NULL "(null)"    
 
 #define EVAL_STRING  1
 #define EVAL_INT     2

@@ -17,10 +17,7 @@
 #include "../include/free.h"
 #include "../include/queries.h"
 
-#define LINE_ENDING '\n'
-#define DOUBLE_QUOTE '\"'
-#define SINGLE_QUOTE '\''
-#define DATA_NULL "(null)"
+
 
 data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident);
 data_set_t * new_data_set(char **columns,int column_count,int row_count);
