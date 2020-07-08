@@ -14,6 +14,7 @@ SELECT  1 as prefix,
 
 
 FROM            test.user as t1
-JOIN            test.ipaddress as ipa ON ipa.ip=t1.ip
-WHERE           t1.first="TimI" or t1.first='The' 
+Left JOIN            test.ipaddress as ipa ON ipa.ip=t1.ip
+WHERE           t1.first="TimI" or t1.first='The
+' 
     
