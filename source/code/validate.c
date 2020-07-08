@@ -342,17 +342,6 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
-    tmp_ptr=select->columns;
-    while(tmp_ptr){
-        // we only care about data sourced from tables
-        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
-            printf("HI\n");
-            debug_identifier(sel_ident);
-        }
-        tmp_ptr=tmp_ptr->next;
-    }
-    
 
 
     // fixup join/from qualifier
@@ -365,6 +354,18 @@ int validate_select(cursor_t * cursor,select_t *select){
             if(join_ptr->identifier->qualifier==0) join_ptr->identifier->qualifier=get_current_database(cursor);
         }
     }
+
+    tmp_ptr=select->columns;
+    while(tmp_ptr){
+        // we only care about data sourced from tables
+        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
+            printf("HI\n");
+            debug_identifier(sel_ident);
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+    
 
     // fixup join/from alias 
     if(select->from) {
