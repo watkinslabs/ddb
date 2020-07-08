@@ -649,8 +649,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     int last_join=0;
     
     if(set+1==cursor->source_count) last_join=1;
-    long matches[length];
-    memset(matches,-1,sizeof(long)*length);
     
     long matches=0;    
     for(long row=0;row<length;row++){
