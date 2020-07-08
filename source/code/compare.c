@@ -25,8 +25,8 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     if(len_src!=strlen(dest->source)) return 0;
     if(len_qual!=strlen(dest->qualifier)) return 0;
 
-    if (mycmp(source->qualifier,dest->qualifier,len_qual)==0 && 
-        mycmp(source->source,dest->source,len_src)==0) return 1;
+    if (strcmp(source->qualifier,dest->qualifier)==0 && 
+        strcmp(source->source,dest->source)==0) return 1;
     return 0;
 }
 
