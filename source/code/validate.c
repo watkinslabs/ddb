@@ -396,7 +396,34 @@ int validate_select(cursor_t * cursor,select_t *select){
             
         }
     }
-    
+
+
+    if(select->from) {
+        tmp_ptr=select->columns;
+        int found=0;
+        while(tmp_ptr){
+            // we only care about data sourced from tables
+            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                //debug_identifier((identifier_t*)tmp_ptr->object);
+                int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
+
+                if(res==0) {
+                    return 0;
+                }
+            }
+            tmp_ptr=tmp_ptr->next;
+        }
+    }
+tmp_ptr=select->columns;
+    while(tmp_ptr){
+        // we only care about data sourced from tables
+        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
+            printf("HI\n");
+            debug_identifier(sel_ident);
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
 // validate from and join sources exist
     if(select->from) {
         table_def_t *table_ptr=0;
@@ -425,32 +452,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     // all select columns are UNIQUE
     // now we validate that all SELECT identifiers exist in the FROM/JOIN
 
-    if(select->from) {
-        tmp_ptr=select->columns;
-        int found=0;
-        while(tmp_ptr){
-            // we only care about data sourced from tables
-            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-                //debug_identifier((identifier_t*)tmp_ptr->object);
-                int res=is_identifier_valid(cursor,select,(identifier_t*)tmp_ptr->object,"select list");
 
-                if(res==0) {
-                    return 0;
-                }
-            }
-            tmp_ptr=tmp_ptr->next;
-        }
-    }
-tmp_ptr=select->columns;
-    while(tmp_ptr){
-        // we only care about data sourced from tables
-        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
-            printf("HI\n");
-            debug_identifier(sel_ident);
-        }
-        tmp_ptr=tmp_ptr->next;
-    }
     // populate aliases of sources 
     if(select->from) {
         //init array block
