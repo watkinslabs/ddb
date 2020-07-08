@@ -17,6 +17,8 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
     // skip null idents
     if(ident==0)  return 0;
     
+    printf(" %s",section);
+    debug_identifier(ident);
     if(select->from) {
         int found=0;
         // we only care about data sourced from tables
