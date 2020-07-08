@@ -762,7 +762,9 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
                                 printf("'%s' ,",value);
                                 break;
             
-            case TOKEN_IDENTIFIER: value=get_value_at(cursor,(identifier_t *)next->object);
+            case TOKEN_IDENTIFIER:  
+            debug_identifier((identifier_t *)next->object);
+             value=get_value_at(cursor,(identifier_t *)next->object);
                                     printf("'%s' ,",value);
                                     
                                 break;
