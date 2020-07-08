@@ -711,8 +711,8 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
 int loop=0;
 int eval_row_set(cursor_t *cursor,select_t *select) {
-     ++loop;
-    loop%=1001;
+     //++loop;
+    //loop%=1001;
     
     
     if(loop==0){
