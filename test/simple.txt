@@ -18,7 +18,7 @@ SELECT  1 as prefix,
 
 FROM            test.user as t1
 JOIN       test.gender as g1 ON g1.gender=t1.gender
-JOIN       test.ipaddress as ipa ON ipa.ip=t1.ip
+LEFT JOIN       test.ipaddress as ipa ON ipa.ip=t1.ip
 WHERE           t1.first="TimI" or t1.first='The'
 
 
