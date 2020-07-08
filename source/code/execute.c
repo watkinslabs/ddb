@@ -667,24 +667,11 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         matches+=res;
 
         switch(type){
-            case TOKEN_FULL_OUTER_JOIN:     if(!res) {
-                                                cursor->source[set]->success=-1;
-                                            } else {
-                                                cursor->source[set]->success=1;
-                                            }
+            case TOKEN_FULL_OUTER_JOIN:     cursor->source[set]->success=res;
                                             break;
-
-            case TOKEN_RIGHT_JOIN:          if(!res) {
-                                                cursor->source[set]->success=-1;
-                                            } else {
-                                                cursor->source[set]->success=1;
-                                            }
+            case TOKEN_RIGHT_JOIN:          cursor->source[set]->success=res;
                                             break;
-            case TOKEN_LEFT_JOIN:           if(!res) {
-                                                cursor->source[set]->success=-1;
-                                            } else {
-                                                cursor->source[set]->success=1;
-                                            }
+            case TOKEN_LEFT_JOIN:           cursor->source[set]->success=res;
                                             break;
 
             case TOKEN_JOIN:                if(!res) {
