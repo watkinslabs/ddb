@@ -477,7 +477,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
             printf("HI\n");
             debug_identifier(sel_ident);
-
+        }
         tmp_ptr=tmp_ptr->next;
     }
 
