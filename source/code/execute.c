@@ -689,10 +689,11 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                             }
                                             break;
         }// end switch
-        if(res==1) printf("RESULTS +1\n");
-        if(last_join==1) printf("LAST JOIN\n");
+        //if(res==1) printf("RESULTS +1\n");
+        //if(last_join==1) printf("LAST JOIN\n");
 
-        if(last_join){
+
+        if(res==1 && last_join){
             // the where go's last
             if(select->where){
                 res=evaluate_expressions(cursor,select->where);
@@ -710,9 +711,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             //ok we have an exact filter.. eval the row        
             eval_row_set(cursor,select);
         }  else {
-            if(res==1) {
-                return_match(cursor,select,set+1);
-            }
+            return_match(cursor,select,set+1);
         }
     }
     if(matches==0) return_match(cursor,select,set+1);
