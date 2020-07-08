@@ -342,6 +342,19 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=tmp_ptr->next;
     }
 
+    tmp_ptr=select->columns;
+    while(tmp_ptr){
+        // we only care about data sourced from tables
+        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
+            printf("HI\n");
+            debug_identifier(sel_ident);
+        }
+        tmp_ptr=tmp_ptr->next;
+    }
+    
+
+
     // fixup join/from qualifier
     // if the database isn't set.. use the active database as the qualifier 
     if(select->from) {
@@ -441,17 +454,6 @@ int validate_select(cursor_t * cursor,select_t *select){
         }
     }
 
-    tmp_ptr=select->columns;
-    while(tmp_ptr){
-        // we only care about data sourced from tables
-        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
-            printf("HI\n");
-            debug_identifier(sel_ident);
-        }
-        tmp_ptr=tmp_ptr->next;
-    }
-    
     // populate aliases of sources 
     if(select->from) {
         //init array block
