@@ -625,7 +625,7 @@ int execute_select(cursor_t * cursor,select_t *select){
 long return_match(cursor_t *cursor,select_t *select,int set){
     int type;
     long results=0;
-    long length     =10;//cursor->source[set]->row_length;
+    long length     =cursor->source[set]->row_length;
     long match[length];
     expression_t *expr=0;
     if(set==0) {
