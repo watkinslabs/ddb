@@ -762,18 +762,17 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
             case TOKEN_BINARY:
             case TOKEN_REAL:
             case TOKEN_NULL: value=(char*)next->object;
-                                printf("'%s' ,",value);
                                 break;
             
             case TOKEN_IDENTIFIER:  
-            debug_identifier((identifier_t *)next->object);
-             value=get_value_at(cursor,(identifier_t *)next->object);
-                                    printf("'%s' ,",value);
-                                    
+                                debug_identifier((identifier_t *)next->object);
+                                value=get_value_at(cursor,(identifier_t *)next->object);
                                 break;
             default:   debug_value(token_type(next->type));
                         break;
         }//end switch
+        printf("'%s' ,",value);
+
         next=next->next;
     }//end while
     
