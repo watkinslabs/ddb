@@ -716,6 +716,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             ++evaled;
         }  
         if(last_join==0){
+            printf ("LOOP\n");
             return_match(cursor,select,set+1);
         }//end last join
     }
