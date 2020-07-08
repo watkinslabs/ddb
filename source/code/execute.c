@@ -683,7 +683,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                             break;
             case TOKEN_LEFT_JOIN:           if(res==0) {
                                                  cursor->source[set]->success=-1;
-                                                continue;
+                                                 continue;
                                             } else {
                                                  cursor->source[set]->success=60;
                                             }
@@ -693,9 +693,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                                 //continue;
                                                 for(int s=set;s<cursor->source_count;s++) {
                                                     cursor->source[set]->success=-22;
-        
                                                 }
-                                                continue;
                                             } else {
                                                 cursor->source[set]->success=50;
                                             }
