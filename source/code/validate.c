@@ -534,7 +534,8 @@ int validate_select(cursor_t * cursor,select_t *select){
 
     cursor->identifier_count=100;
     cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),cursor->identifier_count);
-
+    cursor->identifier_count=0;
+    
     if(select->from) {
         tmp_ptr=select->columns;
         while(tmp_ptr){
