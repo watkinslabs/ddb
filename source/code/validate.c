@@ -493,6 +493,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         int index=0;
         while(tmp_ptr){
             // we only care about data sourced from tables
+            
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
                 for(int i=0;i<select->join_length+1;i++) {
                     identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
@@ -523,9 +524,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         cursor->identifier_lookup[index].source_column=column_index_in_table(table_ptr,sel_ident->source);
                         break;
                     }
-
                 }
-                
             }
             ++index;
             tmp_ptr=tmp_ptr->next;
@@ -653,5 +652,35 @@ int validate_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
+int add_idenfifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier_t *ident){
+    int index=cursor->identifier_count;
+    ++cursor->identifier_count;
 
+    for(int i=0;i<select->join_length+1;i++) {
+        if(strcmp(ident->qualifier,cursor->source_alias[i])==0) {
+            cursor->identifier_lookup[index].active=1;
+            cursor->identifier_lookup[index].source=i;
+            table_def_t *table_ptr;
+            identifier_t *src_ident=0;
+            
+            if(i==0) {
+                src_ident=select->from;
+            } else {
+                src_ident=select->join[i-1].identifier;
+            }
+            table_ptr=get_table_by_identifier(cursor,src_ident);
 
+            if(table_ptr==0) {
+                debug_identifier(src_ident);
+                char *err_msg=malloc(1024);
+                sprintf(err_msg,"invalid table");
+                set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
+                return 0;
+            }
+            
+            cursor->identifier_lookup[index].select_column=index;
+            cursor->identifier_lookup[index].identifier=duplicate_identifier(ident);
+            cursor->identifier_lookup[index].source_column=column_index_in_table(table_ptr,ident->source);
+        }
+    }
+}
