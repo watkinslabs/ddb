@@ -728,7 +728,8 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         }
     }
    
-    if(evaled==0) {
+    
+    /*if(evaled==0) {
         if(last_join==0) return_match(cursor,select,set+1);
         if(last_join==1) {
             if(select->where){
@@ -743,7 +744,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             eval_row_set(cursor,select);
         }
     }
-   
+   */
     return results;
 }
 
