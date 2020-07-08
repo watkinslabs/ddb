@@ -602,7 +602,7 @@ int execute_select(cursor_t * cursor,select_t *select){
         // RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
         // FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
         
-        long results=return_match(cursor,select,1);
+        long results=return_match(cursor,select,0);
 
     }// end where/join
     
@@ -655,7 +655,11 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         // visual check for the matrix
         //printf("%d-%ld\n",set,row);
         cursor->source[set]->position=row;
-        res=evaluate_expressions(cursor,expr);
+        if(set!=0) {
+            res=evaluate_expressions(cursor,expr);
+        } else {
+            res=1;
+        }
         matches+=res;
 
         switch(type){
