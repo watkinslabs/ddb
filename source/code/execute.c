@@ -653,7 +653,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     long matches=0;    
     for(long row=0;row<length;row++){
         // visual check for the matrix
-        printf("%ld\n",row);
+        printf("%d-%ld\n",set,row);
         cursor->source[set]->position=row;
         res=evaluate_expressions(cursor,expr);
         matches+=res;
