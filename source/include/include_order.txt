@@ -2,6 +2,7 @@ source/include/core.h
 source/include/errors.h
 source/include/tokens.h
 source/include/structure.h
+source/include/files.h
 source/include/free.h
 source/include/debug.h
 source/include/teleprompter.h
