@@ -30,8 +30,9 @@ int main(int argc, char* argv[]) {
     // create a cursor and process queries
     cursor_t *cursor=init_cursor();
     process_queries(cursor,query_str);
+    #if defined(DEBUG_ME)
     debug_cursor(cursor);
-
+    #endif
     // free up leftover structures
     free(query_str);
     free_cursor(cursor);
