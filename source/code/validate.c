@@ -545,6 +545,26 @@ int validate_select(cursor_t * cursor,select_t *select){
             tmp_ptr=tmp_ptr->next;
         }
     }
+    if(select->join) {
+        for(int i=0;i<select->join_length;i++) {
+            tmp_ptr=&select->join[i].expression;
+            while(tmp_ptr){
+                if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                    add_idenfifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
+                }
+                tmp_ptr=tmp_ptr->next;
+            }
+        }
+    }
+    if(select->where) {
+        tmp_ptr=select->where;
+        while(tmp_ptr){
+            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                add_idenfifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
+            }
+            tmp_ptr=tmp_ptr->next;
+        }
+    }
 
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
