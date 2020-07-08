@@ -695,6 +695,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             // the where go's last
             if(select->where){
                 res=evaluate_expressions(cursor,select->where);
+               printf ("WHERE %d\n",res);
                // matches+=res;
 
                 if(!res) {
