@@ -583,7 +583,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         while(temp_expr){
             
             if (temp_expr->mode==1) {
-                debug_identifier(temp_expr->identifier);
+                //debug_identifier(temp_expr->identifier);
 
                 add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
             }
