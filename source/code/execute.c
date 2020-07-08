@@ -653,27 +653,27 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     long matches=0;    
     for(long row=0;row<length;row++){
         // visual check for the matrix
-        printf("%d-%ld\n",set,row);
+        //printf("%d-%ld\n",set,row);
         cursor->source[set]->position=row;
         res=evaluate_expressions(cursor,expr);
         matches+=res;
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
-                                                cursor->source[set]->success=-5;
+                                                cursor->source[set]->success=-1;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
                                             break;
 
             case TOKEN_RIGHT_JOIN:          if(!res) {
-                                                cursor->source[set]->success=-4;
+                                                cursor->source[set]->success=-1;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
                                             break;
             case TOKEN_LEFT_JOIN:           if(!res) {
-                                                cursor->source[set]->success=-3;
+                                                cursor->source[set]->success=-1;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
