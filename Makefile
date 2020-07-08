@@ -9,6 +9,7 @@ build:
 
 	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc   
 	#-ggdb -Wno-unused-variable -Wall 
+	
 	#-funroll-loops \
      #-pg  \
 	 #-fsanitize=address -fno-omit-frame-pointer 
