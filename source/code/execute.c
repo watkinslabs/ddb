@@ -714,7 +714,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             return_match(cursor,select,set+1);
         }
     }
-    if(matches==0) return_match(cursor,select,set+1);
+    if(matches==0 && last_join==0) return_match(cursor,select,set+1);
     return results;
 }
 
