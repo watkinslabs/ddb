@@ -650,16 +650,17 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
     if(set+1==cursor->source_count) last_join=1;
     long matches[length];
-    memset(matches,1,sizeof(long)*length);
+    memset(matches,-1,sizeof(long)*length);
+    
+    long matches=0;    
     for(long row=0;row<length;row++){
         // visual check for the matrix
 
         cursor->source[set]->position=row;
         if(set>0) {
             res=evaluate_expressions(cursor,expr);
-        
         }
-        
+        matches+=res;
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
@@ -707,9 +708,12 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             //ok we have an exact filter.. eval the row        
             eval_row_set(cursor,select);
         }  else {
-            return_match(cursor,select,set+1);
+            if(res==1) {
+                return_match(cursor,select,set+1);
+            }
         }
     }
+    if(matches==0) return_match(cursor,select,set+1);
     return results;
 }
 
