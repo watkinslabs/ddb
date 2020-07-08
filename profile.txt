@@ -3,15 +3,15 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ms/call  ms/call  name    
- 53.85      0.21     0.21  2012983     0.00     0.00  get_value_at
- 25.64      0.31     0.10 10077097     0.00     0.00  compare_identifiers
-  7.69      0.34     0.03  2015928     0.00     0.00  evaluate_expression
-  5.13      0.36     0.02        1    20.00   389.95  return_match
-  2.56      0.37     0.01  2033079     0.00     0.00  safe_malloc
-  2.56      0.38     0.01  1007964     0.00     0.00  compare_expressions
-  2.56      0.39     0.01  1006484     0.00     0.00  evaluate_expressions
+ 41.03      0.16     0.16  2012983     0.00     0.00  get_value_at
+ 30.77      0.28     0.12 10077097     0.00     0.00  compare_identifiers
+ 12.82      0.33     0.05  2033079     0.00     0.00  safe_malloc
+ 10.26      0.37     0.04  2015928     0.00     0.00  evaluate_expression
+  2.56      0.38     0.01  1006484     0.00     0.00  evaluate_expressions
+  2.56      0.39     0.01        1    10.00   389.61  return_match
   0.00      0.39     0.00  2015928     0.00     0.00  free_expression_value
   0.00      0.39     0.00  1007964     0.00     0.00  compare_expression_value
+  0.00      0.39     0.00  1007964     0.00     0.00  compare_expressions
   0.00      0.39     0.00     2960     0.00     0.00  eval_token
   0.00      0.39     0.00     2008     0.00     0.00  get_line
   0.00      0.39     0.00     2005     0.00     0.00  build_row
@@ -54,7 +54,7 @@ Each sample counts as 0.01 seconds.
   0.00      0.39     0.00        3     0.00     0.00  duplicate_columns
   0.00      0.39     0.00        3     0.00     0.00  duplicate_table
   0.00      0.39     0.00        3     0.00     0.00  execute_create_table
-  0.00      0.39     0.00        3     0.00     0.03  load_file
+  0.00      0.39     0.00        3     0.00     0.14  load_file
   0.00      0.39     0.00        3     0.00     0.00  process_column_list
   0.00      0.39     0.00        3     0.00     0.00  process_expression
   0.00      0.39     0.00        3     0.00     0.00  validate_create_table
@@ -133,11 +133,11 @@ index % time    self  children    called     name
 [2]    100.0    0.00    0.39       1         process_queries [2]
                 0.00    0.39       1/1           execute_select [3]
                 0.00    0.00       1/1           validate_select [16]
-                0.00    0.00       5/5           process_select [20]
-                0.00    0.00       5/5           process_create_table [21]
-                0.00    0.00       3/3           execute_create_table [25]
-                0.00    0.00       3/3           validate_create_table [36]
-                0.00    0.00       5/5           add_command [37]
+                0.00    0.00       5/5           process_select [17]
+                0.00    0.00       5/5           process_create_table [19]
+                0.00    0.00       3/3           execute_create_table [23]
+                0.00    0.00       5/5           add_command [36]
+                0.00    0.00       3/3           validate_create_table [41]
                 0.00    0.00       5/5           process_use [42]
                 0.00    0.00       1/1           lex [45]
                 0.00    0.00       5/5           compare_token [64]
@@ -150,85 +150,85 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.39       1/1           process_queries [2]
 [3]    100.0    0.00    0.39       1         execute_select [3]
-                0.02    0.37       1/1           return_match [4]
+                0.01    0.38       1/1           return_match [4]
                 0.00    0.00       3/3           load_file [11]
-                0.00    0.00       1/1           new_data_set [41]
+                0.00    0.00       1/1           new_data_set [40]
                 0.00    0.00       1/2033079     safe_malloc [10]
                 0.00    0.00       1/1           get_column_list [43]
                 0.00    0.00       3/4           free_data_set [66]
                 0.00    0.00       1/1           free_column_list [73]
 -----------------------------------------------
                                 2002             return_match [4]
-                0.02    0.37       1/1           execute_select [3]
-[4]    100.0    0.02    0.37       1+2002    return_match [4]
-                0.01    0.36 1006484/1006484     evaluate_expressions [5]
+                0.01    0.38       1/1           execute_select [3]
+[4]     99.9    0.01    0.38       1+2002    return_match [4]
+                0.01    0.37 1006484/1006484     evaluate_expressions [5]
                 0.00    0.00    1480/1480        eval_row_set [15]
                                 2002             return_match [4]
 -----------------------------------------------
-                0.01    0.36 1006484/1006484     return_match [4]
-[5]     94.8    0.01    0.36 1006484         evaluate_expressions [5]
-                0.01    0.35 1007964/1007964     compare_expressions [6]
+                0.01    0.37 1006484/1006484     return_match [4]
+[5]     97.3    0.01    0.37 1006484         evaluate_expressions [5]
+                0.00    0.37 1007964/1007964     compare_expressions [7]
 -----------------------------------------------
-                0.01    0.35 1007964/1007964     evaluate_expressions [5]
-[6]     92.3    0.01    0.35 1007964         compare_expressions [6]
-                0.03    0.32 2015928/2015928     evaluate_expression [7]
+                0.04    0.33 2015928/2015928     compare_expressions [7]
+[6]     94.8    0.04    0.33 2015928         evaluate_expression [6]
+                0.16    0.12 2012968/2012983     get_value_at [8]
+                0.05    0.00 2012968/2033079     safe_malloc [10]
+                0.00    0.00    2960/2960        eval_token [13]
+-----------------------------------------------
+                0.00    0.37 1007964/1007964     evaluate_expressions [5]
+[7]     94.8    0.00    0.37 1007964         compare_expressions [7]
+                0.04    0.33 2015928/2015928     evaluate_expression [6]
                 0.00    0.00 2015928/2015928     free_expression_value [47]
                 0.00    0.00 1007964/1007964     compare_expression_value [48]
 -----------------------------------------------
-                0.03    0.32 2015928/2015928     compare_expressions [6]
-[7]     89.7    0.03    0.32 2015928         evaluate_expression [7]
-                0.21    0.10 2012968/2012983     get_value_at [8]
-                0.01    0.00 2012968/2033079     safe_malloc [10]
-                0.00    0.00    2960/2960        eval_token [13]
------------------------------------------------
                 0.00    0.00      15/2012983     eval_row_set [15]
-                0.21    0.10 2012968/2012983     evaluate_expression [7]
-[8]     79.5    0.21    0.10 2012983         get_value_at [8]
-                0.10    0.00 10077026/10077097     compare_identifiers [9]
+                0.16    0.12 2012968/2012983     evaluate_expression [6]
+[8]     71.8    0.16    0.12 2012983         get_value_at [8]
+                0.12    0.00 10077026/10077097     compare_identifiers [9]
 -----------------------------------------------
-                0.00    0.00       3/10077097     validate_create_table [36]
-                0.00    0.00      68/10077097     get_table_by_identifier [17]
-                0.10    0.00 10077026/10077097     get_value_at [8]
-[9]     25.6    0.10    0.00 10077097         compare_identifiers [9]
+                0.00    0.00       3/10077097     validate_create_table [41]
+                0.00    0.00      68/10077097     get_table_by_identifier [18]
+                0.12    0.00 10077026/10077097     get_value_at [8]
+[9]     30.8    0.12    0.00 10077097         compare_identifiers [9]
 -----------------------------------------------
-                0.00    0.00       1/2033079     process_select [20]
+                0.00    0.00       1/2033079     process_select [17]
                 0.00    0.00       1/2033079     process_use [42]
                 0.00    0.00       1/2033079     execute_select [3]
                 0.00    0.00       1/2033079     get_column_list [43]
                 0.00    0.00       1/2033079     init_cursor [44]
-                0.00    0.00       1/2033079     process_expression [26]
+                0.00    0.00       1/2033079     process_expression [25]
                 0.00    0.00       1/2033079     token_array [46]
-                0.00    0.00       2/2033079     join_list_init [40]
-                0.00    0.00       2/2033079     new_data_set [41]
+                0.00    0.00       2/2033079     join_list_init [39]
+                0.00    0.00       2/2033079     new_data_set [40]
                 0.00    0.00       2/2033079     validate_select [16]
-                0.00    0.00       3/2033079     process_create_table [21]
-                0.00    0.00       3/2033079     duplicate_table [24]
-                0.00    0.00       5/2033079     add_command [37]
-                0.00    0.00       8/2033079     process_simple_expr [29]
+                0.00    0.00       3/2033079     process_create_table [19]
+                0.00    0.00       3/2033079     duplicate_table [22]
+                0.00    0.00       5/2033079     add_command [36]
+                0.00    0.00       8/2033079     process_simple_expr [28]
                 0.00    0.00       9/2033079     load_file [11]
                 0.00    0.00      13/2033079     duplicate_columns [34]
                 0.00    0.00      14/2033079     duplicate_identifier [33]
                 0.00    0.00      15/2033079     duplicate_token [32]
-                0.00    0.00      17/2033079     process_identifier [31]
-                0.00    0.00      19/2033079     add_data_column [23]
+                0.00    0.00      17/2033079     process_identifier [30]
+                0.00    0.00      19/2033079     add_data_column [24]
                 0.00    0.00    2005/2033079     get_line [14]
                 0.00    0.00    2960/2033079     eval_token [13]
                 0.00    0.00   15027/2033079     build_row [12]
-                0.01    0.00 2012968/2033079     evaluate_expression [7]
-[10]     2.6    0.01    0.00 2033079         safe_malloc [10]
+                0.05    0.00 2012968/2033079     evaluate_expression [6]
+[10]    12.8    0.05    0.00 2033079         safe_malloc [10]
 -----------------------------------------------
                 0.00    0.00       3/3           execute_select [3]
-[11]     0.0    0.00    0.00       3         load_file [11]
+[11]     0.1    0.00    0.00       3         load_file [11]
                 0.00    0.00    2005/2005        build_row [12]
                 0.00    0.00    2008/2008        get_line [14]
-                0.00    0.00       3/39          get_table_by_identifier [17]
                 0.00    0.00       9/2033079     safe_malloc [10]
+                0.00    0.00       3/39          get_table_by_identifier [18]
 -----------------------------------------------
                 0.00    0.00    2005/2005        load_file [11]
-[12]     0.0    0.00    0.00    2005         build_row [12]
+[12]     0.1    0.00    0.00    2005         build_row [12]
                 0.00    0.00   15027/2033079     safe_malloc [10]
 -----------------------------------------------
-                0.00    0.00    2960/2960        evaluate_expression [7]
+                0.00    0.00    2960/2960        evaluate_expression [6]
 [13]     0.0    0.00    0.00    2960         eval_token [13]
                 0.00    0.00    2960/2033079     safe_malloc [10]
 -----------------------------------------------
@@ -242,160 +242,160 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/1           process_queries [2]
 [16]     0.0    0.00    0.00       1         validate_select [16]
-                0.00    0.00      11/11          is_identifier_valid [18]
-                0.00    0.00      11/11          add_idenfifier_to_cursor_lookup [19]
-                0.00    0.00       6/39          get_table_by_identifier [17]
+                0.00    0.00      11/11          add_idenfifier_to_cursor_lookup [21]
+                0.00    0.00      11/11          is_identifier_valid [31]
+                0.00    0.00       6/39          get_table_by_identifier [18]
                 0.00    0.00       2/2033079     safe_malloc [10]
                 0.00    0.00       4/54          string_duplicate [53]
                 0.00    0.00       2/2           debug_identifier [68]
 -----------------------------------------------
-                0.00    0.00       3/39          load_file [11]
-                0.00    0.00       6/39          validate_select [16]
-                0.00    0.00      11/39          add_idenfifier_to_cursor_lookup [19]
-                0.00    0.00      19/39          is_identifier_valid [18]
-[17]     0.0    0.00    0.00      39         get_table_by_identifier [17]
-                0.00    0.00      68/10077097     compare_identifiers [9]
------------------------------------------------
-                0.00    0.00      11/11          validate_select [16]
-[18]     0.0    0.00    0.00      11         is_identifier_valid [18]
-                0.00    0.00      19/39          get_table_by_identifier [17]
-                0.00    0.00      19/19          table_has_column [57]
------------------------------------------------
-                0.00    0.00      11/11          validate_select [16]
-[19]     0.0    0.00    0.00      11         add_idenfifier_to_cursor_lookup [19]
-                0.00    0.00      11/39          get_table_by_identifier [17]
-                0.00    0.00      11/14          duplicate_identifier [33]
-                0.00    0.00      11/11          column_index_in_table [59]
------------------------------------------------
                 0.00    0.00       5/5           process_queries [2]
-[20]     0.0    0.00    0.00       5         process_select [20]
-                0.00    0.00       3/3           process_expression [26]
+[17]     0.0    0.00    0.00       5         process_select [17]
+                0.00    0.00       3/3           process_expression [25]
                 0.00    0.00       1/1           process_select_list [35]
-                0.00    0.00       3/19          process_identifier [31]
-                0.00    0.00       2/2           add_join [39]
+                0.00    0.00       3/19          process_identifier [30]
+                0.00    0.00       2/2           add_join [38]
                 0.00    0.00       1/2033079     safe_malloc [10]
                 0.00    0.00      14/155         token_at [51]
                 0.00    0.00       5/213         valid_token_index [50]
                 0.00    0.00       3/9           process_alias [61]
 -----------------------------------------------
+                0.00    0.00       3/39          load_file [11]
+                0.00    0.00       6/39          validate_select [16]
+                0.00    0.00      11/39          add_idenfifier_to_cursor_lookup [21]
+                0.00    0.00      19/39          is_identifier_valid [31]
+[18]     0.0    0.00    0.00      39         get_table_by_identifier [18]
+                0.00    0.00      68/10077097     compare_identifiers [9]
+-----------------------------------------------
                 0.00    0.00       5/5           process_queries [2]
-[21]     0.0    0.00    0.00       5         process_create_table [21]
-                0.00    0.00       3/3           process_column_list [22]
+[19]     0.0    0.00    0.00       5         process_create_table [19]
+                0.00    0.00       3/3           process_column_list [20]
                 0.00    0.00       3/2033079     safe_malloc [10]
-                0.00    0.00       3/19          process_identifier [31]
+                0.00    0.00       3/19          process_identifier [30]
                 0.00    0.00      22/155         token_at [51]
                 0.00    0.00       6/43          copy_token_value_at [54]
                 0.00    0.00       5/213         valid_token_index [50]
 -----------------------------------------------
-                0.00    0.00       3/3           process_create_table [21]
-[22]     0.0    0.00    0.00       3         process_column_list [22]
+                0.00    0.00       3/3           process_create_table [19]
+[20]     0.0    0.00    0.00       3         process_column_list [20]
                 0.00    0.00      13/15          duplicate_token [32]
-                0.00    0.00      13/19          add_data_column [23]
+                0.00    0.00      13/19          add_data_column [24]
                 0.00    0.00      32/155         token_at [51]
 -----------------------------------------------
-                0.00    0.00       6/19          process_select_list [35]
-                0.00    0.00      13/19          process_column_list [22]
-[23]     0.0    0.00    0.00      19         add_data_column [23]
-                0.00    0.00      19/2033079     safe_malloc [10]
+                0.00    0.00      11/11          validate_select [16]
+[21]     0.0    0.00    0.00      11         add_idenfifier_to_cursor_lookup [21]
+                0.00    0.00      11/14          duplicate_identifier [33]
+                0.00    0.00      11/39          get_table_by_identifier [18]
+                0.00    0.00      11/11          column_index_in_table [59]
 -----------------------------------------------
-                0.00    0.00       3/3           execute_create_table [25]
-[24]     0.0    0.00    0.00       3         duplicate_table [24]
+                0.00    0.00       3/3           execute_create_table [23]
+[22]     0.0    0.00    0.00       3         duplicate_table [22]
                 0.00    0.00       3/3           duplicate_columns [34]
                 0.00    0.00       3/2033079     safe_malloc [10]
                 0.00    0.00       3/14          duplicate_identifier [33]
                 0.00    0.00       6/54          string_duplicate [53]
 -----------------------------------------------
                 0.00    0.00       3/3           process_queries [2]
-[25]     0.0    0.00    0.00       3         execute_create_table [25]
-                0.00    0.00       3/3           duplicate_table [24]
+[23]     0.0    0.00    0.00       3         execute_create_table [23]
+                0.00    0.00       3/3           duplicate_table [22]
 -----------------------------------------------
-                0.00    0.00       3/3           process_select [20]
-[26]     0.0    0.00    0.00       3         process_expression [26]
-                0.00    0.00       6/6           process_boolean_primary [30]
+                0.00    0.00       6/19          process_select_list [35]
+                0.00    0.00      13/19          process_column_list [20]
+[24]     0.0    0.00    0.00      19         add_data_column [24]
+                0.00    0.00      19/2033079     safe_malloc [10]
+-----------------------------------------------
+                0.00    0.00       3/3           process_select [17]
+[25]     0.0    0.00    0.00       3         process_expression [25]
+                0.00    0.00       6/6           process_boolean_primary [29]
                 0.00    0.00       1/2033079     safe_malloc [10]
                 0.00    0.00      10/155         token_at [51]
                 0.00    0.00       2/6           add_expr [63]
 -----------------------------------------------
-                0.00    0.00      10/10          process_predicate [28]
-[27]     0.0    0.00    0.00      10         process_bit_expr [27]
-                0.00    0.00      10/10          process_simple_expr [29]
+                0.00    0.00      10/10          process_predicate [27]
+[26]     0.0    0.00    0.00      10         process_bit_expr [26]
+                0.00    0.00      10/10          process_simple_expr [28]
                 0.00    0.00       8/155         token_at [51]
 -----------------------------------------------
-                0.00    0.00      10/10          process_boolean_primary [30]
-[28]     0.0    0.00    0.00      10         process_predicate [28]
-                0.00    0.00      10/10          process_bit_expr [27]
+                0.00    0.00      10/10          process_boolean_primary [29]
+[27]     0.0    0.00    0.00      10         process_predicate [27]
+                0.00    0.00      10/10          process_bit_expr [26]
 -----------------------------------------------
-                0.00    0.00      10/10          process_bit_expr [27]
-[29]     0.0    0.00    0.00      10         process_simple_expr [29]
+                0.00    0.00      10/10          process_bit_expr [26]
+[28]     0.0    0.00    0.00      10         process_simple_expr [28]
                 0.00    0.00       8/2033079     safe_malloc [10]
-                0.00    0.00       8/19          process_identifier [31]
-                0.00    0.00      10/10          process_litteral [38]
+                0.00    0.00       8/19          process_identifier [30]
+                0.00    0.00      10/10          process_litteral [37]
                 0.00    0.00      10/155         token_at [51]
 -----------------------------------------------
-                0.00    0.00       6/6           process_expression [26]
-[30]     0.0    0.00    0.00       6         process_boolean_primary [30]
-                0.00    0.00      10/10          process_predicate [28]
+                0.00    0.00       6/6           process_expression [25]
+[29]     0.0    0.00    0.00       6         process_boolean_primary [29]
+                0.00    0.00      10/10          process_predicate [27]
                 0.00    0.00       4/155         token_at [51]
                 0.00    0.00       4/6           add_expr [63]
 -----------------------------------------------
-                0.00    0.00       3/19          process_select [20]
-                0.00    0.00       3/19          process_create_table [21]
+                0.00    0.00       3/19          process_select [17]
+                0.00    0.00       3/19          process_create_table [19]
                 0.00    0.00       5/19          process_select_list [35]
-                0.00    0.00       8/19          process_simple_expr [29]
-[31]     0.0    0.00    0.00      19         process_identifier [31]
+                0.00    0.00       8/19          process_simple_expr [28]
+[30]     0.0    0.00    0.00      19         process_identifier [30]
                 0.00    0.00      17/2033079     safe_malloc [10]
                 0.00    0.00      30/43          copy_token_value_at [54]
                 0.00    0.00      19/155         token_at [51]
 -----------------------------------------------
-                0.00    0.00       2/15          process_litteral [38]
-                0.00    0.00      13/15          process_column_list [22]
+                0.00    0.00      11/11          validate_select [16]
+[31]     0.0    0.00    0.00      11         is_identifier_valid [31]
+                0.00    0.00      19/39          get_table_by_identifier [18]
+                0.00    0.00      19/19          table_has_column [57]
+-----------------------------------------------
+                0.00    0.00       2/15          process_litteral [37]
+                0.00    0.00      13/15          process_column_list [20]
 [32]     0.0    0.00    0.00      15         duplicate_token [32]
                 0.00    0.00      15/2033079     safe_malloc [10]
                 0.00    0.00      15/54          string_duplicate [53]
 -----------------------------------------------
-                0.00    0.00       3/14          duplicate_table [24]
-                0.00    0.00      11/14          add_idenfifier_to_cursor_lookup [19]
+                0.00    0.00       3/14          duplicate_table [22]
+                0.00    0.00      11/14          add_idenfifier_to_cursor_lookup [21]
 [33]     0.0    0.00    0.00      14         duplicate_identifier [33]
                 0.00    0.00      14/2033079     safe_malloc [10]
                 0.00    0.00      28/54          string_duplicate [53]
 -----------------------------------------------
-                0.00    0.00       3/3           duplicate_table [24]
+                0.00    0.00       3/3           duplicate_table [22]
 [34]     0.0    0.00    0.00       3         duplicate_columns [34]
                 0.00    0.00      13/2033079     safe_malloc [10]
 -----------------------------------------------
-                0.00    0.00       1/1           process_select [20]
+                0.00    0.00       1/1           process_select [17]
 [35]     0.0    0.00    0.00       1         process_select_list [35]
-                0.00    0.00       6/19          add_data_column [23]
-                0.00    0.00       5/19          process_identifier [31]
+                0.00    0.00       6/19          add_data_column [24]
+                0.00    0.00       5/19          process_identifier [30]
                 0.00    0.00      12/155         token_at [51]
                 0.00    0.00       6/9           process_alias [61]
                 0.00    0.00       1/43          copy_token_value_at [54]
 -----------------------------------------------
-                0.00    0.00       3/3           process_queries [2]
-[36]     0.0    0.00    0.00       3         validate_create_table [36]
-                0.00    0.00       3/10077097     compare_identifiers [9]
------------------------------------------------
                 0.00    0.00       5/5           process_queries [2]
-[37]     0.0    0.00    0.00       5         add_command [37]
+[36]     0.0    0.00    0.00       5         add_command [36]
                 0.00    0.00       5/2033079     safe_malloc [10]
 -----------------------------------------------
-                0.00    0.00      10/10          process_simple_expr [29]
-[38]     0.0    0.00    0.00      10         process_litteral [38]
+                0.00    0.00      10/10          process_simple_expr [28]
+[37]     0.0    0.00    0.00      10         process_litteral [37]
                 0.00    0.00       2/15          duplicate_token [32]
                 0.00    0.00      10/155         token_at [51]
 -----------------------------------------------
-                0.00    0.00       2/2           process_select [20]
-[39]     0.0    0.00    0.00       2         add_join [39]
-                0.00    0.00       2/2           join_list_init [40]
+                0.00    0.00       2/2           process_select [17]
+[38]     0.0    0.00    0.00       2         add_join [38]
+                0.00    0.00       2/2           join_list_init [39]
                 0.00    0.00       2/2           join_init [70]
 -----------------------------------------------
-                0.00    0.00       2/2           add_join [39]
-[40]     0.0    0.00    0.00       2         join_list_init [40]
+                0.00    0.00       2/2           add_join [38]
+[39]     0.0    0.00    0.00       2         join_list_init [39]
                 0.00    0.00       2/2033079     safe_malloc [10]
 -----------------------------------------------
                 0.00    0.00       1/1           execute_select [3]
-[41]     0.0    0.00    0.00       1         new_data_set [41]
+[40]     0.0    0.00    0.00       1         new_data_set [40]
                 0.00    0.00       2/2033079     safe_malloc [10]
+-----------------------------------------------
+                0.00    0.00       3/3           process_queries [2]
+[41]     0.0    0.00    0.00       3         validate_create_table [41]
+                0.00    0.00       3/10077097     compare_identifiers [9]
 -----------------------------------------------
                 0.00    0.00       5/5           process_queries [2]
 [42]     0.0    0.00    0.00       5         process_use [42]
@@ -424,34 +424,34 @@ index % time    self  children    called     name
 [46]     0.0    0.00    0.00       1         token_array [46]
                 0.00    0.00       1/2033079     safe_malloc [10]
 -----------------------------------------------
-                0.00    0.00 2015928/2015928     compare_expressions [6]
+                0.00    0.00 2015928/2015928     compare_expressions [7]
 [47]     0.0    0.00    0.00 2015928         free_expression_value [47]
 -----------------------------------------------
-                0.00    0.00 1007964/1007964     compare_expressions [6]
+                0.00    0.00 1007964/1007964     compare_expressions [7]
 [48]     0.0    0.00    0.00 1007964         compare_expression_value [48]
 -----------------------------------------------
                 0.00    0.00     286/286         lex [45]
 [49]     0.0    0.00    0.00     286         sub_str_cpy [49]
 -----------------------------------------------
-                0.00    0.00       5/213         process_select [20]
-                0.00    0.00       5/213         process_create_table [21]
+                0.00    0.00       5/213         process_select [17]
+                0.00    0.00       5/213         process_create_table [19]
                 0.00    0.00       5/213         process_use [42]
                 0.00    0.00      43/213         copy_token_value_at [54]
                 0.00    0.00     155/213         token_at [51]
 [50]     0.0    0.00    0.00     213         valid_token_index [50]
 -----------------------------------------------
-                0.00    0.00       4/155         process_boolean_primary [30]
+                0.00    0.00       4/155         process_boolean_primary [29]
                 0.00    0.00       5/155         process_use [42]
-                0.00    0.00       8/155         process_bit_expr [27]
+                0.00    0.00       8/155         process_bit_expr [26]
                 0.00    0.00       9/155         process_alias [61]
-                0.00    0.00      10/155         process_litteral [38]
-                0.00    0.00      10/155         process_simple_expr [29]
-                0.00    0.00      10/155         process_expression [26]
+                0.00    0.00      10/155         process_litteral [37]
+                0.00    0.00      10/155         process_simple_expr [28]
+                0.00    0.00      10/155         process_expression [25]
                 0.00    0.00      12/155         process_select_list [35]
-                0.00    0.00      14/155         process_select [20]
-                0.00    0.00      19/155         process_identifier [31]
-                0.00    0.00      22/155         process_create_table [21]
-                0.00    0.00      32/155         process_column_list [22]
+                0.00    0.00      14/155         process_select [17]
+                0.00    0.00      19/155         process_identifier [30]
+                0.00    0.00      22/155         process_create_table [19]
+                0.00    0.00      32/155         process_column_list [20]
 [51]     0.0    0.00    0.00     155         token_at [51]
                 0.00    0.00     155/213         valid_token_index [50]
 -----------------------------------------------
@@ -460,7 +460,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       1/54          execute_use [72]
                 0.00    0.00       4/54          validate_select [16]
-                0.00    0.00       6/54          duplicate_table [24]
+                0.00    0.00       6/54          duplicate_table [22]
                 0.00    0.00      15/54          duplicate_token [32]
                 0.00    0.00      28/54          duplicate_identifier [33]
 [53]     0.0    0.00    0.00      54         string_duplicate [53]
@@ -468,8 +468,8 @@ index % time    self  children    called     name
                 0.00    0.00       1/43          process_use [42]
                 0.00    0.00       1/43          process_select_list [35]
                 0.00    0.00       5/43          process_alias [61]
-                0.00    0.00       6/43          process_create_table [21]
-                0.00    0.00      30/43          process_identifier [31]
+                0.00    0.00       6/43          process_create_table [19]
+                0.00    0.00      30/43          process_identifier [30]
 [54]     0.0    0.00    0.00      43         copy_token_value_at [54]
                 0.00    0.00      43/213         valid_token_index [50]
 -----------------------------------------------
@@ -484,14 +484,14 @@ index % time    self  children    called     name
                 0.00    0.00      27/31          consolidate_tokens [71]
 [56]     0.0    0.00    0.00      31         token_delete [56]
 -----------------------------------------------
-                0.00    0.00      19/19          is_identifier_valid [18]
+                0.00    0.00      19/19          is_identifier_valid [31]
 [57]     0.0    0.00    0.00      19         table_has_column [57]
 -----------------------------------------------
                 0.00    0.00      12/12          consolidate_tokens [71]
 [58]     0.0    0.00    0.00      12         token_combine [58]
                 0.00    0.00       4/31          token_delete [56]
 -----------------------------------------------
-                0.00    0.00      11/11          add_idenfifier_to_cursor_lookup [19]
+                0.00    0.00      11/11          add_idenfifier_to_cursor_lookup [21]
 [59]     0.0    0.00    0.00      11         column_index_in_table [59]
 -----------------------------------------------
                 0.00    0.00       1/10          execute_use [72]
@@ -499,7 +499,7 @@ index % time    self  children    called     name
                 0.00    0.00       6/10          free_table_def [67]
 [60]     0.0    0.00    0.00      10         free_string [60]
 -----------------------------------------------
-                0.00    0.00       3/9           process_select [20]
+                0.00    0.00       3/9           process_select [17]
                 0.00    0.00       6/9           process_select_list [35]
 [61]     0.0    0.00    0.00       9         process_alias [61]
                 0.00    0.00       9/155         token_at [51]
@@ -510,8 +510,8 @@ index % time    self  children    called     name
 [62]     0.0    0.00    0.00       7         free_data_columns [62]
                 0.00    0.00       5/31          free_ident [55]
 -----------------------------------------------
-                0.00    0.00       2/6           process_expression [26]
-                0.00    0.00       4/6           process_boolean_primary [30]
+                0.00    0.00       2/6           process_expression [25]
+                0.00    0.00       4/6           process_boolean_primary [29]
 [63]     0.0    0.00    0.00       6         add_expr [63]
 -----------------------------------------------
                 0.00    0.00       5/5           process_queries [2]
@@ -541,7 +541,7 @@ index % time    self  children    called     name
                 0.00    0.00       2/2           free_expression [65]
 [69]     0.0    0.00    0.00       2         free_litteral [69]
 -----------------------------------------------
-                0.00    0.00       2/2           add_join [39]
+                0.00    0.00       2/2           add_join [38]
 [70]     0.0    0.00    0.00       2         join_init [70]
 -----------------------------------------------
                 0.00    0.00       1/1           lex [45]
@@ -676,30 +676,30 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [37] add_command            [62] free_data_columns      [21] process_create_table
-  [23] add_data_column        [66] free_data_set          [26] process_expression
-  [63] add_expr               [65] free_expression        [31] process_identifier
-  [19] add_idenfifier_to_cursor_lookup [47] free_expression_value [38] process_litteral
-  [39] add_join               [55] free_ident             [28] process_predicate
+  [36] add_command            [62] free_data_columns      [19] process_create_table
+  [24] add_data_column        [66] free_data_set          [25] process_expression
+  [63] add_expr               [65] free_expression        [30] process_identifier
+  [21] add_idenfifier_to_cursor_lookup [47] free_expression_value [37] process_litteral
+  [38] add_join               [55] free_ident             [27] process_predicate
   [12] build_row              [69] free_litteral           [2] process_queries
-  [59] column_index_in_table  [75] free_select            [20] process_select
+  [59] column_index_in_table  [75] free_select            [17] process_select
   [48] compare_expression_value [60] free_string          [35] process_select_list
-   [6] compare_expressions    [67] free_table_def         [29] process_simple_expr
+   [7] compare_expressions    [67] free_table_def         [28] process_simple_expr
    [9] compare_identifiers    [76] free_use               [42] process_use
   [64] compare_token          [43] get_column_list         [4] return_match
   [71] consolidate_tokens     [77] get_current_database   [10] safe_malloc
   [54] copy_token_value_at    [14] get_line               [53] string_duplicate
   [68] debug_identifier       [78] get_stdin              [49] sub_str_cpy
-  [34] duplicate_columns      [17] get_table_by_identifier [57] table_has_column
+  [34] duplicate_columns      [18] get_table_by_identifier [57] table_has_column
   [33] duplicate_identifier    [8] get_value_at           [46] token_array
-  [24] duplicate_table        [44] init_cursor            [51] token_at
-  [32] duplicate_token        [18] is_identifier_valid    [58] token_combine
+  [22] duplicate_table        [44] init_cursor            [51] token_at
+  [32] duplicate_token        [31] is_identifier_valid    [58] token_combine
   [15] eval_row_set           [70] join_init              [56] token_delete
-  [13] eval_token             [40] join_list_init         [52] token_push
-   [7] evaluate_expression    [45] lex                    [79] tokens_destroy
+  [13] eval_token             [39] join_list_init         [52] token_push
+   [6] evaluate_expression    [45] lex                    [79] tokens_destroy
    [5] evaluate_expressions   [11] load_file              [50] valid_token_index
-  [25] execute_create_table   [41] new_data_set           [36] validate_create_table
+  [23] execute_create_table   [40] new_data_set           [41] validate_create_table
    [3] execute_select         [61] process_alias          [16] validate_select
-  [72] execute_use            [27] process_bit_expr       [80] validate_use
-  [73] free_column_list       [30] process_boolean_primary
-  [74] free_cursor            [22] process_column_list
+  [72] execute_use            [26] process_bit_expr       [80] validate_use
+  [73] free_column_list       [29] process_boolean_primary
+  [74] free_cursor            [20] process_column_list
