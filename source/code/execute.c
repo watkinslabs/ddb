@@ -662,20 +662,20 @@ long return_match(cursor_t *cursor,select_t *select,int set){
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
-                                                cursor->source[set]->success=-1;
+                                                cursor->source[set]->success=-5;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
                                             break;
 
             case TOKEN_RIGHT_JOIN:          if(!res) {
-                                                cursor->source[set]->success=-1;
+                                                cursor->source[set]->success=-4;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
                                             break;
             case TOKEN_LEFT_JOIN:           if(!res) {
-                                                cursor->source[set]->success=-1;
+                                                cursor->source[set]->success=-3;
                                             } else {
                                                 cursor->source[set]->success=1;
                                             }
