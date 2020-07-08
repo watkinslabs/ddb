@@ -414,16 +414,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             tmp_ptr=tmp_ptr->next;
         }
     }
-tmp_ptr=select->columns;
-    while(tmp_ptr){
-        // we only care about data sourced from tables
-        if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-            identifier_t *sel_ident=(identifier_t*)tmp_ptr->object;
-            printf("HI\n");
-            debug_identifier(sel_ident);
-        }
-        tmp_ptr=tmp_ptr->next;
-    }
+
 // validate from and join sources exist
     if(select->from) {
         table_def_t *table_ptr=0;
