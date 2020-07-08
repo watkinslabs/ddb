@@ -86,7 +86,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
             if(compare_identifiers(ident,ident_lookup.identifier)) {
                 //ok we know what source/position to look at.. fetch the data and return
                 data_set_t *data_set=cursor->source[ident_lookup.source];
-                if (data_set->success==0) return DATA_NULL;
+                if (data_set->success==-1) return DATA_NULL;
                 //grab the curent position from the cursor.. (saved in dataset)
                 long row_index=data_set->position;
 
@@ -667,11 +667,11 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         matches+=res;
 
         switch(type){
-            case TOKEN_FULL_OUTER_JOIN:     cursor->source[set]->success=res;
+            case TOKEN_FULL_OUTER_JOIN:     if(res==0) res==-1; cursor->source[set]->success=res;
                                             break;
-            case TOKEN_RIGHT_JOIN:          cursor->source[set]->success=res;
+            case TOKEN_RIGHT_JOIN:          if(res==0) res==-1; cursor->source[set]->success=res;
                                             break;
-            case TOKEN_LEFT_JOIN:           cursor->source[set]->success=res;
+            case TOKEN_LEFT_JOIN:           if(res==0) res==-1; cursor->source[set]->success=res;
                                             break;
 
             case TOKEN_JOIN:                if(!res) {
