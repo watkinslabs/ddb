@@ -115,7 +115,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
         }
     }
     //debug_identifier(iden);
-    return DATA_NULL;
+    return "EH";//DATA_NULL;
 }
 
 expression_value_t *eval_token(token_t *token){
