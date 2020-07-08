@@ -559,7 +559,10 @@ int validate_select(cursor_t * cursor,select_t *select){
     if(select->where) {
         expression_t *temp_expr=select->where;
         while(temp_expr){
+            
             if (temp_expr->mode==1) {
+                debug_identifier(temp_expr->identifier);
+                
                 add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
             }
             temp_expr=temp_expr->expression;
