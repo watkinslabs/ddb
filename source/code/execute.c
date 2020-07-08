@@ -671,7 +671,12 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                             break;
             case TOKEN_RIGHT_JOIN:          if(res==0) res=-1; cursor->source[set]->success=res;
                                             break;
-            case TOKEN_LEFT_JOIN:           if(res==0) res=-1; cursor->source[set]->success=res;
+            case TOKEN_LEFT_JOIN:           if(res==0) {
+                                                 res=1; 
+                                                 cursor->source[set]->success=-1;
+                                            } else {
+                                                 cursor->source[set]->success=1;
+                                            }
                                             break;
 
             case TOKEN_JOIN:                if(!res) {
@@ -694,7 +699,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 if(select->where){
                     res=evaluate_expressions(cursor,select->where);
                     //printf ("WHERE %d\n",res);
-                    //matches+=res;
+                    matches+=res;
 
                     if(!res) {
                         for(int s=set;s<cursor->source_count;s++) {
