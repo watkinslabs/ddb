@@ -106,8 +106,8 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
             }
         }
     }
-    debug_identifier(ident);
-    return "EH";//DATA_NULL;
+    //debug_identifier(ident);
+    return DATA_NULL;
 }
 
 expression_value_t *eval_token(token_t *token){
