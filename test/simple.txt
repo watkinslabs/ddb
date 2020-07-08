@@ -9,11 +9,11 @@ SELECT  1 as prefix,
         first,
         last, 
         t1.ip,
-        octet_a,
+/*        octet_a,
         octet_b,
         octet_c,
         octet_d,
-        message
+  */      message
 
 
 FROM            test.user as t1
