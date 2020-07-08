@@ -655,9 +655,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         // visual check for the matrix
 
         cursor->source[set]->position=row;
-        if(set>0) {
-            res=evaluate_expressions(cursor,expr);
-        }
+        res=evaluate_expressions(cursor,expr);
         matches+=res;
 
         switch(type){
@@ -697,7 +695,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             // the where go's last
             if(select->where){
                 res=evaluate_expressions(cursor,select->where);
-                matches+=res;
+               // matches+=res;
 
                 if(!res) {
                     for(int s=set;s<cursor->source_count;s++) {
