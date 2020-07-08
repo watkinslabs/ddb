@@ -615,7 +615,7 @@ int process_queries(cursor_t *cursor,char *queries){
     command_t * tmp_ptr=commands;
     command_t * tmp_ptr2;
 
-#if !defined(DEBUG_ME)
+#if defined(DEBUG_ME)
 
     // free resources;
     while(tmp_ptr){
