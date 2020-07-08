@@ -90,6 +90,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 int row_index=data_set->position;
                 row_t *row=data_set->rows[row_index];
                 
+                debug_identifier(ident);
                 printf ("**%d-%d,%d**\n",data_set->column_length ,row->column_length, ident_lookup.source_column);
                 for(int i=0;i<row->column_length;i++) printf("%s,",row->columns[i]); 
                 printf("\n");
