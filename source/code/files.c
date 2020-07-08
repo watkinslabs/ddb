@@ -1,3 +1,5 @@
+#include "../include/files.h"
+
 range_t * get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {
         //printf("OUT OF BOUNDS %ld of %ld\n",*position,fsize);
