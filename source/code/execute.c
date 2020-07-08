@@ -654,7 +654,8 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     
     if(set+1==cursor->source_count) last_join=1;
     
-    long matches=0;    
+    long matches=0;
+    int evaled=0;    
     for(long row=0;row<length;row++){
         // visual check for the matrix
         //printf("%d-%ld\n",set,row);
@@ -716,31 +717,27 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                 }
                 //ok we have an exact filter.. eval the row        
                 eval_row_set(cursor,select);
+                ++evaled;
             }  else {
                 return_match(cursor,select,set+1);
             }//end last join
         }//end res
     }
    
-   
-    if(matches==0 && last_join==0) return_match(cursor,select,set+1);
-    if(matches==0 && last_join==1) {
-        //cursor->source[set]->success=-1;
-//        printf("BUB\n");
-        // the where go's last
-        if(select->where){
-            res=evaluate_expressions(cursor,select->where);
-            //printf ("WHERE %d\n",res);
-        // matches+=res;
-
-            if(!res) {
-                cursor->source[0]->success=-3;
-            } else {
-                cursor->source[0]->success=12;
+    if(evaled==0) {
+        if(last_join==0) return_match(cursor,select,set+1);
+        if(last_join==1) {
+            if(select->where){
+                res=evaluate_expressions(cursor,select->where);
+                if(!res) {
+                    cursor->source[0]->success=-3;
+                } else {
+                    cursor->source[0]->success=12;
+                }
             }
+            //ok we have an exact filter.. eval the row        
+            eval_row_set(cursor,select);
         }
-        //ok we have an exact filter.. eval the row        
-        eval_row_set(cursor,select);
     }
    
     return results;
