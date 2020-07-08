@@ -659,7 +659,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             res=evaluate_expressions(cursor,expr);
         
         }
-        printf("%d\n",res);
+        
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
