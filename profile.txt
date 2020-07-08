@@ -6,12 +6,12 @@ Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
   0.00      0.00     0.00    17641     0.00     0.00  safe_malloc
-  0.00      0.00     0.00     3277     0.00     0.00  compare_identifiers
+  0.00      0.00     0.00     3321     0.00     0.00  compare_identifiers
   0.00      0.00     0.00     2008     0.00     0.00  get_line
   0.00      0.00     0.00     2005     0.00     0.00  build_row
   0.00      0.00     0.00      484     0.00     0.00  evaluate_expression
   0.00      0.00     0.00      484     0.00     0.00  free_expression_value
-  0.00      0.00     0.00      442     0.00     0.00  get_value_at
+  0.00      0.00     0.00      452     0.00     0.00  get_value_at
   0.00      0.00     0.00      296     0.00     0.00  sub_str_cpy
   0.00      0.00     0.00      242     0.00     0.00  compare_expression_value
   0.00      0.00     0.00      242     0.00     0.00  compare_expressions
@@ -29,8 +29,8 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00       20     0.00     0.00  table_has_column
   0.00      0.00     0.00       19     0.00     0.00  add_data_column
   0.00      0.00     0.00       16     0.00     0.00  duplicate_token
+  0.00      0.00     0.00       16     0.00     0.00  eval_row_set
   0.00      0.00     0.00       15     0.00     0.00  duplicate_identifier
-  0.00      0.00     0.00       14     0.00     0.00  eval_row_set
   0.00      0.00     0.00       12     0.00     0.00  add_idenfifier_to_cursor_lookup
   0.00      0.00     0.00       12     0.00     0.00  column_index_in_table
   0.00      0.00     0.00       12     0.00     0.00  is_identifier_valid
@@ -140,7 +140,7 @@ index % time    self  children    called     name
                 0.00    0.00       9/17641       load_file [53]
                 0.00    0.00      10/17641       process_simple_expr [33]
                 0.00    0.00      13/17641       duplicate_columns [49]
-                0.00    0.00      15/17641       duplicate_identifier [25]
+                0.00    0.00      15/17641       duplicate_identifier [26]
                 0.00    0.00      16/17641       duplicate_token [24]
                 0.00    0.00      18/17641       process_identifier [21]
                 0.00    0.00      19/17641       add_data_column [23]
@@ -150,10 +150,10 @@ index % time    self  children    called     name
                 0.00    0.00   15027/17641       build_row [4]
 [1]      0.0    0.00    0.00   17641         safe_malloc [1]
 -----------------------------------------------
-                0.00    0.00       3/3277        validate_create_table [56]
-                0.00    0.00      70/3277        get_table_by_identifier [18]
-                0.00    0.00    3204/3277        get_value_at [7]
-[2]      0.0    0.00    0.00    3277         compare_identifiers [2]
+                0.00    0.00       3/3321        validate_create_table [56]
+                0.00    0.00      70/3321        get_table_by_identifier [18]
+                0.00    0.00    3248/3321        get_value_at [7]
+[2]      0.0    0.00    0.00    3321         compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00    2008/2008        load_file [53]
 [3]      0.0    0.00    0.00    2008         get_line [3]
@@ -165,16 +165,17 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00     484/484         compare_expressions [10]
 [5]      0.0    0.00    0.00     484         evaluate_expression [5]
-                0.00    0.00     442/442         get_value_at [7]
+                0.00    0.00     442/452         get_value_at [7]
                 0.00    0.00     442/17641       safe_malloc [1]
                 0.00    0.00      42/42          eval_token [17]
 -----------------------------------------------
                 0.00    0.00     484/484         compare_expressions [10]
 [6]      0.0    0.00    0.00     484         free_expression_value [6]
 -----------------------------------------------
-                0.00    0.00     442/442         evaluate_expression [5]
-[7]      0.0    0.00    0.00     442         get_value_at [7]
-                0.00    0.00    3204/3277        compare_identifiers [2]
+                0.00    0.00      10/452         eval_row_set [25]
+                0.00    0.00     442/452         evaluate_expression [5]
+[7]      0.0    0.00    0.00     452         get_value_at [7]
+                0.00    0.00    3248/3321        compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00     296/296         lex [71]
 [8]      0.0    0.00    0.00     296         sub_str_cpy [8]
@@ -221,7 +222,7 @@ index % time    self  children    called     name
                 0.00    0.00       4/57          validate_select [78]
                 0.00    0.00       6/57          duplicate_table [50]
                 0.00    0.00      16/57          duplicate_token [24]
-                0.00    0.00      30/57          duplicate_identifier [25]
+                0.00    0.00      30/57          duplicate_identifier [26]
 [15]     0.0    0.00    0.00      57         string_duplicate [15]
 -----------------------------------------------
                 0.00    0.00       1/45          process_use [45]
@@ -241,7 +242,7 @@ index % time    self  children    called     name
                 0.00    0.00      12/41          add_idenfifier_to_cursor_lookup [27]
                 0.00    0.00      20/41          is_identifier_valid [29]
 [18]     0.0    0.00    0.00      41         get_table_by_identifier [18]
-                0.00    0.00      70/3277        compare_identifiers [2]
+                0.00    0.00      70/3321        compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00       3/33          free_select [65]
                 0.00    0.00       5/33          free_data_columns [38]
@@ -277,19 +278,20 @@ index % time    self  children    called     name
                 0.00    0.00      16/17641       safe_malloc [1]
                 0.00    0.00      16/57          string_duplicate [15]
 -----------------------------------------------
+                0.00    0.00      16/16          return_match [75]
+[25]     0.0    0.00    0.00      16         eval_row_set [25]
+                0.00    0.00      10/452         get_value_at [7]
+-----------------------------------------------
                 0.00    0.00       3/15          duplicate_table [50]
                 0.00    0.00      12/15          add_idenfifier_to_cursor_lookup [27]
-[25]     0.0    0.00    0.00      15         duplicate_identifier [25]
+[26]     0.0    0.00    0.00      15         duplicate_identifier [26]
                 0.00    0.00      30/57          string_duplicate [15]
                 0.00    0.00      15/17641       safe_malloc [1]
------------------------------------------------
-                0.00    0.00      14/14          return_match [75]
-[26]     0.0    0.00    0.00      14         eval_row_set [26]
 -----------------------------------------------
                 0.00    0.00      12/12          validate_select [78]
 [27]     0.0    0.00    0.00      12         add_idenfifier_to_cursor_lookup [27]
                 0.00    0.00      12/41          get_table_by_identifier [18]
-                0.00    0.00      12/15          duplicate_identifier [25]
+                0.00    0.00      12/15          duplicate_identifier [26]
                 0.00    0.00      12/12          column_index_in_table [28]
 -----------------------------------------------
                 0.00    0.00      12/12          add_idenfifier_to_cursor_lookup [27]
@@ -415,7 +417,7 @@ index % time    self  children    called     name
                 0.00    0.00       6/57          string_duplicate [15]
                 0.00    0.00       3/17641       safe_malloc [1]
                 0.00    0.00       3/3           duplicate_columns [49]
-                0.00    0.00       3/15          duplicate_identifier [25]
+                0.00    0.00       3/15          duplicate_identifier [26]
 -----------------------------------------------
                 0.00    0.00       3/3           process_queries [73]
 [51]     0.0    0.00    0.00       3         execute_create_table [51]
@@ -446,7 +448,7 @@ index % time    self  children    called     name
 -----------------------------------------------
                 0.00    0.00       3/3           process_queries [73]
 [56]     0.0    0.00    0.00       3         validate_create_table [56]
-                0.00    0.00       3/3277        compare_identifiers [2]
+                0.00    0.00       3/3321        compare_identifiers [2]
 -----------------------------------------------
                 0.00    0.00       2/2           process_select [44]
 [57]     0.0    0.00    0.00       2         add_join [57]
@@ -556,7 +558,7 @@ index % time    self  children    called     name
                 0.00    0.00       1/1           execute_select [61]
 [75]     0.0    0.00    0.00       1+20      return_match [75]
                 0.00    0.00     214/214         evaluate_expressions [12]
-                0.00    0.00      14/14          eval_row_set [26]
+                0.00    0.00      16/16          eval_row_set [25]
                                   20             return_match [75]
 -----------------------------------------------
                 0.00    0.00       1/1           lex [71]
@@ -684,10 +686,10 @@ Index by function name
   [16] copy_token_value_at     [3] get_line               [15] string_duplicate
   [48] debug_identifier       [69] get_stdin               [8] sub_str_cpy
   [49] duplicate_columns      [18] get_table_by_identifier [22] table_has_column
-  [25] duplicate_identifier    [7] get_value_at           [76] token_array
+  [26] duplicate_identifier    [7] get_value_at           [76] token_array
   [50] duplicate_table        [70] init_cursor            [13] token_at
   [24] duplicate_token        [29] is_identifier_valid    [34] token_combine
-  [26] eval_row_set           [58] join_init              [20] token_delete
+  [25] eval_row_set           [58] join_init              [20] token_delete
   [17] eval_token             [59] join_list_init         [14] token_push
    [5] evaluate_expression    [71] lex                    [77] tokens_destroy
   [12] evaluate_expressions   [53] load_file              [11] valid_token_index
