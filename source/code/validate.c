@@ -485,6 +485,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 
 
     //create lookup for identifiers.. speed things up
+    /*
     if(select->from) {
         cursor->identifier_count=select->column_length;
         cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),select->column_length);
@@ -527,6 +528,19 @@ int validate_select(cursor_t * cursor,select_t *select){
                 }
             }
             ++index;
+            tmp_ptr=tmp_ptr->next;
+        }
+    }*/
+
+    cursor->identifier_count=100;
+    cursor->identifier_lookup=safe_malloc(sizeof(identifier_lookup_t),cursor->identifier_count);
+
+    if(select->from) {
+        tmp_ptr=select->columns;
+        while(tmp_ptr){
+            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
+                add_idenfifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
+            }
             tmp_ptr=tmp_ptr->next;
         }
     }
