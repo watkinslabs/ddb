@@ -697,6 +697,8 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             // the where go's last
             if(select->where){
                 res=evaluate_expressions(cursor,select->where);
+                matches+=res;
+
                 if(!res) {
                     for(int s=set;s<cursor->source_count;s++) {
                         cursor->source[s]->success=-2;
