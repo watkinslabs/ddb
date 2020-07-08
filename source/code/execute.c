@@ -660,20 +660,25 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         
         }
         printf("%d\n",res);
-        //res=1;
 
         switch(type){
             case TOKEN_FULL_OUTER_JOIN:     if(!res) {
                                                 cursor->source[set]->success=-1;
+                                            } else {
+                                                cursor->source[set]->success=1;
                                             }
                                             break;
 
             case TOKEN_RIGHT_JOIN:          if(!res) {
                                                 cursor->source[set]->success=-1;
+                                            } else {
+                                                cursor->source[set]->success=1;
                                             }
                                             break;
             case TOKEN_LEFT_JOIN:           if(!res) {
                                                 cursor->source[set]->success=-1;
+                                            } else {
+                                                cursor->source[set]->success=1;
                                             }
                                             break;
 
@@ -682,6 +687,8 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                                     cursor->source[s]->success=-2;
                                                 }
                                                 last_join=1;
+                                            } else {
+                                                cursor->source[set]->success=1;
                                             }
                                             break;
         }// end switch
