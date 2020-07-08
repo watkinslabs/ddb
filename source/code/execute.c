@@ -764,7 +764,6 @@ int eval_row_set(cursor_t *cursor,select_t *select) {
                                 break;
             
             case TOKEN_IDENTIFIER:  
-                                debug_identifier((identifier_t *)next->object);
                                 value=get_value_at(cursor,(identifier_t *)next->object);
                                 break;
             default:   debug_value(token_type(next->type));
