@@ -713,7 +713,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     }
     if(matches==0 && last_join==0) return_match(cursor,select,set+1);
     if(matches==0 && last_join==1) {
-        cursor->source[set]->success=-1;
+        //cursor->source[set]->success=-1;
 //        printf("BUB\n");
         // the where go's last
         if(select->where){
