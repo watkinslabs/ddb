@@ -7,7 +7,7 @@
 #define LINE_ENDING '\n'
 #define DOUBLE_QUOTE '\"'
 #define SINGLE_QUOTE '\''
-#define DATA_NULL "(null)"    
+#define DATA_NULL "(zoink)"    
 
 #define EVAL_STRING  1
 #define EVAL_INT     2
