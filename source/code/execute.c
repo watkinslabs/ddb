@@ -711,7 +711,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                     if(!res) {
                         cursor->source[0]->success=-33;
                     } else {
-                        cursor->source[0]->success=1;
+                        cursor->source[0]->success=11;
                     }
                 }
                 //ok we have an exact filter.. eval the row        
@@ -736,7 +736,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             if(!res) {
                 cursor->source[0]->success=-3;
             } else {
-                cursor->source[0]->success=1;
+                cursor->source[0]->success=12;
             }
         }
         //ok we have an exact filter.. eval the row        
