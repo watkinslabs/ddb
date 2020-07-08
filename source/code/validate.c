@@ -556,16 +556,15 @@ int validate_select(cursor_t * cursor,select_t *select){
             }
         }
     }
- /*   if(select->where) {
-        tmp_ptr=select->where;
-        while(tmp_ptr){
-            if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-                add_idenfifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
+    if(select->where) {
+        expression_t *temp_expr=select->where;
+        while(temp_expr){
+            if (temp_expr->mode==1) {
+                add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
             }
-            tmp_ptr=tmp_ptr->next;
+            temp_expr=temp_expr->expression;
         }
     }
-*/
     // At this point the select list, from and join sources have 
     // been validated to be legal, and non ambiguious.
 
