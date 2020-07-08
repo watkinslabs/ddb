@@ -715,7 +715,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             eval_row_set(cursor,select);
             ++evaled;
         }  
-        if(!last_join){
+        if(last_join==0){
             return_match(cursor,select,set+1);
         }//end last join
     }
