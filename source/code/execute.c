@@ -89,8 +89,7 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 //grab the curent position from the cursor.. (saved in dataset)
                 long row_index=data_set->position;
 
-                printf("INDEX %d\n",row_index);
-                if (row_index==-1) return DATA_NULL;
+                if (data_set->success==-1) return DATA_NULL;
                 row_t *row=data_set->rows[row_index];
                 //is it a valid row...
                 if(row_index>=0 && row_index<data_set->row_length) {
