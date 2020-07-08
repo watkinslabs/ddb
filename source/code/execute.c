@@ -906,6 +906,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
                 //last_line=i;
             }
         }
+        if(data[fsize-1]!=LINE_ENDING) ++lines;
         
         //update data set and allocate row structure
         data_set->row_length=lines;
@@ -946,7 +947,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
 
         // init the column pointer lookup table
         data_set->columns=(char**)safe_malloc(sizeof(char*),max_columns);
-
+        
 
         // copy column names for defined columns
         data_column_t * temp_data_column=table->columns;
