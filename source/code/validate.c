@@ -60,7 +60,8 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
             }
         } else {
         // lets search all the sources for this column... and make sure its unique
-            //printf("NO QUALIFIER \n");
+            printf("NO QUALIFIER \n");
+            debug_identifier(ident);
             table_def_t *temp_table=get_table_by_identifier(cursor,select->from);
             found=table_has_column(temp_table,ident->source);
             char *qualifier=select->alias;
