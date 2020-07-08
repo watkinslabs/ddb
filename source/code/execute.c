@@ -689,7 +689,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                             }
                                             break;
         }// end switch
-
+        if(res==1) printf("yuep\n");
 
         if(last_join){
             // the where go's last
