@@ -670,19 +670,19 @@ long return_match(cursor_t *cursor,select_t *select,int set){
             case TOKEN_FULL_OUTER_JOIN:     if(res==0) {
                                                  cursor->source[set]->success=-1;
                                             } else {
-                                                 cursor->source[set]->success=1;
+                                                 cursor->source[set]->success=80;
                                             }
                                             break;
             case TOKEN_RIGHT_JOIN:          if(res==0) {
                                                  cursor->source[set]->success=-1;
                                             } else {
-                                                 cursor->source[set]->success=1;
+                                                 cursor->source[set]->success=70;
                                             }
                                             break;
             case TOKEN_LEFT_JOIN:           if(res==0) {
                                                  cursor->source[set]->success=-1;
                                             } else {
-                                                 cursor->source[set]->success=1;
+                                                 cursor->source[set]->success=60;
                                             }
                                             break;
 
@@ -692,7 +692,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
                                                 }
                                                 //last_join=1;
                                             } else {
-                                                cursor->source[set]->success=1;
+                                                cursor->source[set]->success=50;
                                             }
                                             break;
         }// end switch
