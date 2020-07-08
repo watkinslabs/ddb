@@ -702,7 +702,6 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         //if(last_join==1) printf("*");
 
         if(last_join==1){
-            printf ("LASE LOOP\n");
             if(res==1) {
                 // the where go's last
                 for(int s=0;s<cursor->source_count;s++) {
