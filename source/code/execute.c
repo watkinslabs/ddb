@@ -649,7 +649,7 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         for(int i=0;i<cursor->source_count;i++) cursor->source[i]->success=0;
     } else {
         //if anything on this row is a failure -2 then skip further evaluation
-        for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success==-2) return 0;
+        //for(int i=0;i<cursor->source_count;i++) if(cursor->source[i]->success==-2) return 0;
     }
     int res=0;
     int last_join=0;
