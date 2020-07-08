@@ -728,6 +728,21 @@ long return_match(cursor_t *cursor,select_t *select,int set){
     if(matches==0 && last_join==1) {
         //cursor->source[set]->success=-1;
         printf("BUB\n");
+        // the where go's last
+        if(select->where){
+            res=evaluate_expressions(cursor,select->where);
+            //printf ("WHERE %d\n",res);
+        // matches+=res;
+
+            if(!res) {
+                for(int s=set;s<cursor->source_count;s++) {
+                    cursor->source[s]->success=-2;
+                }
+            } else {
+                cursor->source[0]->success=1;
+            }
+        }
+        //ok we have an exact filter.. eval the row        
         eval_row_set(cursor,select);
     }
     return results;
