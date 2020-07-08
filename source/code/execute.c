@@ -728,7 +728,26 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         }//end last join
     }
     //joins dont get a second chance at data
-    //if(type==TOKEN_JOIN) return results;
+    if(type==TOKEN_JOIN) return results;
+    if(evaled==0) {
+        // the where go's last
+        for(int s=0;s<cursor->source_count;s++) {
+            printf("%ld:%d ",cursor->source[s]->position,cursor->source[s]->success);
+        } 
+        printf("\n");
+
+        if(select->where){
+            res=evaluate_expressions(cursor,select->where);
+            if(!res) {
+                cursor->source[0]->success=-33;
+            } else {
+                cursor->source[0]->success=11;
+            }
+        }
+        //ok we have an exact filter.. eval the row        
+        eval_row_set(cursor,select);
+        ++evaled;
+    }
 
     return results;
 }
