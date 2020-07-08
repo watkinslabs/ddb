@@ -667,9 +667,9 @@ long return_match(cursor_t *cursor,select_t *select,int set){
         matches+=res;
 
         switch(type){
-            case TOKEN_FULL_OUTER_JOIN:     if(res==0) res=3; cursor->source[set]->success=res;
+            case TOKEN_FULL_OUTER_JOIN:     if(res==0) res=-1; cursor->source[set]->success=res;
                                             break;
-            case TOKEN_RIGHT_JOIN:          if(res==0) res=4; cursor->source[set]->success=res;
+            case TOKEN_RIGHT_JOIN:          if(res==0) res=-1; cursor->source[set]->success=res;
                                             break;
             case TOKEN_LEFT_JOIN:           if(res==0) res=-1; cursor->source[set]->success=res;
                                             break;
