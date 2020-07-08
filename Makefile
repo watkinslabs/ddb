@@ -8,7 +8,7 @@ build:
 	@./build.sh
 
 
-	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc    -o1
+	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc    -o3
 	#-ggdb -Wno-unused-variable -Wall 
 	
 	#-funroll-loops \
