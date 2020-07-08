@@ -88,11 +88,11 @@ char *get_value_at(cursor_t *cursor,identifier_t *ident){
                 data_set_t *data_set=cursor->source[ident_lookup.source];
                 //grab the curent position from the cursor.. (saved in dataset)
                 int row_index=data_set->position;
+                row_t *row=data_set->rows[row_index];
                 
                 printf ("**%d-%d,%d**\n",data_set->column_length ,row->column_length, ident_lookup.source_column);
                 //is it a valid row...
                 if(row_index>=0 && row_index<data_set->row_length) {
-                    row_t *row=data_set->rows[row_index];
                     if(ident_lookup.source_column<data_set->column_length && 
                        ident_lookup.source_column<row->column_length){
                         //found the colum in the row.. return the value
