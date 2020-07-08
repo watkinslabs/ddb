@@ -58,7 +58,6 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
                 return 0;
             } 
             if(found==1) {
-                debug_identifier(ident);
                 return 1;
             }
         } else {
@@ -92,8 +91,6 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
             }
             if(found==1) {
                 ident->qualifier=strdup(qualifier);
-                debug_identifier(ident);
-
                 return 1;
             }
         }// end else
