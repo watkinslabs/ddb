@@ -9,11 +9,10 @@ build:
 
 
 	@/usr/bin/gcc   -lm -g  builds/ddb.c -o builds/ddbc -funroll-loops
-	#-ggdb -Wno-unused-variable 
-	#-Wall 
-	# \
-    #-pg  \
-	#-fsanitize=address -fno-omit-frame-pointer 
+	-ggdb -Wno-unused-variable  \
+	-Wall \
+	-pg  \
+	-fsanitize=address -fno-omit-frame-pointer 
 	
 build-profile: 
 	@/usr/bin/gcc -Wno-unused-variable -Wall  builds/ddb.c  -o builds/ddbc -pg  -fsanitize=address -fno-omit-frame-pointer 
