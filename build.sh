@@ -9,7 +9,7 @@ SOURCE=builds/ddb.c
 
 
 echo '// ddb all in one source'>$SOURCE
-echo '#include "../source/incude/master.h"'>>$SOURCE
+echo '#include "ddb.h"'>>$SOURCE
 echo ''>>$SOURCE
 echo ''>>$SOURCE
 for x in $(find source/ |grep '\.c')
@@ -23,19 +23,19 @@ done
 
 
 
-# echo '// ddb all in one header'>$HEADER
-# cat $SOURCE| grep '^\#include'| sed 's/[ \t]*$//' | sort| uniq>>$HEADER
-# echo ''>>$HEADER
-# echo ''>>$HEADER
-# for x in $(cat source/include/include_order.txt)
-# do 
-#   echo '// *** BEGIN '$x>>$HEADER
-#   cat $x>>$HEADER; 
-#   echo '// *** END'>>$HEADER; 
-#   echo ''>>$HEADER; 
-# done
-# 
-# echo ''>>$HEADER
+echo '// ddb all in one header'>$HEADER
+#cat $SOURCE| grep '^\#include'| sed 's/[ \t]*$//' | sort| uniq>>$HEADER
+ echo ''>>$HEADER
+ echo ''>>$HEADER
+ for x in $(cat source/include/include_order.txt)
+ do 
+   echo '// *** BEGIN '$x>>$HEADER
+   cat $x>>$HEADER; 
+   echo '// *** END'>>$HEADER; 
+   echo ''>>$HEADER; 
+ done
+ 
+ echo ''>>$HEADER
 
 # delete all local includes fomr this header... 
 #sed -i '/#include "/d'  $HEADER
