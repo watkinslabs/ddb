@@ -24,7 +24,7 @@ done
 
 
 echo '// ddb all in one header'>$HEADER
-cat $SOURCE| grep include| sed 's/[ \t]*$//' | sort| uniq>>$HEADER
+cat $SOURCE| grep '^#include'| sed 's/[ \t]*$//' | sort| uniq>>$HEADER
 echo ''>>$HEADER
 echo ''>>$HEADER
 for x in $(cat source/include/include_order.txt)
