@@ -1,8 +1,3 @@
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <io.h>
-
 #include "include/core.h"
 #include "include/structure.h"
 #include "include/teleprompter.h"
