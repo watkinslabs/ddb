@@ -6,7 +6,7 @@
 #include "../include/core.h"
 #include <string.h>
 #include <stdio.h>
-#include <io.h>
+//#include <io.h>
 
 
 int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,char *section){
