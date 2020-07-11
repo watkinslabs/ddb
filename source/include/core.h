@@ -18,15 +18,15 @@
     
     #ifdef __linux__ 
         #define STRICMP stricmp
-        #define STRCMP strcmp
-        #define STRDUP strdup
+        #define STRCMP  strcmp
+        #define STRDUP  strdup
         #define SPRINTF sprintf
-        #define FOPEN fopen
-        #define STRCAT strcat
-        #define ISATTY isatty
-        #define ACCESS access
-        #include <unistd.h>
-    #elif _WIN32
+        #define FOPEN   fopen
+        #define STRCAT  strcat
+        #define ISATTY  isatty
+        #define ACCESS  access
+        #include <unistd.h>    // for access (file perms)
+    #elif _WIN32 
         // windows code goes here
         #define STRICMP _stricmp
         #define STRCMP _strcmp
