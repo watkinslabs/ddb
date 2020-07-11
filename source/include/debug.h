@@ -1,9 +1,10 @@
 // debugging 
 
-#include "tokens.h"
 
 #if !defined (_DEBUG_H_)
     #define _DEBUG_H_ 1
+    #include "structure.h"
+
 
     #define ANSI_COLOR_RED     "\x1b[31m"
     #define ANSI_COLOR_GREEN   "\x1b[32m"

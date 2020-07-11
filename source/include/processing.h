@@ -1,7 +1,8 @@
-#include "structure.h"
 
 #if !defined(_PROCESING_H_)
     #define _PROCESING_H_ 1
+    #include "structure.h"
+    
     char          * process_alias            (cursor_t *cursor,token_array_t *tokens,int *index);
     identifier_t  * process_identifier       (cursor_t *cursor,token_array_t *tokens,int *index);
     token_t       * process_litteral         (cursor_t *cursor,token_array_t *tokens,int *index);

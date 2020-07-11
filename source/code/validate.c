@@ -1,9 +1,12 @@
+#include "../include/validate.h"
 #include "../include/errors.h"
-#include "../include/structure.h"
 #include "../include/debug.h"
 #include "../include/queries.h"
 #include "../include/free.h"
-
+#include "../include/core.h"
+#include <string.h>
+#include <stdio.h>
+#include <io.h>
 
 
 int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,char *section){
@@ -42,7 +45,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
             // we didnt find the referenced qualifier as a source 
             if (temp_table==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"%s: invalid qualifier: %s",section,ident->qualifier);
+                SPRINTF(err_msg,"%s: invalid qualifier: %s",section,ident->qualifier);
                 set_error(cursor,ERR_INVALID_QUALIFIER,err_msg);
                 return 0;
             }
@@ -53,7 +56,7 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
 
             if(found==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"%s: invalid column `%s`.`%s` in table: `%s`.`%s`",section,ident->qualifier,ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
+                SPRINTF(err_msg,"%s: invalid column `%s`.`%s` in table: `%s`.`%s`",section,ident->qualifier,ident->source,temp_table->identifier->qualifier,temp_table->identifier->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
             } 
@@ -79,18 +82,18 @@ int is_identifier_valid(cursor_t * cursor,select_t *select,identifier_t *ident,c
             //printf("%d\n",found);
             if(found==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"%s: invalid column `%s`",section,ident->source);
+                SPRINTF(err_msg,"%s: invalid column `%s`",section,ident->source);
                 set_error(cursor,ERR_COLUMN_NOT_FOUND,err_msg);
                 return 0;
             }
             if(found>1) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"%s: ambiguious column `%s`, %d found",section,ident->source,found);
+                SPRINTF(err_msg,"%s: ambiguious column `%s`, %d found",section,ident->source,found);
                 set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,err_msg);
                 return 0;
             }
             if(found==1) {
-                ident->qualifier=strdup(qualifier);
+                ident->qualifier=STRDUP(qualifier);
                 return 1;
             }
         }// end else
@@ -154,7 +157,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         if(next->identifier) {
             if(compare_identifiers(next->identifier,table->identifier)){
                 msg=safe_malloc(1000,1);
-                sprintf(msg,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
+                SPRINTF(msg,"Table already exists %s.%s",table->identifier->qualifier,table->identifier->source);
                 set_error(cursor,ERR_TABLE_ALREADY_EXISTS,msg);
                 return 0;
             }
@@ -162,24 +165,24 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
         next=next->next;
     }
     // check to see if file is accessable
-    if( access( table->file, F_OK) != -1 ) {
-        if( access( table->file, R_OK) != -1 ) {
-            if( access( table->file, W_OK) != -1 ) {
+    if( ACCESS( table->file, F_OK) != -1 ) {
+        if( ACCESS( table->file, R_OK) != -1 ) {
+            if(ACCESS( table->file, W_OK) != -1 ) {
             } else {
                 msg=safe_malloc(1000,1);
-                sprintf(msg,"Cant write to file %s",table->file);
+                SPRINTF(msg,"Cant write to file %s",table->file);
                 set_error(cursor,ERR_FILE_WRITE_PERMISSION,msg);
                 return 0;
             }
         } else {
             msg=safe_malloc(1000,1);
-            sprintf(msg,"Cant read from file %s",table->file);
+            SPRINTF(msg,"Cant read from file %s",table->file);
             set_error(cursor,ERR_FILE_READ_PERMISSION,msg);
             return 0;
         }
     } else {
         msg=safe_malloc(1000,1);      
-        sprintf(msg,"Cant find file %s",table->file);
+        SPRINTF(msg,"Cant find file %s",table->file);
         set_error(cursor,ERR_FILE_NOT_FOUND,msg);
         return 0;
     }
@@ -187,7 +190,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 
     if(table->columns==0) {
         msg=safe_malloc(1000,1);      
-        sprintf(msg,"no columns in %s.%s",table->identifier->qualifier,table->identifier->source);
+        SPRINTF(msg,"no columns in %s.%s",table->identifier->qualifier,table->identifier->source);
         set_error(cursor,ERR_TABLE_HAS_NO_COLUMNS,msg);
         return 1;
     }
@@ -205,7 +208,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
                     // if you find a duplicate column error out
                     if(outer_tmp->type==inner_tmp->type && strcmp(outer_tmp->object,inner_tmp->object)==0) {
                         msg=safe_malloc(1000,1);      
-                        sprintf(msg,"Column must be a unique literal %s",(char*)inner_tmp->object);
+                        SPRINTF(msg,"Column must be a unique literal %s",(char*)inner_tmp->object);
                         set_error(cursor,ERR_AMBIGUOUS_COLUMN_NAME,msg);
                         return 0;
                     }
@@ -216,7 +219,7 @@ int validate_create_table(cursor_t * cursor,table_def_t *table){
 
         } else {
             msg=safe_malloc(1000,1);      
-            sprintf(msg,"Column must be a unique literal");
+            SPRINTF(msg,"Column must be a unique literal");
             set_error(cursor,ERR_INVALID_COLUMN_NAME,msg);
             return 0;
         }
@@ -240,7 +243,7 @@ int validate_use(cursor_t *cursor,use_t *use){
     if(use){
         if(!use->database){
             char *err_msg=malloc(1024);
-            sprintf(err_msg,"database not specified");
+            SPRINTF(err_msg,"database not specified");
             set_error(cursor,ERR_INVALID_DATABASE,err_msg);
             return 0;
         }
@@ -254,7 +257,7 @@ int validate_use(cursor_t *cursor,use_t *use){
             temp_table=temp_table->next;
         }
         char *err_msg=malloc(1024);
-        sprintf(err_msg,"database not found `%s`",use->database);
+        SPRINTF(err_msg,"database not found `%s`",use->database);
         set_error(cursor,ERR_INVALID_DATABASE,err_msg);
         return 0;
     }
@@ -291,7 +294,7 @@ int validate_select(cursor_t * cursor,select_t *select){
 
     if(column_length==0) {
         err_msg=malloc(1024);
-        sprintf(err_msg,"Select missing select list/columns");
+        SPRINTF(err_msg,"Select missing select list/columns");
         set_error(cursor,ERR_MISSING_COLUMNS,err_msg);
         return 0;
     }
@@ -321,7 +324,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             break;
             default: 
                             err_msg=malloc(1024);
-                            sprintf(err_msg,"Unknown Select token in select list: %s",token_type(tmp_ptr->type));
+                            SPRINTF(err_msg,"Unknown Select token in select list: %s",token_type(tmp_ptr->type));
                             set_error(cursor,ERR_SELECT_LIST_UNKNOWN_TOKEN,err_msg);
                             return 0;
         }
@@ -336,7 +339,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if(tmp_ptr->ordinal!=tmp_ptr2->ordinal) {
                 if(strcmp(tmp_ptr->alias,tmp_ptr2->alias)==0){
                     err_msg=malloc(1024);
-                    sprintf(err_msg,"Ambiguous column in select expression: %s at ordinal %d\n",tmp_ptr->alias,tmp_ptr2->ordinal);
+                    SPRINTF(err_msg,"Ambiguous column in select expression: %s at ordinal %d\n",tmp_ptr->alias,tmp_ptr2->ordinal);
                     set_error(cursor,ERR_AMBIGUOUS_COLUMN_IN_SELECT_LIST,err_msg);
                     return 0;
                 }
@@ -379,7 +382,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             // join and from ambiguity validation
             if(strcmp(join_ptr->alias,select->alias)==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"ambiguous join: %s",join_ptr->alias);
+                SPRINTF(err_msg,"ambiguous join: %s",join_ptr->alias);
                 set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                 return 0;
             }
@@ -391,7 +394,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 // unique match
                 if(strcmp(join_ptr->alias,join_ptr2->alias)==0) {
                     err_msg=malloc(1024);
-                    sprintf(err_msg,"ambiguous join: %s",join_ptr->alias);
+                    SPRINTF(err_msg,"ambiguous join: %s",join_ptr->alias);
                     set_error(cursor,ERR_AMBIGUOUS_JOIN,err_msg);
                     return 0;
                 }
@@ -436,7 +439,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         table_ptr=get_table_by_identifier(cursor,select->from);
         if(table_ptr==0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
+            SPRINTF(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
             set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
             return 0;
         }
@@ -446,7 +449,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             table_ptr=get_table_by_identifier(cursor,join_ptr->identifier);
             if(table_ptr==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid JOIN table: %s.%s",join_ptr->identifier->qualifier,join_ptr->identifier->source);
+                SPRINTF(err_msg,"invalid JOIN table: %s.%s",join_ptr->identifier->qualifier,join_ptr->identifier->source);
                 set_error(cursor,ERR_INVALID_JOIN_TABLE,err_msg);
                 return 0;
             }
@@ -467,22 +470,22 @@ int validate_select(cursor_t * cursor,select_t *select){
         table_ptr=get_table_by_identifier(cursor,select->from);
         if(table_ptr==0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
+            SPRINTF(err_msg,"invalid FROM table: %s.%s",select->from->qualifier,select->from->source);
             set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
             return 0;
         }
-        cursor->source_alias[0]=strdup(select->alias);
+        cursor->source_alias[0]=STRDUP(select->alias);
         join_t *join_ptr=0;
         for(int i=0;i<select->join_length;i++) {
             join_ptr=&select->join[i];
             table_ptr=get_table_by_identifier(cursor,join_ptr->identifier);
             if(table_ptr==0) {
                 err_msg=malloc(1024);
-                sprintf(err_msg,"invalid JOIN table: %s.%s",join_ptr->identifier->qualifier,join_ptr->identifier->source);
+                SPRINTF(err_msg,"invalid JOIN table: %s.%s",join_ptr->identifier->qualifier,join_ptr->identifier->source);
                 set_error(cursor,ERR_INVALID_JOIN_TABLE,err_msg);
                 return 0;
             }
-            cursor->source_alias[i+1]=strdup(select->join[i].alias);
+            cursor->source_alias[i+1]=STRDUP(select->join[i].alias);
         }
     }
 
@@ -518,7 +521,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                         if(table_ptr==0) {
                             debug_identifier(src_ident);
                             err_msg=malloc(1024);
-                            sprintf(err_msg,"invalid table");
+                            SPRINTF(err_msg,"invalid table");
                             set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
                             return 0;
                         }
@@ -562,7 +565,7 @@ int validate_select(cursor_t * cursor,select_t *select){
         tmp_ptr=select->columns;
         while(tmp_ptr){
             if (tmp_ptr->type==TOKEN_IDENTIFIER) {
-                add_idenfifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
+                add_identifier_to_cursor_lookup(cursor,select,(identifier_t *)tmp_ptr->object);
             }
             tmp_ptr=tmp_ptr->next;
         }
@@ -572,7 +575,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             expression_t *temp_expr=select->join[i].expression;
             while(temp_expr){
                 if (temp_expr->mode==1) {
-                    add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
+                    add_identifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
                 }
                 temp_expr=temp_expr->expression;
             }
@@ -585,7 +588,7 @@ int validate_select(cursor_t * cursor,select_t *select){
             if (temp_expr->mode==1) {
                 //debug_identifier(temp_expr->identifier);
 
-                add_idenfifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
+                add_identifier_to_cursor_lookup(cursor,select,temp_expr->identifier);
             }
             temp_expr=temp_expr->expression;
         }
@@ -633,7 +636,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 if(index1!=index2) {
                     if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier)) {
                         err_msg=malloc(1024);
-                        sprintf(err_msg,"duplicate group by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
+                        SPRINTF(err_msg,"duplicate group by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
                         set_error(cursor,ERR_DUPLICATE_GROUP_BY_COLUMN,err_msg);
                         return 0;
                     }
@@ -664,7 +667,7 @@ int validate_select(cursor_t * cursor,select_t *select){
                 if(index1!=index2) {
                     if(compare_identifiers(tmp_expr->identifier,tmp_expr2->identifier)) {
                         err_msg=malloc(1024);
-                        sprintf(err_msg,"duplicate order by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
+                        SPRINTF(err_msg,"duplicate order by column: %s.%s",tmp_expr2->identifier->qualifier,tmp_expr2->identifier->source);
                         set_error(cursor,ERR_DUPLICATE_GROUP_BY_COLUMN,err_msg);
                         return 0;
                     }
@@ -680,13 +683,13 @@ int validate_select(cursor_t * cursor,select_t *select){
     if(select->limit_start) {
         if(select->has_limit_start && select->limit_start<0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"limit: start index cannot be negative: %d",select->limit_start);
+            SPRINTF(err_msg,"limit: start index cannot be negative: %d",select->limit_start);
             set_error(cursor,ERR_LIMIT_START_NEGATIVE,err_msg);
             return 0;
         }
         if(select->has_limit_length && select->limit_length<0) {
             err_msg=malloc(1024);
-            sprintf(err_msg,"limit: length index cannot be negative: %d",select->limit_length);
+            SPRINTF(err_msg,"limit: length index cannot be negative: %d",select->limit_length);
             set_error(cursor,ERR_LIMIT_LENGTH_NEGATIVE,err_msg);
             return 0;
         }
@@ -694,7 +697,7 @@ int validate_select(cursor_t * cursor,select_t *select){
     return 1;
 }
 
-int add_idenfifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier_t *ident){
+int add_identifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier_t *ident){
     int index=cursor->identifier_count;
     ++cursor->identifier_count;
     //debug_identifier(ident);
@@ -715,7 +718,7 @@ int add_idenfifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier
             if(table_ptr==0) {
                 debug_identifier(src_ident);
                 char *err_msg=malloc(1024);
-                sprintf(err_msg,"invalid table");
+                SPRINTF(err_msg,"invalid table");
                 set_error(cursor,ERR_INVALID_FROM_TABLE,err_msg);
                 return 0;
             }
@@ -725,4 +728,5 @@ int add_idenfifier_to_cursor_lookup(cursor_t *cursor,select_t *select,identifier
             cursor->identifier_lookup[index].source_column=column_index_in_table(table_ptr,ident->source);
         }
     }
+    return 1;
 }

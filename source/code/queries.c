@@ -4,12 +4,12 @@
 #include "../include/queries.h"
 #include "../include/free.h"
 #include <time.h>
-
+#include <stdio.h>
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"
-    if (cursor->active_database==0) return strdup(DEFAULT_DATABASE_NAME);
-    return strdup(cursor->active_database);
+    if (cursor->active_database==0) return STRDUP(DEFAULT_DATABASE_NAME);
+    return STRDUP(cursor->active_database);
 }
 
 void set_error(cursor_t *cursor,int error_no,char *msg){
@@ -47,7 +47,7 @@ token_t * token_at(token_array_t *tokens,int index){
 char * copy_token_value_at(token_array_t *tokens,int index){
     if(valid_token_index(tokens,index)){
         char *value=tokens->array[index].value;
-        if(value) return strdup(value);
+        if(value) return STRDUP(value);
     }
     printf("ERROR: COPYING INVALID POSITION %d\n",index);
     return 0;
@@ -138,7 +138,12 @@ cursor_t * init_cursor(){
     cursor_t * cursor=safe_malloc(sizeof(cursor_t),1);
     cursor->parse_position=0;
     cursor->active_database=get_current_database(cursor);
+
+#ifdef __linux__ 
     clock_gettime(CLOCK_REALTIME,&cursor->created);
+#elif _WIN32
+    win_clock_gettime(&cursor->created);
+#endif
     return cursor;
 }
 

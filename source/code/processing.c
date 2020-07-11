@@ -4,6 +4,7 @@
 #include "../include/queries.h"
 #include "../include/free.h"
 #include <time.h>
+#include <stdio.h>
 
 /* Function: process_alias
  * -----------------------

@@ -1,8 +1,9 @@
-#include "structure.h"
 
 #if !defined(_FREE_H_)
     #define _FREE_H_ 1
-    
+    #include <stdlib.h> 
+    #include "structure.h"
+
     int free_data_columns    (data_column_t *columns);
     int free_data_set        (data_set_t *data_set);
     int free_column_list     (char ** columns,int length);

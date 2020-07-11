@@ -97,7 +97,7 @@ void ghost(int err_no){
 
 char *string_duplicate(const char *str){
     if (str==0) return 0;
-    char *new_str = strdup(str);
+    char *new_str = STRDUP(str);
     if(new_str == NULL)
         ghost(ERR_STRING_DUPLICATION_ERROR);
     return new_str;
@@ -118,7 +118,7 @@ char *sub_str_cpy(char *data,int start,int length){
     }
     char *buffer=calloc(1,length+1);
     
-    if (buffer==NULL){
+    if (buffer==0){
         ghost(ERR_MEMORY_ALLOCATION_ERR);
     }
 
@@ -203,7 +203,7 @@ void debug_create_table(table_def_t *table) {
         printf ("Cant debug create table. Null\n");
     } 
     printf (" -- CREATE_TABLE DEBUG -------------\n");
-    data_column_t *temp_ptr=table->columns;
+    data_column_t * temp_ptr=table->columns;
     debug_identifier(table->identifier);
     
     while(temp_ptr){

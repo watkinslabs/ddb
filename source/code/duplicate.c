@@ -3,7 +3,8 @@
 #include "../include/debug.h"
 #include "../include/queries.h"
 #include "../include/free.h"
-
+#include "../include/core.h"
+#include <stdio.h>
 
 /* Function: duplicate_token
  * -----------------------
@@ -43,13 +44,13 @@ data_column_t * duplicate_columns(data_column_t *columns){
             new_column->type         =tmp_ptr->type;
             new_column->ordinal      =tmp_ptr->ordinal;
             if(tmp_ptr->alias!=0) {
-                new_column->alias        =strdup((char*)tmp_ptr->alias);
+                new_column->alias        =STRDUP((char*)tmp_ptr->alias);
             }
             if(tmp_ptr->object!=0){
                 if(tmp_ptr->type==TOKEN_IDENTIFIER)
                     new_column->object   =duplicate_identifier((identifier_t *)tmp_ptr->object);
                 else
-                    new_column->object   =strdup((char*)tmp_ptr->object);
+                    new_column->object   =STRDUP((char*)tmp_ptr->object);
             }
             // attach list
             if(new_columns==0){
@@ -86,7 +87,7 @@ char** duplicate_data_set_columns(char **columns,long length) {
         char **columns=(char**)safe_malloc(sizeof(char*),length);
         for(long i=0;i<length;i++){
             //duplicate individual string
-            columns[i]=strdup(columns[i]);
+            columns[i]=STRDUP(columns[i]);
         }
         return columns;
     } else {
@@ -149,13 +150,13 @@ cursor_t * duplicate_cursor(cursor_t *cursor){
             new_cursor->tables           =new_table;
         }
         if(cursor->active_database)
-            new_cursor->active_database  =strdup(cursor->active_database);       
+            new_cursor->active_database  =STRDUP(cursor->active_database);       
         if(cursor->requested_query)
-            new_cursor->requested_query  =strdup(cursor->requested_query);       
+            new_cursor->requested_query  =STRDUP(cursor->requested_query);       
         if(cursor->executed_query)
-            new_cursor->executed_query   =strdup(cursor->executed_query);       
+            new_cursor->executed_query   =STRDUP(cursor->executed_query);       
         if(cursor->error_message)
-            new_cursor->error_message    =strdup(cursor->error_message);
+            new_cursor->error_message    =STRDUP(cursor->error_message);
 
         new_cursor->parse_position   =cursor->parse_position;       
         new_cursor->error            =cursor->error;       

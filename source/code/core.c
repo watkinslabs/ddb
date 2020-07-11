@@ -1,5 +1,8 @@
-#include "include/errors.h"
-#include <memory.h>
+#include "../include/errors.h"
+#include "../include/debug.h"
+#include "../include/core.h"
+
+
 
 void * safe_malloc(int size,int qty){
     int length=size*qty;

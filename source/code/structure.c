@@ -1,8 +1,8 @@
-#include "include/core.h"
-#include "include/structure.h"
-#include "include/errors.h"
 #include <stdio.h>
 #include <string.h>
+#include "../include/structure.h"
+#include "../include/core.h"
+#include "../include/errors.h"
 
 
 select_t *select_new(){

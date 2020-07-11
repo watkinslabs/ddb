@@ -1,4 +1,4 @@
-#include "include/free.h"
+#include "../include/free.h"
 
 /* Function: free_data_columns
  * -----------------------

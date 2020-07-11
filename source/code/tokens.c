@@ -132,7 +132,7 @@ char *token_type(unsigned int t){
         case  TOKEN_USE:              return "USE";
     }
     char *token_id=calloc(1,20);
-    sprintf(token_id,"UNKNOWN: %d",(unsigned int)t);
+    SPRINTF(token_id,"UNKNOWN: %d",(unsigned int)t);
     return token_id;
     
 }
@@ -177,7 +177,7 @@ int compare_token(token_array_t *tokens,unsigned int optional,unsigned int token
 }
 
 void token_add_type_range(token_array_t * arr,unsigned int type,unsigned int index){
-    for(int i=index;i<arr->position;i++){
+    for(unsigned int i=index;i<arr->position;i++){
         if(arr->array[i].depth<TOKEN_MAX_DEPTH){
             arr->array[i].expr[arr->array[i].depth]=type;
             ++arr->array[i].depth;
@@ -191,7 +191,7 @@ void token_set_type(token_array_t * arr,unsigned int type,unsigned int index){
 
 
 void tokens_destroy(token_array_t *tokens){
-    for(int i=0;i<tokens->length;i++){
+    for(unsigned int i=0;i<tokens->length;i++){
        if(tokens->array[i].value!=0) free(tokens->array[i].value);
     }
     free(tokens->array);
@@ -258,6 +258,8 @@ void token_delete(token_array_t* tokens,unsigned int index) {
     free(tokens->array[index].value);
 
     if(index!=(tokens->length-1)) {
+        if (buffer == 0)   ghost(ERR_MEMORY_ALLOCATION_ERR);
+        if (pos1_ptr == 0) ghost(ERR_MEMORY_ALLOCATION_ERR);
         memcpy(buffer,pos2_ptr,section_length);
         memcpy(pos1_ptr,buffer,section_length);
     }
@@ -279,7 +281,7 @@ token_t token_peek(token_array_t* tokens){
 void token_print(token_array_t *tokens){
     char* color;
     if (tokens!=NULL){
-        for(int i=0;i<tokens->length;i++){
+        for(unsigned int i=0;i<tokens->length;i++){
             if(tokens->array[i].value!=NULL){
                 token_t token=tokens->array[i];
                 

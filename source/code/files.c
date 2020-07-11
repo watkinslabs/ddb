@@ -1,4 +1,7 @@
 #include "../include/files.h"
+#include "../include/errors.h"
+#include "../include/core.h"
+#include <stdio.h>
 
 range_t * get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {
@@ -98,7 +101,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
        // lock_file(table->file);
         
         // read the file into a memory block in 1 chunk
-        FILE *f = fopen(table->file, "rb");
+        FILE *f = FOPEN(table->file, "rb");
         long fsize=0;
         char *data=0;
         if(f) {
@@ -112,7 +115,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
             data[fsize] = 0;
         } else {
             char *err_msg=(char*)safe_malloc(1024,1);
-            sprintf(err_msg,"cannot open file '%s'",table->file);
+            SPRINTF(err_msg,"cannot open file '%s'",table->file);
             error(cursor,ERR_FILE_OPEN_ERROR,err_msg);
             return 0;
         }
@@ -120,7 +123,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         //if no data abort
         if(data==0) {
             char *err_msg=(char*)safe_malloc(1024,1);
-            sprintf(err_msg,"returned data empty. '%s'",table->file);
+            SPRINTF(err_msg,"returned data empty. '%s'",table->file);
             error(cursor,ERR_DATA_FETCH_ERROR,err_msg);
             return 0;
         }
@@ -184,14 +187,14 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
         data_column_t * temp_data_column=table->columns;
         long ordinal=0;
         while(temp_data_column){
-            data_set->columns[ordinal]=strdup(temp_data_column->object);
+            data_set->columns[ordinal]=STRDUP(temp_data_column->object);
             temp_data_column=temp_data_column->next;
             ++ordinal;
         }
         // add default column names for undefined columns with `col_`+ordinal
         while(ordinal<max_columns){
             char *col_name=safe_malloc(sizeof(char),20);
-            sprintf(col_name,"col_%ld",ordinal);
+            SPRINTF(col_name,"col_%ld",ordinal);
             data_set->columns[ordinal]=col_name;
             ++ordinal;
         }
@@ -204,7 +207,7 @@ data_set_t * load_file(cursor_t *cursor,identifier_t *table_ident){
     }
     return 0;
 }
-
+/*
 int lock_file(char *file){
     struct sockaddr_un sun;
       if(strlen(file)>strlen(sun.sun_path)+1) return 0;
@@ -223,3 +226,4 @@ int lock_file(char *file){
     }
     return 1;
 }
+*/

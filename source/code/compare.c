@@ -1,4 +1,5 @@
-
+#include "../include/structure.h"
+#include <string.h>
 
 long mycmp(const unsigned char *cmp1, const unsigned char *cmp2, unsigned long length) {
     if(length >= 4) {
@@ -22,7 +23,7 @@ int compare_identifiers(identifier_t *source,identifier_t *dest){
     //debug_identifier(dest);
     int len_src= strlen(source->source);
     int len_qual=strlen(source->qualifier);
-    if(len_src!=strlen(dest->source)) return 0;
+    if(len_src!= strlen(dest->source)) return 0;
     if(len_qual!=strlen(dest->qualifier)) return 0;
 
     if (strcmp(source->qualifier,dest->qualifier)==0 && 

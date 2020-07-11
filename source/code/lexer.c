@@ -4,11 +4,15 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "../include/free.h"
+#include "../include/core.h"
+#include "../include/debug.h"
 #include "../include/errors.h"
+#include "../include/lexer.h"
 #include "../include/structure.h"
 #include "../include/queries.h"
-#include "../include/debug.h"
-#include "../include/free.h"
+#include "../include/statements.h"
+#include "../include/validate.h"
 
 
 token_array_t *lex(char * query){
@@ -28,7 +32,7 @@ token_array_t *lex(char * query){
 
     if(1==1)
 
-    for(int i=0;i<query_length;i++){
+    for(unsigned int i=0;i<query_length;i++){
 
         buffer_len=query_length-i;
         c=query[i];
@@ -89,7 +93,7 @@ token_array_t *lex(char * query){
 
             switch(t){
                 case TOKEN_ALPHA:
-                    for(int lazer=i+1;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+1;lazer<query_length;lazer++){
                         c=query[lazer];
                         if (lazer!=query_length-1 && (
                             (c>='a' && c<='z') ||   
@@ -111,69 +115,69 @@ token_array_t *lex(char * query){
                          
                         switch(token_len) {
                             case 9:
-                                    if (0==strncasecmp(new_token,"DELIMITER" ,9 ) ) { t=TOKEN_COLUMN_DELIMITER; } 
+                                    if (0==STRICMP(new_token,"DELIMITER" ) ) { t=TOKEN_COLUMN_DELIMITER; } 
                                     break;
                             case 8:
-                                    if (0==strncasecmp(new_token,"DISTINCT"  ,8 ) ) { t=TOKEN_DISTINCT;         } else
-                                    if (0==strncasecmp(new_token,"PASSWORD"  ,8 ) ) { t=TOKEN_PASSWORD;         } 
+                                    if (0==STRICMP(new_token,"DISTINCT"  ) ) { t=TOKEN_DISTINCT;         } else
+                                    if (0==STRICMP(new_token,"PASSWORD"  ) ) { t=TOKEN_PASSWORD;         } 
                                     break;
                             case 7:
-                                    if (0==strncasecmp(new_token,"ACCOUNT"   ,7 ) ) { t=TOKEN_ACCOUNT;          } else
-                                    if (0==strncasecmp(new_token,"UNKNOWN"   ,7 ) ) { t=TOKEN_UNKNOWN;          } 
+                                    if (0==STRICMP(new_token,"ACCOUNT"   ) ) { t=TOKEN_ACCOUNT;          } else
+                                    if (0==STRICMP(new_token,"UNKNOWN"   ) ) { t=TOKEN_UNKNOWN;          } 
                                     break;
                             case 6:
-                                    if (0==strncasecmp(new_token,"SELECT"    ,6 ) ) { t=TOKEN_SELECT;           } else
-                                    if (0==strncasecmp(new_token,"COMMIT"    ,6 ) ) { t=TOKEN_COMMIT;           } else
-                                    if (0==strncasecmp(new_token,"COLUMN"    ,6 ) ) { t=TOKEN_COLUMN;           } else
-                                    if (0==strncasecmp(new_token,"QUOTED"    ,6 ) ) { t=TOKEN_QUOTED;           } else
-                                    if (0==strncasecmp(new_token,"STRICT"    ,6 ) ) { t=TOKEN_STRICT;           } else
-                                    if (0==strncasecmp(new_token,"CREATE"    ,6 ) ) { t=TOKEN_CREATE;           } 
+                                    if (0==STRICMP(new_token,"SELECT"    ) ) { t=TOKEN_SELECT;           } else
+                                    if (0==STRICMP(new_token,"COMMIT"    ) ) { t=TOKEN_COMMIT;           } else
+                                    if (0==STRICMP(new_token,"COLUMN"    ) ) { t=TOKEN_COLUMN;           } else
+                                    if (0==STRICMP(new_token,"QUOTED"    ) ) { t=TOKEN_QUOTED;           } else
+                                    if (0==STRICMP(new_token,"STRICT"    ) ) { t=TOKEN_STRICT;           } else
+                                    if (0==STRICMP(new_token,"CREATE"    ) ) { t=TOKEN_CREATE;           } 
                                     break;
                             case 5:
-                                    if (0==strncasecmp(new_token,"ARRAY"     ,5 ) ) { t=TOKEN_ARRAY_DELIMITER;  } else
-                                    if (0==strncasecmp(new_token,"TABLE"     ,5 ) ) { t=TOKEN_TABLE;            } else
-                                    if (0==strncasecmp(new_token,"WHERE"     ,5 ) ) { t=TOKEN_WHERE;            } else
-                                    if (0==strncasecmp(new_token,"ORDER"     ,5 ) ) { t=TOKEN_ORDER;            } else
-                                    if (0==strncasecmp(new_token,"GROUP"     ,5 ) ) { t=TOKEN_GROUP;            } else
-                                    if (0==strncasecmp(new_token,"LIMIT"     ,5 ) ) { t=TOKEN_LIMIT;            } else
-                                    if (0==strncasecmp(new_token,"OUTER"     ,5 ) ) { t=TOKEN_OUTER;            } else
-                                    if (0==strncasecmp(new_token,"INNER"     ,5 ) ) { t=TOKEN_INNER;            } else
-                                    if (0==strncasecmp(new_token,"RIGHT"     ,5 ) ) { t=TOKEN_RIGHT;            } else
-                                    if (0==strncasecmp(new_token,"FALSE"     ,5 ) ) { t=TOKEN_FALSE;            } 
+                                    if (0==STRICMP(new_token,"ARRAY"     ) ) { t=TOKEN_ARRAY_DELIMITER;  } else
+                                    if (0==STRICMP(new_token,"TABLE"     ) ) { t=TOKEN_TABLE;            } else
+                                    if (0==STRICMP(new_token,"WHERE"     ) ) { t=TOKEN_WHERE;            } else
+                                    if (0==STRICMP(new_token,"ORDER"     ) ) { t=TOKEN_ORDER;            } else
+                                    if (0==STRICMP(new_token,"GROUP"     ) ) { t=TOKEN_GROUP;            } else
+                                    if (0==STRICMP(new_token,"LIMIT"     ) ) { t=TOKEN_LIMIT;            } else
+                                    if (0==STRICMP(new_token,"OUTER"     ) ) { t=TOKEN_OUTER;            } else
+                                    if (0==STRICMP(new_token,"INNER"     ) ) { t=TOKEN_INNER;            } else
+                                    if (0==STRICMP(new_token,"RIGHT"     ) ) { t=TOKEN_RIGHT;            } else
+                                    if (0==STRICMP(new_token,"FALSE"     ) ) { t=TOKEN_FALSE;            } 
                                     break;
                             case 4:
-                                    if (0==strncasecmp(new_token,"LEFT"      ,4 ) ) { t=TOKEN_LEFT;             } else
-                                    if (0==strncasecmp(new_token,"FULL"      ,4 ) ) { t=TOKEN_FULL;             } else
-                                    if (0==strncasecmp(new_token,"DESC"      ,4 ) ) { t=TOKEN_DESC;             } else
-                                    if (0==strncasecmp(new_token,"JOIN"      ,4 ) ) { t=TOKEN_JOIN;             } else
-                                    if (0==strncasecmp(new_token,"LIKE"      ,4 ) ) { t=TOKEN_LIKE;             } else
-                                    if (0==strncasecmp(new_token,"FROM"      ,4 ) ) { t=TOKEN_FROM;             } else
-                                    if (0==strncasecmp(new_token,"NULL"      ,4 ) ) { t=TOKEN_NULL;             } else
-                                    if (0==strncasecmp(new_token,"TRUE"      ,4 ) ) { t=TOKEN_TRUE;             } else
-                                    if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
-                                    if (0==strncasecmp(new_token,"FIFO"      ,4 ) ) { t=TOKEN_FIFO;             } else
-                                    if (0==strncasecmp(new_token,"REPO"      ,4 ) ) { t=TOKEN_REPO;             } else
-                                    if (0==strncasecmp(new_token,"FILE"      ,4 ) ) { t=TOKEN_FILE;             } else
-                                    if (0==strncasecmp(new_token,"BASE"      ,4 ) ) { t=TOKEN_BASE;             } else
-                                    if (0==strncasecmp(new_token,"PATH"      ,4 ) ) { t=TOKEN_PATH;             } else
-                                    if (0==strncasecmp(new_token,"PUSH"      ,4 ) ) { t=TOKEN_PUSH;             } else
-                                    if (0==strncasecmp(new_token,"PULL"      ,4 ) ) { t=TOKEN_PULL;             } else
-                                    if (0==strncasecmp(new_token,"READ"      ,4 ) ) { t=TOKEN_READ;             } 
+                                    if (0==STRICMP(new_token,"LEFT"      ) ) { t=TOKEN_LEFT;             } else
+                                    if (0==STRICMP(new_token,"FULL"      ) ) { t=TOKEN_FULL;             } else
+                                    if (0==STRICMP(new_token,"DESC"      ) ) { t=TOKEN_DESC;             } else
+                                    if (0==STRICMP(new_token,"JOIN"      ) ) { t=TOKEN_JOIN;             } else
+                                    if (0==STRICMP(new_token,"LIKE"      ) ) { t=TOKEN_LIKE;             } else
+                                    if (0==STRICMP(new_token,"FROM"      ) ) { t=TOKEN_FROM;             } else
+                                    if (0==STRICMP(new_token,"NULL"      ) ) { t=TOKEN_NULL;             } else
+                                    if (0==STRICMP(new_token,"TRUE"      ) ) { t=TOKEN_TRUE;             } else
+                                    if (0==STRICMP(new_token,"FILE"      ) ) { t=TOKEN_FILE;             } else
+                                    if (0==STRICMP(new_token,"FIFO"      ) ) { t=TOKEN_FIFO;             } else
+                                    if (0==STRICMP(new_token,"REPO"      ) ) { t=TOKEN_REPO;             } else
+                                    if (0==STRICMP(new_token,"FILE"      ) ) { t=TOKEN_FILE;             } else
+                                    if (0==STRICMP(new_token,"BASE"      ) ) { t=TOKEN_BASE;             } else
+                                    if (0==STRICMP(new_token,"PATH"      ) ) { t=TOKEN_PATH;             } else
+                                    if (0==STRICMP(new_token,"PUSH"      ) ) { t=TOKEN_PUSH;             } else
+                                    if (0==STRICMP(new_token,"PULL"      ) ) { t=TOKEN_PULL;             } else
+                                    if (0==STRICMP(new_token,"READ"      ) ) { t=TOKEN_READ;             } 
                                     break;
                             case 3:
-                                    if (0==strncasecmp(new_token,"URL"       ,3 ) ) { t=TOKEN_URL;              } else
-                                    if (0==strncasecmp(new_token,"AND"       ,3 ) ) { t=TOKEN_AND;              } else
-                                    if (0==strncasecmp(new_token,"USE"       ,3 ) ) { t=TOKEN_USE;              } else
-                                    if (0==strncasecmp(new_token,"ASC"       ,3 ) ) { t=TOKEN_ASC;              } else
-                                    if (0==strncasecmp(new_token,"NOT"       ,3 ) ) { t=TOKEN_NOT;              } 
+                                    if (0==STRICMP(new_token,"URL"       ) ) { t=TOKEN_URL;              } else
+                                    if (0==STRICMP(new_token,"AND"       ) ) { t=TOKEN_AND;              } else
+                                    if (0==STRICMP(new_token,"USE"       ) ) { t=TOKEN_USE;              } else
+                                    if (0==STRICMP(new_token,"ASC"       ) ) { t=TOKEN_ASC;              } else
+                                    if (0==STRICMP(new_token,"NOT"       ) ) { t=TOKEN_NOT;              } 
                                     break;
                             case 2:
-                                    if (0==strncasecmp(new_token,"BY"        ,2 ) ) { t=TOKEN_BY;               } else
-                                    if (0==strncasecmp(new_token,"AS"        ,2 ) ) { t=TOKEN_AS;               } else
-                                    if (0==strncasecmp(new_token,"OR"        ,2 ) ) { t=TOKEN_OR;               } else
-                                    if (0==strncasecmp(new_token,"ON"        ,2 ) ) { t=TOKEN_ON;               } else
-                                    if (0==strncasecmp(new_token,"IS"        ,2 ) ) { t=TOKEN_IS;               } else
-                                    if (0==strncasecmp(new_token,"IN"        ,2 ) ) { t=TOKEN_IN;               } 
+                                    if (0==STRICMP(new_token,"BY"        ) ) { t=TOKEN_BY;               } else
+                                    if (0==STRICMP(new_token,"AS"        ) ) { t=TOKEN_AS;               } else
+                                    if (0==STRICMP(new_token,"OR"        ) ) { t=TOKEN_OR;               } else
+                                    if (0==STRICMP(new_token,"ON"        ) ) { t=TOKEN_ON;               } else
+                                    if (0==STRICMP(new_token,"IS"        ) ) { t=TOKEN_IS;               } else
+                                    if (0==STRICMP(new_token,"IN"        ) ) { t=TOKEN_IN;               } 
                                     break;
                         }//end switch
 
@@ -191,7 +195,7 @@ token_array_t *lex(char * query){
 
                 case TOKEN_NUMERIC: 
 
-                    for(int lazer=i+1;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+1;lazer<query_length;lazer++){
                         c=query[lazer];
                         if (c>='0' && c<='9') continue;
                         else {
@@ -204,7 +208,7 @@ token_array_t *lex(char * query){
                     break;
 
                 case TOKEN_HEX: 
-                    for(int lazer=i+2;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+2;lazer<query_length;lazer++){
                         c=query[lazer];
                         if ((c>='0' && c<='9') || ( (c>='a' && c<='f') || (c>='A' && c<='F') ) ) continue;
                         else {
@@ -219,7 +223,7 @@ token_array_t *lex(char * query){
                     break;
 
                 case TOKEN_BINARY: 
-                    for(int lazer=i+2;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+2;lazer<query_length;lazer++){
                         c=query[lazer];
                         if (c=='0' || c=='1') continue;
                         else {
@@ -237,7 +241,7 @@ token_array_t *lex(char * query){
 
 
                 case TOKEN_WHITESPACE: 
-                    for(int lazer=i+1;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+1;lazer<query_length;lazer++){
                         c=query[lazer];
                         if (c<32) continue;
                         else {
@@ -251,7 +255,7 @@ token_array_t *lex(char * query){
                 case TOKEN_LINE_COMMENT:
                     //is it long enough
                     skip=-1;
-                    for(int lazer=i+2;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+2;lazer<query_length;lazer++){
                         c=query[lazer];
                         if (c=='\n') {
                             new_token=sub_str_cpy(query,i+2,lazer-i-2);
@@ -267,7 +271,7 @@ token_array_t *lex(char * query){
                 case TOKEN_BLOCK_COMMENT:
                     //is it long enough
                     if(query_length-i-3>0){
-                        for(int lazer=i+2;lazer<query_length-1;lazer++){
+                        for(unsigned int lazer=i+2;lazer<query_length-1;lazer++){
                             c=query[lazer];
                             d=query[lazer+1];
                             
@@ -287,7 +291,7 @@ token_array_t *lex(char * query){
 
                 case TOKEN_STRING:
                     skip=-1;
-                    for(int lazer=i+1;lazer<query_length;lazer++){
+                    for(unsigned int lazer=i+1;lazer<query_length;lazer++){
                         if(query[lazer]==c) {
                             // it's an empty string.....
                             if (lazer-i==1) 
@@ -382,10 +386,8 @@ void token_combine(token_array_t *tokens,int *list){
 }
 
 
-void consolidate_tokens(token_array_t *tokens){
-    token_t d;
+void consolidate_tokens(token_array_t * tokens){
     token_t e;
-    int buffer_len;
 
     //             length-2 combo token     match pattern
     int token1 [] ={3,TOKEN_FULL_OUTER_JOIN ,TOKEN_FULL          ,TOKEN_OUTER    ,TOKEN_JOIN     };
@@ -573,7 +575,7 @@ int process_queries(cursor_t *cursor,char *queries){
         token_t *token=&tokens->array[tokens->position];
         int message_len=strlen(token->value)+100;
         char *message=safe_malloc(message_len,1);
-        sprintf(message,"error: unknown text at position :%d %s >>> %s  <<< \n",tokens->position,token_type(token->type),token->value);
+        SPRINTF(message,"error: unknown text at position :%d %s >>> %s  <<< \n",tokens->position,token_type(token->type),token->value);
         error(cursor,ERR_UNKNOWN_SQL,message);
         token_print(tokens);
 
@@ -587,7 +589,6 @@ int process_queries(cursor_t *cursor,char *queries){
     //   in order until finished or an error occurs
     if(cursor->error==0) {
         command_t * tmp_ptr=commands;
-        command_t * tmp_ptr2;
         //doing this while no errors exist
         while(tmp_ptr){
             int res=0;
@@ -652,7 +653,13 @@ int process_queries(cursor_t *cursor,char *queries){
 
     cursor->parse_position=tokens->position;
     tokens_destroy(tokens);
-    clock_gettime(CLOCK_REALTIME,&cursor->ended);
+
+    #ifdef __linux__ 
+        clock_gettime(CLOCK_REALTIME, &cursor->ended);
+    #elif _WIN32
+        win_clock_gettime(&cursor->ended);
+    #endif
+
     
     if(cursor->error) {
        // free_table_def(cursor->tables);

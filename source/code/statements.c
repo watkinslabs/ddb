@@ -2,6 +2,7 @@
 #include "../include/structure.h"
 #include "../include/debug.h"
 #include "../include/queries.h"
+#include "../include/processing.h"
 #include "../include/free.h"
 #include <time.h>
 

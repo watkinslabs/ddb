@@ -1,8 +1,8 @@
-#include "structure.h"
 
 #if !defined(_QUERIES_EXPR_H_)
     #define _QUERIES_EXPR_H_ 1
-    
+    #include "structure.h"
+
     #define EXPRESSION_GROUP_BY 3
     #define EXPRESSION_ORDER_BY 4
     #define EXPRESSION_COLUMN   5

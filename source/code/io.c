@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../include/core.h"
 #include "../include/errors.h"
 #include "../include/debug.h"
 
@@ -13,7 +14,7 @@ char* read_file(char *file){
   char *buffer=0;
   long length=0;
 
-   if ((fptr = fopen(file,"r")) == NULL){
+   if ((fptr = FOPEN(file,"r")) == NULL){
        exit(ERR_FILE_OPEN_ERROR);
    }
     
@@ -21,10 +22,10 @@ char* read_file(char *file){
     fseek (fptr, 0, SEEK_END);
     length = ftell (fptr);
     fseek (fptr, 0, SEEK_SET);
-    buffer = malloc (length+1);
-    memset(buffer,0,length+1);
+    buffer = malloc(length + (long)1);
     if (buffer)    {
-      fread (buffer, 1, length, fptr);
+        memset(buffer, 0, length + (long)1);
+        fread (buffer, 1, length, fptr);
     } else {
       exit(ERR_MEMORY_ALLOCATION_ERR);
     }
