@@ -25,6 +25,7 @@
         #define STRCAT strcat
         #define ISATTY isatty
         #define ACCESS access
+        #include <unistd.h>
     #elif _WIN32
         // windows code goes here
         #define STRICMP _stricmp
