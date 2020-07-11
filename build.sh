@@ -9,7 +9,7 @@ SOURCE=builds/ddb.c
 
 
 echo '// ddb all in one source'>$SOURCE
-echo '#include "master.h"'>>$SOURCE
+echo '#include "../source/incude/master.h"'>>$SOURCE
 echo ''>>$SOURCE
 echo ''>>$SOURCE
 for x in $(find source/ |grep '\.c')
