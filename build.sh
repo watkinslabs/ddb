@@ -38,6 +38,6 @@ echo '// ddb all in one header'>$HEADER
  echo ''>>$HEADER
 
 # delete all local includes fomr this header... 
-#sed -i '/#include "/d'  $HEADER
+sed -i '/^#include "/d'  $HEADER
 
 sed -i '/#include </d'  $SOURCE
