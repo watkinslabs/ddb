@@ -847,8 +847,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
     if(e1->type==EVAL_STRING){
         int success=0;
         char *e2_str=0;
-        int e2_str_calc=0;
-
+        
         switch(e2->type){
             case EVAL_STRING : e2_str=e2->STRING_V; e2_str_calc=0; 
                                break;
