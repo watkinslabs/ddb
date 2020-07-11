@@ -46,7 +46,7 @@
         typedef unsigned long       DWORD;
 
         typedef struct _FILETIME {
-            DWORD dwLowDateTime;
+            DWORD dwLowDateTime; 
             DWORD dwHighDateTime;
         } FILETIME, * PFILETIME, * LPFILETIME;
         #define CLOCK_REALTIME 0
