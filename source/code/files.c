@@ -1,7 +1,6 @@
 #include "../include/files.h"
 #include "../include/errors.h"
 #include "../include/core.h"
-#include <stdio.h>
 
 range_t * get_line(char *data,long *position,long fsize) {
     if(*position>=fsize) {

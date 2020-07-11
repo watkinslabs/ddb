@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "../include/teleprompter.h"
 
 void show_usage(){
     printf("\n");

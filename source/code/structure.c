@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <string.h>
+
 #include "../include/structure.h"
 #include "../include/core.h"
 #include "../include/errors.h"

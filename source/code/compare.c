@@ -1,5 +1,4 @@
 #include "../include/structure.h"
-#include <string.h>
 
 long mycmp(const unsigned char *cmp1, const unsigned char *cmp2, unsigned long length) {
     if(length >= 4) {

@@ -3,8 +3,6 @@
 #include "../include/debug.h"
 #include "../include/queries.h"
 #include "../include/free.h"
-#include <time.h>
-#include <stdio.h>
 
 char *get_current_database(cursor_t *cursor){
     // always set.. defaults to "information_schema"

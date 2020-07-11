@@ -1,7 +1,4 @@
 // message output
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../include/errors.h"
 #include "../include/structure.h"
 #include "../include/debug.h"

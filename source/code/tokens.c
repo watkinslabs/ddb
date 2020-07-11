@@ -1,7 +1,3 @@
-#include <limits.h> 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <string.h> 
 #include "../include/errors.h"
 #include "../include/tokens.h"
 #include "../include/debug.h"

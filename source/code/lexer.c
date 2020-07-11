@@ -1,8 +1,3 @@
-#include <ctype.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
 
 #include "../include/free.h"
 #include "../include/core.h"

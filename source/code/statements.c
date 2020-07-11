@@ -4,7 +4,7 @@
 #include "../include/queries.h"
 #include "../include/processing.h"
 #include "../include/free.h"
-#include <time.h>
+
 
 
 /* Function: process_select

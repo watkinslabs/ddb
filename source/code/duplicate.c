@@ -4,7 +4,6 @@
 #include "../include/queries.h"
 #include "../include/free.h"
 #include "../include/core.h"
-#include <stdio.h>
 
 /* Function: duplicate_token
  * -----------------------

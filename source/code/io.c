@@ -1,7 +1,4 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../include/core.h"
 #include "../include/errors.h"
 #include "../include/debug.h"

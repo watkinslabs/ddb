@@ -1,15 +1,4 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-//#include <unistd.h>
-//#include <sys/socket.h>
-//#include <sys/un.h>
-#include <math.h>
-#include <assert.h>
-//#include <unistd.h> 
-//#include <pthread.h> 
-
 #include "../include/errors.h"
 #include "../include/structure.h"
 #include "../include/debug.h"

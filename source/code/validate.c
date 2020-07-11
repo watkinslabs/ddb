@@ -4,8 +4,6 @@
 #include "../include/queries.h"
 #include "../include/free.h"
 #include "../include/core.h"
-#include <string.h>
-#include <stdio.h>
 //#include <io.h>
 
 
