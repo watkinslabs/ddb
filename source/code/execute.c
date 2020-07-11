@@ -847,7 +847,8 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
     if(e1->type==EVAL_STRING){
         int success=0;
         char *e2_str=0;
-        
+        int e2_str_calc=0;
+
         switch(e2->type){
             case EVAL_STRING : e2_str=e2->STRING_V; e2_str_calc=0; 
                                break;
@@ -881,7 +882,7 @@ int compare_expression_value(expression_value_t *e1,expression_value_t *e2,int c
                                     break;
         }
         //printf("compare %s-%s %d\n",e1->STRING_V,e2_str,success);
-        if(e2_str) free(e2_str);
+        if(e2_str_calc) free(e2_str);
 //        printf( "no match? string");
         return success;
     }
