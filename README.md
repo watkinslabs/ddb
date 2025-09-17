@@ -74,14 +74,15 @@
 
 ### Output Formats
 
-| Format | Extension | Use Case |
-|--------|-----------|----------|
-| Table | `.txt` | Console display (default) |
-| CSV | `.csv` | Spreadsheet import, data exchange |
-| JSON | `.json` | API responses, structured data |
-| JSONL | `.jsonl` | Streaming data, log processing |
-| YAML | `.yaml` | Configuration files, human-readable |
-| Excel | `.xlsx` | Business reports, presentations |
+| Format | Extension | Use Case | Compression |
+|--------|-----------|----------|-------------|
+| Table | `.txt` | Console display (default) | - |
+| CSV | `.csv` | Spreadsheet import, data exchange | ✅ |
+| JSON | `.json` | API responses, structured data | ✅ |
+| JSONL | `.jsonl` | Streaming data, log processing | ✅ |
+| YAML | `.yaml` | Configuration files, human-readable | ✅ |
+| Excel | `.xlsx` | Business reports, presentations | - |
+| Parquet | `.parquet` | Analytics, columnar storage | Built-in |
 
 ### Enterprise Features
 
@@ -247,17 +248,17 @@ ddb query "SELECT department, COUNT(*) as headcount, AVG(salary) as avg_pay FROM
   --output excel \
   --export department_report.xlsx
 
-# Export to JSON for APIs
-ddb query "SELECT * FROM sales WHERE amount > 1000" \
-  --file sales:./data/sales.jsonl \
-  --output json \
-  --export high_value_sales.json
+# Export to Parquet for analytics pipelines
+ddb query "SELECT * FROM transactions WHERE amount > 1000" \
+  --file transactions:./data/transactions.csv.gz \
+  --output parquet \
+  --export high_value_transactions.parquet
 
-# Pipeline integration with progress monitoring
+# Query compressed files directly
 ddb query "SELECT customer_id, SUM(amount) FROM sales GROUP BY customer_id" \
-  --file sales:./data/large_sales.csv \
-  --output csv \
-  --export customer_totals.csv \
+  --file sales:./data/sales.csv.gz \
+  --output json \
+  --export customer_totals.json \
   --verbose
 ```
 

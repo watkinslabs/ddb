@@ -8,6 +8,12 @@ import (
 	"io"
 	"strings"
 
+	"github.com/apache/arrow/go/v14/arrow"
+	"github.com/apache/arrow/go/v14/arrow/array"
+	"github.com/apache/arrow/go/v14/arrow/memory"
+	"github.com/apache/arrow/go/v14/parquet"
+	"github.com/apache/arrow/go/v14/parquet/compress"
+	"github.com/apache/arrow/go/v14/parquet/pqarrow"
 	"github.com/xuri/excelize/v2"
 	"gopkg.in/yaml.v3"
 )
@@ -477,6 +483,261 @@ func (e *ExcelExporter) FileExtension() string {
 	return ".xlsx"
 }
 
+// ParquetExporter exports results to Parquet format using Apache Arrow
+type ParquetExporter struct {
+	CompressionCodec string
+}
+
+func NewParquetExporter(compression string) *ParquetExporter {
+	// Validate compression type
+	switch strings.ToLower(compression) {
+	case "snappy", "gzip", "lz4", "zstd", "none":
+		return &ParquetExporter{CompressionCodec: strings.ToLower(compression)}
+	default:
+		return &ParquetExporter{CompressionCodec: "snappy"} // Default to Snappy
+	}
+}
+
+func (e *ParquetExporter) Export(writer io.Writer, resultSet types.ResultSet) error {
+	if len(resultSet.Rows) == 0 {
+		return fmt.Errorf("no data to export to Parquet")
+	}
+
+	// Create Arrow memory allocator
+	pool := memory.NewGoAllocator()
+
+	// Analyze data types from the first few rows
+	schema, err := e.inferSchema(resultSet, pool)
+	if err != nil {
+		return fmt.Errorf("failed to infer schema: %w", err)
+	}
+
+	// Create record batch
+	record, err := e.createRecord(resultSet, schema, pool)
+	if err != nil {
+		return fmt.Errorf("failed to create record: %w", err)
+	}
+	defer record.Release()
+
+	// Create Parquet writer properties with compression
+	var props *parquet.WriterProperties
+	switch e.CompressionCodec {
+	case "gzip":
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Gzip))
+	case "snappy":
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Snappy))
+	case "lz4":
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Lz4))
+	case "zstd":
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Zstd))
+	case "none":
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Uncompressed))
+	default:
+		props = parquet.NewWriterProperties(parquet.WithCompression(compress.Codecs.Snappy))
+	}
+
+	// Create Arrow writer properties
+	arrowProps := pqarrow.DefaultWriterProps()
+
+	// Write to Parquet
+	pqWriter, err := pqarrow.NewFileWriter(schema, writer, props, arrowProps)
+	if err != nil {
+		return fmt.Errorf("failed to create Parquet writer: %w", err)
+	}
+	defer pqWriter.Close()
+
+	if err := pqWriter.Write(record); err != nil {
+		return fmt.Errorf("failed to write record: %w", err)
+	}
+
+	return nil
+}
+
+func (e *ParquetExporter) inferSchema(resultSet types.ResultSet, pool memory.Allocator) (*arrow.Schema, error) {
+	fields := make([]arrow.Field, len(resultSet.Columns))
+	
+	for i, colName := range resultSet.Columns {
+		// Analyze the column data to determine the best Arrow type
+		dataType := e.inferColumnType(resultSet, colName)
+		fields[i] = arrow.Field{
+			Name: colName,
+			Type: dataType,
+		}
+	}
+
+	return arrow.NewSchema(fields, nil), nil
+}
+
+func (e *ParquetExporter) inferColumnType(resultSet types.ResultSet, colName string) arrow.DataType {
+	// Sample first few rows to infer type
+	sampleSize := 10
+	if len(resultSet.Rows) < sampleSize {
+		sampleSize = len(resultSet.Rows)
+	}
+
+	hasString := false
+	hasFloat := false
+	hasInt := false
+
+	for i := 0; i < sampleSize; i++ {
+		value, exists := resultSet.Rows[i][colName]
+		if !exists || value == nil {
+			continue
+		}
+
+		switch value.(type) {
+		case string:
+			hasString = true
+		case int, int32, int64:
+			hasInt = true
+		case float32, float64:
+			hasFloat = true
+		default:
+			// Try to parse as number
+			str := fmt.Sprintf("%v", value)
+			if strings.Contains(str, ".") {
+				hasFloat = true
+			} else {
+				// Try to determine if it's numeric
+				hasString = true
+			}
+		}
+	}
+
+	// Determine the most appropriate type
+	if hasString {
+		return arrow.BinaryTypes.String
+	} else if hasFloat {
+		return arrow.PrimitiveTypes.Float64
+	} else if hasInt {
+		return arrow.PrimitiveTypes.Int64
+	} else {
+		// Default to string for safety
+		return arrow.BinaryTypes.String
+	}
+}
+
+func (e *ParquetExporter) createRecord(resultSet types.ResultSet, schema *arrow.Schema, pool memory.Allocator) (arrow.Record, error) {
+	builders := make([]array.Builder, len(resultSet.Columns))
+	
+	// Create builders for each column
+	for i, field := range schema.Fields() {
+		switch field.Type.ID() {
+		case arrow.STRING:
+			builders[i] = array.NewStringBuilder(pool)
+		case arrow.FLOAT64:
+			builders[i] = array.NewFloat64Builder(pool)
+		case arrow.INT64:
+			builders[i] = array.NewInt64Builder(pool)
+		default:
+			builders[i] = array.NewStringBuilder(pool)
+		}
+	}
+
+	// Fill builders with data
+	for _, row := range resultSet.Rows {
+		for i, colName := range resultSet.Columns {
+			value, exists := row[colName]
+			
+			if !exists || value == nil {
+				builders[i].AppendNull()
+				continue
+			}
+
+			switch schema.Field(i).Type.ID() {
+			case arrow.STRING:
+				stringBuilder := builders[i].(*array.StringBuilder)
+				stringBuilder.Append(fmt.Sprintf("%v", value))
+				
+			case arrow.FLOAT64:
+				float64Builder := builders[i].(*array.Float64Builder)
+				switch v := value.(type) {
+				case float64:
+					float64Builder.Append(v)
+				case float32:
+					float64Builder.Append(float64(v))
+				case int:
+					float64Builder.Append(float64(v))
+				case int64:
+					float64Builder.Append(float64(v))
+				default:
+					// Try to parse as float
+					if floatVal, err := parseFloat(fmt.Sprintf("%v", value)); err == nil {
+						float64Builder.Append(floatVal)
+					} else {
+						float64Builder.AppendNull()
+					}
+				}
+				
+			case arrow.INT64:
+				int64Builder := builders[i].(*array.Int64Builder)
+				switch v := value.(type) {
+				case int64:
+					int64Builder.Append(v)
+				case int:
+					int64Builder.Append(int64(v))
+				case int32:
+					int64Builder.Append(int64(v))
+				default:
+					// Try to parse as int
+					if intVal, err := parseInt(fmt.Sprintf("%v", value)); err == nil {
+						int64Builder.Append(intVal)
+					} else {
+						int64Builder.AppendNull()
+					}
+				}
+				
+			default:
+				stringBuilder := builders[i].(*array.StringBuilder)
+				stringBuilder.Append(fmt.Sprintf("%v", value))
+			}
+		}
+	}
+
+	// Build arrays
+	arrays := make([]arrow.Array, len(builders))
+	for i, builder := range builders {
+		arrays[i] = builder.NewArray()
+		defer arrays[i].Release()
+	}
+
+	// Create record
+	return array.NewRecord(schema, arrays, int64(len(resultSet.Rows))), nil
+}
+
+// Helper functions for type conversion
+func parseFloat(s string) (float64, error) {
+	if s == "" {
+		return 0, fmt.Errorf("empty string")
+	}
+	var f float64
+	n, err := fmt.Sscanf(s, "%f", &f)
+	if err != nil || n != 1 {
+		return 0, fmt.Errorf("invalid float: %s", s)
+	}
+	return f, nil
+}
+
+func parseInt(s string) (int64, error) {
+	if s == "" {
+		return 0, fmt.Errorf("empty string")
+	}
+	var i int64
+	n, err := fmt.Sscanf(s, "%d", &i)
+	if err != nil || n != 1 {
+		return 0, fmt.Errorf("invalid integer: %s", s)
+	}
+	return i, nil
+}
+
+func (e *ParquetExporter) ContentType() string {
+	return "application/octet-stream"
+}
+
+func (e *ParquetExporter) FileExtension() string {
+	return ".parquet"
+}
+
 // GetExporter returns an exporter for the specified format
 func GetExporter(format string, options map[string]interface{}) (Exporter, error) {
 	switch strings.ToLower(format) {
@@ -509,6 +770,13 @@ func GetExporter(format string, options map[string]interface{}) (Exporter, error
 			sheetName = s
 		}
 		return NewExcelExporter(sheetName), nil
+
+	case "parquet":
+		compression := "snappy"
+		if c, ok := options["compression"].(string); ok {
+			compression = c
+		}
+		return NewParquetExporter(compression), nil
 
 	default:
 		return nil, fmt.Errorf("unsupported export format: %s", format)

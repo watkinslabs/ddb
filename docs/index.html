@@ -440,7 +440,7 @@
                 <p class="subtitle">Enterprise SQL Engine for File-Based Analytics</p>
                 <div class="header-badges">
                     <span class="badge">46 Tests Passing</span>
-                    <span class="badge">6 Output Formats</span>
+                    <span class="badge">7 Output Formats</span>
                     <span class="badge">30+ SQL Functions</span>
                     <span class="badge">Enterprise Ready</span>
                 </div>
@@ -466,7 +466,7 @@
                     <div class="stat-label">Passing Tests</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">6</span>
+                    <span class="stat-number">7</span>
                     <div class="stat-label">Output Formats</div>
                 </div>
                 <div class="stat-card">
@@ -657,11 +657,17 @@ ddb query "SELECT department, COUNT(*) as headcount, AVG(salary) as avg_pay FROM
   --output excel \
   --export department_report.xlsx
 
-# Export to JSON for APIs
-ddb query "SELECT * FROM sales WHERE amount > 1000" \
-  --file sales:./sales.json \
+# Export to Parquet for analytics
+ddb query "SELECT * FROM transactions WHERE amount > 1000" \
+  --file transactions:./data.csv.gz \
+  --output parquet \
+  --export high_value_transactions.parquet
+
+# Query compressed files directly
+ddb query "SELECT customer, SUM(amount) FROM sales GROUP BY customer" \
+  --file sales:./sales.csv.gz \
   --output json \
-  --export high_value_sales.json</code></pre>
+  --export customer_totals.json</code></pre>
                     </div>
                 </div>
             </div>

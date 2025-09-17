@@ -1,0 +1,34 @@
+# Binaries and executables
+ddb
+ddb.exe
+*.exe
+
+# Test output and temporary files
+temp/
+*.tmp
+test_output/
+*_test.csv
+*_test.json
+*_test.xlsx
+*_test.parquet
+large_test.*
+test_progress.*
+high_earners.*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Go build files
+vendor/
+*.mod.sum.bak
+
+# Shell completion test files
+*_completion.*

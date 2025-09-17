@@ -63,17 +63,17 @@ func init() {
 	queryCmd.RegisterFlagCompletionFunc("config-dir", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return nil, cobra.ShellCompDirectiveFilterDirs
 	})
-	queryCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, csv, json, jsonl, yaml, excel)")
+	queryCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, csv, json, jsonl, yaml, excel, parquet)")
 	queryCmd.Flags().StringVarP(&exportFile, "export", "e", "", "Export results to file")
 	
 	// Add completions for output format
 	queryCmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{"table", "csv", "json", "jsonl", "yaml", "excel"}, cobra.ShellCompDirectiveNoFileComp
+		return []string{"table", "csv", "json", "jsonl", "yaml", "excel", "parquet"}, cobra.ShellCompDirectiveNoFileComp
 	})
 	
 	// Add completions for export file (suggest file extensions based on output format)
 	queryCmd.RegisterFlagCompletionFunc("export", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{".csv", ".json", ".jsonl", ".yaml", ".xlsx", ".txt"}, cobra.ShellCompDirectiveFilterFileExt
+		return []string{".csv", ".json", ".jsonl", ".yaml", ".xlsx", ".parquet", ".txt"}, cobra.ShellCompDirectiveFilterFileExt
 	})
 	queryCmd.Flags().StringArrayVarP(&inlineFiles, "file", "f", []string{}, "Inline file definition: table_name:/path/to/file.ext")
 	
@@ -243,9 +243,17 @@ func parseInlineFileSpec(spec string) (*types.TableConfig, error) {
 		return nil, fmt.Errorf("file not accessible: %w", err)
 	}
 	
-	// Detect format from file extension
+	// Detect format from file extension, handling compression
 	ext := strings.ToLower(filepath.Ext(filePath))
 	format := "csv" // default
+	
+	// Handle compressed files (.gz extension)
+	if ext == ".gz" {
+		// Get the extension before .gz
+		baseFile := strings.TrimSuffix(filePath, ext)
+		ext = strings.ToLower(filepath.Ext(baseFile))
+	}
+	
 	switch ext {
 	case ".json":
 		format = "json"

@@ -3,6 +3,7 @@ package parser
 import (
 	"ddb/pkg/types"
 	"bufio"
+	"compress/gzip"
 	"context"
 	"crypto/md5"
 	"encoding/json"
@@ -37,19 +38,28 @@ func (fr *FileReaderImpl) Read(ctx context.Context, reader io.Reader, config typ
 	go func() {
 		defer close(chunks)
 
+		// Check if the file is compressed and decompress if needed
+		decompressedReader, err := fr.decompressIfNeeded(reader, config.FilePath)
+		if err != nil {
+			// For compression errors, we'll let the individual format readers handle it
+			// by using the original reader and letting them fail naturally
+			decompressedReader = reader
+		}
+
 		switch strings.ToLower(config.Format) {
 		case "csv":
-			fr.readCSV(ctx, reader, config, chunks)
+			fr.readCSV(ctx, decompressedReader, config, chunks)
 		case "json":
-			fr.readJSON(ctx, reader, config, chunks)
+			fr.readJSON(ctx, decompressedReader, config, chunks)
 		case "jsonl", "json-lines":
-			fr.readJSONLines(ctx, reader, config, chunks)
+			fr.readJSONLines(ctx, decompressedReader, config, chunks)
 		case "yaml":
-			fr.readYAML(ctx, reader, config, chunks)
+			fr.readYAML(ctx, decompressedReader, config, chunks)
 		case "parquet":
+			// Parquet files handle compression internally, use original reader
 			fr.readParquet(ctx, reader, config, chunks)
 		default:
-			fr.readCSV(ctx, reader, config, chunks) // Default to CSV
+			fr.readCSV(ctx, decompressedReader, config, chunks) // Default to CSV
 		}
 	}()
 
@@ -311,6 +321,25 @@ func (fr *FileReaderImpl) convertValue(value string, dataType types.DataType) in
 		}
 	}
 	return value // Default to string
+}
+
+// decompressIfNeeded detects and decompresses compressed files
+func (fr *FileReaderImpl) decompressIfNeeded(reader io.Reader, filePath string) (io.Reader, error) {
+	// Check if file is gzipped based on extension
+	if strings.HasSuffix(strings.ToLower(filePath), ".gz") {
+		gzipReader, err := gzip.NewReader(reader)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create gzip reader: %w", err)
+		}
+		return gzipReader, nil
+	}
+
+	// For future: Add support for other compression formats
+	// if strings.HasSuffix(strings.ToLower(filePath), ".bz2") { ... }
+	// if strings.HasSuffix(strings.ToLower(filePath), ".xz") { ... }
+
+	// Return original reader if not compressed
+	return reader, nil
 }
 
 // Close cleans up resources
