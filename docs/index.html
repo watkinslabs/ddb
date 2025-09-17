@@ -440,9 +440,9 @@
                 <p class="subtitle">Enterprise SQL Engine for File-Based Analytics</p>
                 <div class="header-badges">
                     <span class="badge">46 Tests Passing</span>
-                    <span class="badge">5 File Formats</span>
+                    <span class="badge">6 Output Formats</span>
                     <span class="badge">30+ SQL Functions</span>
-                    <span class="badge">Production Ready</span>
+                    <span class="badge">Enterprise Ready</span>
                 </div>
                 <div class="cta-buttons">
                     <a href="#quick-start" class="btn btn-primary">Get Started</a>
@@ -466,8 +466,8 @@
                     <div class="stat-label">Passing Tests</div>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">5</span>
-                    <div class="stat-label">File Formats</div>
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">Output Formats</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-number">30+</span>
@@ -622,12 +622,15 @@ ddb query "
                 <div class="step-section">
                     <h3 class="step-title">1. Install DDB</h3>
                     <div class="code-example">
-                        <pre><code># Go Install
+                        <pre><code># Homebrew (Recommended)
+brew tap watkinslabs/ddb
+brew install ddb
+
+# Go Install
 go install github.com/watkinslabs/ddb@latest
 
-# Or download binary
-curl -L https://github.com/watkinslabs/ddb/releases/latest/download/ddb-linux-amd64 -o ddb
-chmod +x ddb</code></pre>
+# Enable shell completion
+source <(ddb completion bash)</code></pre>
                     </div>
                 </div>
 
@@ -648,11 +651,17 @@ ddb query "SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id
                 <div class="step-section">
                     <h3 class="step-title">3. Export Results</h3>
                     <div class="code-example">
-                        <pre><code># Export to JSON
-ddb query "SELECT department, COUNT(*) FROM employees GROUP BY department" \
+                        <pre><code># Export to Excel for business reports
+ddb query "SELECT department, COUNT(*) as headcount, AVG(salary) as avg_pay FROM employees GROUP BY department" \
   --file employees:./employees.csv \
+  --output excel \
+  --export department_report.xlsx
+
+# Export to JSON for APIs
+ddb query "SELECT * FROM sales WHERE amount > 1000" \
+  --file sales:./sales.json \
   --output json \
-  --export report.json</code></pre>
+  --export high_value_sales.json</code></pre>
                     </div>
                 </div>
             </div>

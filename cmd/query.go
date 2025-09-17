@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
 
@@ -57,9 +58,29 @@ var (
 
 func init() {
 	queryCmd.Flags().StringVarP(&configDir, "config-dir", "c", "", "Directory containing table configuration files")
-	queryCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, csv, json, jsonl, yaml)")
+	
+	// Add completions for config directory
+	queryCmd.RegisterFlagCompletionFunc("config-dir", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return nil, cobra.ShellCompDirectiveFilterDirs
+	})
+	queryCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format (table, csv, json, jsonl, yaml, excel)")
 	queryCmd.Flags().StringVarP(&exportFile, "export", "e", "", "Export results to file")
+	
+	// Add completions for output format
+	queryCmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"table", "csv", "json", "jsonl", "yaml", "excel"}, cobra.ShellCompDirectiveNoFileComp
+	})
+	
+	// Add completions for export file (suggest file extensions based on output format)
+	queryCmd.RegisterFlagCompletionFunc("export", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{".csv", ".json", ".jsonl", ".yaml", ".xlsx", ".txt"}, cobra.ShellCompDirectiveFilterFileExt
+	})
 	queryCmd.Flags().StringArrayVarP(&inlineFiles, "file", "f", []string{}, "Inline file definition: table_name:/path/to/file.ext")
+	
+	// Add completions for file flag (suggest data file extensions)
+	queryCmd.RegisterFlagCompletionFunc("file", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{".csv", ".json", ".jsonl", ".yaml", ".yml", ".parquet", ".tsv"}, cobra.ShellCompDirectiveFilterFileExt
+	})
 	queryCmd.Flags().IntVarP(&workers, "workers", "w", 0, "Number of worker threads (0 = auto-detect)")
 	queryCmd.Flags().IntVar(&chunkSize, "chunk-size", 1000, "Number of rows per chunk")
 	queryCmd.Flags().IntVar(&bufferSize, "buffer-size", 100, "Chunk buffer size")
@@ -113,6 +134,24 @@ func runQuery(cmd *cobra.Command, args []string) error {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.Join(names, ", "))
 	}
 
+	// Show progress bar for large files (only if not outputting to stdout)
+	var progressBar *progressbar.ProgressBar
+	if exportFile != "" && shouldShowProgress(tableConfigs) {
+		totalSize := calculateTotalSize(tableConfigs)
+		progressBar = progressbar.NewOptions64(totalSize,
+			progressbar.OptionSetDescription("Processing files..."),
+			progressbar.OptionSetWriter(os.Stderr),
+			progressbar.OptionShowBytes(true),
+			progressbar.OptionSetWidth(40),
+			progressbar.OptionThrottle(100*time.Millisecond),
+			progressbar.OptionShowCount(),
+			progressbar.OptionOnCompletion(func() {
+				fmt.Fprintf(os.Stderr, "\n")
+			}),
+		)
+		defer progressBar.Close()
+	}
+
 	// Create and execute query
 	executor := query.NewExecutor()
 	results, err := executor.Execute(ctx, sqlQuery, tableConfigs)
@@ -122,6 +161,19 @@ func runQuery(cmd *cobra.Command, args []string) error {
 
 	if verbose {
 		fmt.Fprintf(os.Stderr, "Query returned %d rows\n", results.Count)
+		fmt.Fprintf(os.Stderr, "Result columns: %s\n", strings.Join(results.Columns, ", "))
+		if len(results.Rows) > 0 {
+			fmt.Fprintf(os.Stderr, "Sample values from first row:\n")
+			for i, col := range results.Columns {
+				if i >= 3 { // Limit to first 3 columns to avoid clutter
+					fmt.Fprintf(os.Stderr, "  ... and %d more columns\n", len(results.Columns)-3)
+					break
+				}
+				if value, exists := results.Rows[0][col]; exists {
+					fmt.Fprintf(os.Stderr, "  %s: %v\n", col, value)
+				}
+			}
+		}
 	}
 
 	// Export results
@@ -145,7 +197,11 @@ func loadTableConfigurations() (map[string]*types.TableConfig, error) {
 			tableConfigs[config.Name] = config
 			
 			if verbose {
-				fmt.Fprintf(os.Stderr, "Loaded config for table '%s' from file '%s'\n", config.Name, config.FilePath)
+				fmt.Fprintf(os.Stderr, "Loaded config for table '%s' from file '%s' (format: %s)\n", config.Name, config.FilePath, config.Format)
+				if fileInfo, err := os.Stat(config.FilePath); err == nil {
+					fmt.Fprintf(os.Stderr, "  File size: %d bytes, Chunk size: %d, Workers: %d\n", 
+						fileInfo.Size(), config.ChunkSize, config.WorkerThreads)
+				}
 			}
 		}
 	}
@@ -162,7 +218,11 @@ func loadTableConfigurations() (map[string]*types.TableConfig, error) {
 		tableConfigs[config.Name] = config
 		
 		if verbose {
-			fmt.Fprintf(os.Stderr, "Created inline config for table '%s' from file '%s'\n", config.Name, config.FilePath)
+			fmt.Fprintf(os.Stderr, "Created inline config for table '%s' from file '%s' (format: %s)\n", config.Name, config.FilePath, config.Format)
+			if fileInfo, err := os.Stat(config.FilePath); err == nil {
+				fmt.Fprintf(os.Stderr, "  File size: %d bytes, Chunk size: %d, Workers: %d\n", 
+					fileInfo.Size(), config.ChunkSize, config.WorkerThreads)
+			}
 		}
 	}
 	
@@ -312,4 +372,22 @@ func exportResults(results types.ResultSet) error {
 	}
 	
 	return nil
+}
+
+// shouldShowProgress determines if we should show a progress bar
+func shouldShowProgress(tableConfigs map[string]*types.TableConfig) bool {
+	const minSizeForProgress = 1024 * 1024 // 1MB minimum
+	totalSize := calculateTotalSize(tableConfigs)
+	return totalSize > minSizeForProgress
+}
+
+// calculateTotalSize calculates the total size of all input files
+func calculateTotalSize(tableConfigs map[string]*types.TableConfig) int64 {
+	var totalSize int64
+	for _, config := range tableConfigs {
+		if fileInfo, err := os.Stat(config.FilePath); err == nil {
+			totalSize += fileInfo.Size()
+		}
+	}
+	return totalSize
 }

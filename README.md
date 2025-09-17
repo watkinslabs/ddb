@@ -72,6 +72,37 @@
 
 *⚠️ Limited parallel support due to format complexity*
 
+### Output Formats
+
+| Format | Extension | Use Case |
+|--------|-----------|----------|
+| Table | `.txt` | Console display (default) |
+| CSV | `.csv` | Spreadsheet import, data exchange |
+| JSON | `.json` | API responses, structured data |
+| JSONL | `.jsonl` | Streaming data, log processing |
+| YAML | `.yaml` | Configuration files, human-readable |
+| Excel | `.xlsx` | Business reports, presentations |
+
+### Enterprise Features
+
+#### 🚀 **Operational Excellence**
+- **Progress Indicators**: Visual progress bars for large file processing
+- **Verbose Mode**: Detailed execution information with `--verbose`
+- **Shell Completion**: Bash/Zsh/Fish autocomplete with smart suggestions
+- **Performance Monitoring**: Built-in query timing and resource usage
+
+#### 📦 **Distribution & Packaging**
+- **Homebrew Support**: `brew install watkinslabs/ddb/ddb`
+- **Docker Images**: Multi-arch containers for containerized environments
+- **Package Managers**: APT, YUM, Chocolatey, Scoop support planned
+- **Cross-Platform**: Native binaries for Linux, macOS, Windows
+
+#### 🔧 **Developer Experience**
+- **Rich CLI**: Comprehensive command-line interface with help system
+- **Configuration Files**: YAML-based configuration for complex setups
+- **Error Handling**: Clear error messages with context and suggestions
+- **Documentation**: Complete API docs with examples and tutorials
+
 ### Function Library
 
 #### String Functions
@@ -127,32 +158,44 @@ column IN (val1, val2)    -- Set membership
 
 ## Installation & Quick Start
 
-### Prerequisites
+### Quick Install
 
-- Go 1.21 or later
-- Operating System: Linux, macOS, Windows
+Choose your preferred installation method:
 
-### Installation Methods
-
-#### Option 1: Pre-built Binaries
+#### 🍺 Homebrew (macOS/Linux) - **Recommended**
 ```bash
-# Download latest release
-curl -L https://github.com/watkinslabs/ddb/releases/latest/download/ddb-linux-amd64 -o ddb
-chmod +x ddb
-sudo mv ddb /usr/local/bin/
+brew tap watkinslabs/ddb
+brew install ddb
+
+# Enable shell completion
+source <(ddb completion bash)  # or zsh/fish
 ```
 
-#### Option 2: Go Install
+#### 📦 Package Managers
 ```bash
+# Go Install
 go install github.com/watkinslabs/ddb@latest
+
+# Docker
+docker run --rm -v $(pwd):/data watkinslabs/ddb:latest query "SELECT * FROM data" --file data:/data/file.csv
 ```
 
-#### Option 3: Build from Source
+#### 💾 Direct Download
 ```bash
-git clone https://github.com/watkinslabs/ddb.git
-cd ddb
-go build -o ddb .
+# Linux AMD64
+curl -L https://github.com/watkinslabs/ddb/releases/latest/download/ddb-linux-amd64 -o ddb
+chmod +x ddb && sudo mv ddb /usr/local/bin/
+
+# macOS AMD64  
+curl -L https://github.com/watkinslabs/ddb/releases/latest/download/ddb-darwin-amd64 -o ddb
+chmod +x ddb && sudo mv ddb /usr/local/bin/
 ```
+
+> 📋 **Complete Installation Guide**: See [INSTALL.md](./INSTALL.md) for all installation methods including APT, YUM, Chocolatey, and more.
+
+### Prerequisites
+- Operating System: Linux, macOS, Windows
+- Go 1.21+ (only for building from source)
 
 ### Quick Start Examples
 
@@ -198,16 +241,43 @@ ddb query "
 
 #### Export & Integration
 ```bash
-# Export to different formats
+# Export to Excel for business reports
+ddb query "SELECT department, COUNT(*) as headcount, AVG(salary) as avg_pay FROM employees GROUP BY department" \
+  --file employees:./data/employees.csv \
+  --output excel \
+  --export department_report.xlsx
+
+# Export to JSON for APIs
 ddb query "SELECT * FROM sales WHERE amount > 1000" \
   --file sales:./data/sales.jsonl \
   --output json \
   --export high_value_sales.json
 
-# Pipeline integration
+# Pipeline integration with progress monitoring
 ddb query "SELECT customer_id, SUM(amount) FROM sales GROUP BY customer_id" \
-  --file sales:./data/sales.csv \
-  --output csv | sort -nr -t, -k2
+  --file sales:./data/large_sales.csv \
+  --output csv \
+  --export customer_totals.csv \
+  --verbose
+```
+
+#### Enterprise Operations
+```bash
+# Verbose mode for debugging and monitoring
+ddb query "SELECT * FROM big_data WHERE important_field IS NOT NULL" \
+  --file big_data:./data/massive.csv \
+  --verbose \
+  --chunk-size 5000 \
+  --workers 8
+
+# Progress indicators for large files (>1MB)
+ddb query "SELECT COUNT(*) FROM transactions" \
+  --file transactions:./data/2023_transactions.csv \
+  --export summary.json
+
+# Shell completion (after installation)
+ddb query "SELECT * FROM data" --file data:<TAB>  # Shows .csv, .json, etc.
+ddb query "SELECT * FROM data" --output <TAB>     # Shows table, csv, json, excel, etc.
 ```
 
 ## Configuration Management

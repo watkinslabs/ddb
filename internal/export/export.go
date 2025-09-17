@@ -8,6 +8,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/xuri/excelize/v2"
 	"gopkg.in/yaml.v3"
 )
 
@@ -295,6 +296,187 @@ func (e *TableExporter) FileExtension() string {
 	return ".txt"
 }
 
+// ExcelExporter exports results to Excel format
+type ExcelExporter struct {
+	SheetName string
+}
+
+func NewExcelExporter(sheetName string) *ExcelExporter {
+	if sheetName == "" {
+		sheetName = "Data"
+	}
+	return &ExcelExporter{SheetName: sheetName}
+}
+
+func (e *ExcelExporter) Export(writer io.Writer, resultSet types.ResultSet) error {
+	// Create a new Excel file
+	f := excelize.NewFile()
+	defer func() {
+		if err := f.Close(); err != nil {
+			fmt.Printf("Error closing Excel file: %v\n", err)
+		}
+	}()
+
+	// Create or use existing sheet
+	sheetIndex, err := f.NewSheet(e.SheetName)
+	if err != nil {
+		return fmt.Errorf("failed to create sheet: %w", err)
+	}
+	f.SetActiveSheet(sheetIndex)
+
+	// Delete default Sheet1 if we created a custom sheet
+	if e.SheetName != "Sheet1" {
+		err = f.DeleteSheet("Sheet1")
+		if err != nil {
+			return fmt.Errorf("failed to delete default sheet: %w", err)
+		}
+	}
+
+	// Set headers with styling
+	headerStyle, err := f.NewStyle(&excelize.Style{
+		Font: &excelize.Font{
+			Bold: true,
+			Size: 12,
+		},
+		Fill: excelize.Fill{
+			Type:    "pattern",
+			Color:   []string{"#E6E6FA"},
+			Pattern: 1,
+		},
+		Border: []excelize.Border{
+			{Type: "left", Color: "000000", Style: 1},
+			{Type: "top", Color: "000000", Style: 1},
+			{Type: "bottom", Color: "000000", Style: 1},
+			{Type: "right", Color: "000000", Style: 1},
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create header style: %w", err)
+	}
+
+	// Write headers
+	for i, col := range resultSet.Columns {
+		cellRef, err := excelize.CoordinatesToCellName(i+1, 1)
+		if err != nil {
+			return fmt.Errorf("failed to get cell reference for header: %w", err)
+		}
+		if err := f.SetCellValue(e.SheetName, cellRef, col); err != nil {
+			return fmt.Errorf("failed to set header cell: %w", err)
+		}
+		if err := f.SetCellStyle(e.SheetName, cellRef, cellRef, headerStyle); err != nil {
+			return fmt.Errorf("failed to set header style: %w", err)
+		}
+	}
+
+	// Create data style with borders
+	dataStyle, err := f.NewStyle(&excelize.Style{
+		Border: []excelize.Border{
+			{Type: "left", Color: "000000", Style: 1},
+			{Type: "top", Color: "000000", Style: 1},
+			{Type: "bottom", Color: "000000", Style: 1},
+			{Type: "right", Color: "000000", Style: 1},
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create data style: %w", err)
+	}
+
+	// Write data rows
+	for rowIdx, row := range resultSet.Rows {
+		for colIdx, col := range resultSet.Columns {
+			cellRef, err := excelize.CoordinatesToCellName(colIdx+1, rowIdx+2) // +2 because headers are in row 1
+			if err != nil {
+				return fmt.Errorf("failed to get cell reference for data: %w", err)
+			}
+			
+			var value interface{}
+			if v, exists := row[col]; exists {
+				value = v
+			} else {
+				value = ""
+			}
+			
+			if err := f.SetCellValue(e.SheetName, cellRef, value); err != nil {
+				return fmt.Errorf("failed to set data cell: %w", err)
+			}
+			if err := f.SetCellStyle(e.SheetName, cellRef, cellRef, dataStyle); err != nil {
+				return fmt.Errorf("failed to set data style: %w", err)
+			}
+		}
+	}
+
+	// Auto-adjust column widths
+	for i, col := range resultSet.Columns {
+		colName, err := excelize.ColumnNumberToName(i + 1)
+		if err != nil {
+			return fmt.Errorf("failed to get column name: %w", err)
+		}
+		
+		// Calculate optimal width based on header and data
+		maxWidth := float64(len(col))
+		for _, row := range resultSet.Rows {
+			if value, exists := row[col]; exists {
+				valueStr := fmt.Sprintf("%v", value)
+				if float64(len(valueStr)) > maxWidth {
+					maxWidth = float64(len(valueStr))
+				}
+			}
+		}
+		
+		// Set reasonable bounds for column width
+		if maxWidth < 8 {
+			maxWidth = 8
+		}
+		if maxWidth > 50 {
+			maxWidth = 50
+		}
+		
+		if err := f.SetColWidth(e.SheetName, colName, colName, maxWidth+1); err != nil {
+			return fmt.Errorf("failed to set column width: %w", err)
+		}
+	}
+
+	// Add a summary row with count
+	summaryRow := len(resultSet.Rows) + 3 // +3 for header + data + empty row
+	summaryCell, err := excelize.CoordinatesToCellName(1, summaryRow)
+	if err != nil {
+		return fmt.Errorf("failed to get summary cell reference: %w", err)
+	}
+	
+	summaryText := fmt.Sprintf("Total Rows: %d", resultSet.Count)
+	if err := f.SetCellValue(e.SheetName, summaryCell, summaryText); err != nil {
+		return fmt.Errorf("failed to set summary cell: %w", err)
+	}
+	
+	summaryStyle, err := f.NewStyle(&excelize.Style{
+		Font: &excelize.Font{
+			Bold: true,
+			Color: "666666",
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create summary style: %w", err)
+	}
+	if err := f.SetCellStyle(e.SheetName, summaryCell, summaryCell, summaryStyle); err != nil {
+		return fmt.Errorf("failed to set summary style: %w", err)
+	}
+
+	// Write to the provided writer
+	if err := f.Write(writer); err != nil {
+		return fmt.Errorf("failed to write Excel file: %w", err)
+	}
+
+	return nil
+}
+
+func (e *ExcelExporter) ContentType() string {
+	return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+}
+
+func (e *ExcelExporter) FileExtension() string {
+	return ".xlsx"
+}
+
 // GetExporter returns an exporter for the specified format
 func GetExporter(format string, options map[string]interface{}) (Exporter, error) {
 	switch strings.ToLower(format) {
@@ -320,6 +502,13 @@ func GetExporter(format string, options map[string]interface{}) (Exporter, error
 
 	case "table", "text":
 		return NewTableExporter(), nil
+
+	case "excel", "xlsx":
+		sheetName := "Data"
+		if s, ok := options["sheet"].(string); ok {
+			sheetName = s
+		}
+		return NewExcelExporter(sheetName), nil
 
 	default:
 		return nil, fmt.Errorf("unsupported export format: %s", format)
