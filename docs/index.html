@@ -304,11 +304,15 @@
             overflow-x: auto;
         }
 
+        .code-example pre {
+            margin: 0;
+        }
+        
         .code-example code {
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.875rem;
             line-height: 1.6;
-            white-space: pre-wrap;
+            white-space: pre;
             display: block;
         }
 
@@ -476,13 +480,11 @@
             </div>
 
             <div class="code-example">
-                <code># Query any file format with SQL
-
+                <pre><code># Query any file format with SQL
 ddb query "SELECT name, salary FROM employees WHERE salary > 80000" \
   --file employees:./data/employees.csv
 
 # Join across different formats
-
 ddb query "
   SELECT e.name, d.department_name, e.salary
   FROM employees e 
@@ -490,7 +492,7 @@ ddb query "
   WHERE e.salary > 75000
 " \
   --file employees:./data/employees.csv \
-  --file departments:./data/departments.json</code>
+  --file departments:./data/departments.json</code></pre>
             </div>
         </div>
     </section>
@@ -620,37 +622,37 @@ ddb query "
                 <div class="step-section">
                     <h3 class="step-title">1. Install DDB</h3>
                     <div class="code-example">
-                        <code># Go Install
+                        <pre><code># Go Install
 go install github.com/watkinslabs/ddb@latest
 
 # Or download binary
 curl -L https://github.com/watkinslabs/ddb/releases/latest/download/ddb-linux-amd64 -o ddb
-chmod +x ddb</code>
+chmod +x ddb</code></pre>
                     </div>
                 </div>
 
                 <div class="step-section">
                     <h3 class="step-title">2. Query Files</h3>
                     <div class="code-example">
-                        <code># Basic query
+                        <pre><code># Basic query
 ddb query "SELECT * FROM data WHERE amount > 1000" \
   --file data:./sales.csv
 
 # Multi-table join
 ddb query "SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id" \
   --file users:./users.csv \
-  --file orders:./orders.json</code>
+  --file orders:./orders.json</code></pre>
                     </div>
                 </div>
 
                 <div class="step-section">
                     <h3 class="step-title">3. Export Results</h3>
                     <div class="code-example">
-                        <code># Export to JSON
+                        <pre><code># Export to JSON
 ddb query "SELECT department, COUNT(*) FROM employees GROUP BY department" \
   --file employees:./employees.csv \
   --output json \
-  --export report.json</code>
+  --export report.json</code></pre>
                     </div>
                 </div>
             </div>
