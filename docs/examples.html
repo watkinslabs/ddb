@@ -208,6 +208,8 @@
                     </div>
                     
                     <div class="code-block"># Basic SELECT query
+
+
 ./ddb query "SELECT first_name, last_name, salary FROM employees WHERE salary > 70000" \
     --file employees:/data/employees.csv</div>
                     
@@ -237,6 +239,8 @@
                     </div>
                     
                     <div class="code-block"># Query JSON with filtering
+
+
 ./ddb query "SELECT name, price FROM products WHERE category = 'Electronics' AND price > 100" \
     --file products:/data/products.json</div>
                     
@@ -268,6 +272,7 @@
                     </div>
                     
                     <div class="code-block"># JOIN employees with departments
+
 ./ddb query "SELECT e.first_name, e.last_name, d.department_name, e.salary 
     FROM employees e 
     JOIN departments d ON e.department_id = d.department_id 
@@ -291,6 +296,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Complex JOIN with string functions and aliases
+
 ./ddb query "SELECT 
     UPPER(e.first_name) AS name,
     CONCAT(e.first_name, ' ', e.last_name) AS full_name,
@@ -322,6 +328,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># String functions showcase
+
 ./ddb query "SELECT 
     first_name,
     UPPER(first_name) AS upper_name,
@@ -350,6 +357,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Math functions for salary analysis
+
 ./ddb query "SELECT 
     first_name,
     salary,
@@ -382,6 +390,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Various LIKE pattern examples
+
 ./ddb query "SELECT first_name, last_name 
     FROM employees 
     WHERE first_name LIKE 'J%'    -- Starts with J
@@ -408,6 +417,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Handle NULL values with various approaches
+
 ./ddb query "SELECT 
     first_name,
     manager_id,
@@ -439,6 +449,7 @@
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Group employees by department
+
 ./ddb query "SELECT 
     d.department_name,
     COUNT(*) AS employee_count
@@ -478,6 +489,7 @@
                     </div>
                     
                     <div class="code-block"># Query JSONL sales data
+
 ./ddb query "SELECT 
     date,
     customer,
@@ -511,6 +523,7 @@ Jane Smith|jane@example.com|Canada|87</div>
                     </div>
                     
                     <div class="code-block"># Query pipe-separated values
+
 ./ddb query "SELECT name, country, score 
     FROM users 
     WHERE score > 90" \
@@ -528,6 +541,7 @@ Jane Smith|jane@example.com|Canada|87</div>
                 <p>When dealing with large files (> 100MB), use parallel processing for better performance:</p>
                 
                 <div class="code-block"># Process large CSV with parallel workers
+
 ./ddb query "SELECT customer_id, SUM(amount) as total 
     FROM large_transactions 
     WHERE transaction_date >= '2025-01-01' 
@@ -545,6 +559,7 @@ Jane Smith|jane@example.com|Canada|87</div>
                 <p>For memory-constrained environments, use smaller chunks:</p>
                 
                 <div class="code-block"># Memory-efficient processing
+
 ./ddb query "SELECT * FROM big_data WHERE important_field IS NOT NULL" \
     --file big_data:/data/massive.csv \
     --chunk-size 500 \
@@ -563,6 +578,7 @@ Jane Smith|jane@example.com|Canada|87</div>
                 </div>
                 <div class="example-body">
                     <div class="code-block"># Export to JSON
+
 ./ddb query "SELECT first_name, salary FROM employees WHERE salary > 80000" \
     --file employees:/data/employees.csv \
     --output json \

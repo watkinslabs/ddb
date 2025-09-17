@@ -249,6 +249,33 @@
             box-shadow: 0 8px 24px rgba(15, 98, 254, 0.1);
         }
 
+        /* Quick Start Steps */
+        .quick-start-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .step-section {
+            padding: 2rem;
+            border: 1px solid var(--ibm-gray-200);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .step-section:hover {
+            border-color: var(--ibm-blue);
+            box-shadow: 0 4px 12px rgba(15, 98, 254, 0.1);
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--ibm-blue);
+        }
+
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
@@ -448,10 +475,12 @@
 
             <div class="code-example">
                 <code># Query any file format with SQL
+
 ddb query "SELECT name, salary FROM employees WHERE salary > 80000" \
   --file employees:./data/employees.csv
 
 # Join across different formats
+
 ddb query "
   SELECT e.name, d.department_name, e.salary
   FROM employees e 
@@ -585,9 +614,9 @@ ddb query "
                 <p class="section-subtitle">Get started with DDB in minutes</p>
             </div>
 
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3 class="feature-title">1. Install</h3>
+            <div class="quick-start-steps">
+                <div class="step-section">
+                    <h3 class="step-title">1. Install DDB</h3>
                     <div class="code-example">
                         <code># Go Install
 go install github.com/watkinslabs/ddb@latest
@@ -598,8 +627,8 @@ chmod +x ddb</code>
                     </div>
                 </div>
 
-                <div class="feature-card">
-                    <h3 class="feature-title">2. Query Files</h3>
+                <div class="step-section">
+                    <h3 class="step-title">2. Query Files</h3>
                     <div class="code-example">
                         <code># Basic query
 ddb query "SELECT * FROM data WHERE amount > 1000" \
@@ -612,8 +641,8 @@ ddb query "SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id
                     </div>
                 </div>
 
-                <div class="feature-card">
-                    <h3 class="feature-title">3. Export Results</h3>
+                <div class="step-section">
+                    <h3 class="step-title">3. Export Results</h3>
                     <div class="code-example">
                         <code># Export to JSON
 ddb query "SELECT department, COUNT(*) FROM employees GROUP BY department" \
