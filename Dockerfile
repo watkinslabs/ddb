@@ -73,7 +73,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD ["/usr/local/bin/ddb", "version"]
 
 # Labels for metadata
-LABEL maintainer="Charles Watkins <charles@watkinslabs.com>"
+LABEL maintainer="Chris Watkins <chris@watkinslabs.com>"
 LABEL org.opencontainers.image.title="DDB: Enterprise SQL Engine for File-Based Analytics"
 LABEL org.opencontainers.image.description="High-performance, stateless SQL engine for querying CSV, JSON, JSONL, YAML, and Parquet files"
 LABEL org.opencontainers.image.version="${VERSION}"

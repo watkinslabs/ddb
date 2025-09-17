@@ -10,8 +10,8 @@ highlighter: rouge
 theme: minima
 
 # GitHub Pages settings
-github_username: yourusername
-repository: agent-ddb
+github_username: watkinslabs
+repository: ddb
 
 # Custom settings
 show_downloads: true

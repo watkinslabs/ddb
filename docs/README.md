@@ -46,7 +46,7 @@ The site is built as static HTML and can be deployed directly to GitHub Pages:
 1. **Enable GitHub Pages** in your repository settings
 2. **Set source** to "Deploy from a branch" 
 3. **Select branch** `main` and folder `/docs`
-4. **Access your site** at `https://yourusername.github.io/ddb/`
+4. **Access your site** at `https://watkinslabs.github.io/ddb/`
 
 ### Option 2: Jekyll Integration
 The site includes Jekyll configuration for enhanced GitHub Pages features:
@@ -60,7 +60,7 @@ The site includes Jekyll configuration for enhanced GitHub Pages features:
 ### Update Repository Information
 Edit `docs/_config.yml`:
 ```yaml
-github_username: yourusername
+github_username: watkinslabs
 repository: ddb
 title: Your Project Name
 description: Your project description

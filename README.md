@@ -681,11 +681,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: https://watkinslabs.github.io/ddb/
 - **Issues**: https://github.com/watkinslabs/ddb/issues
 - **Discussions**: https://github.com/watkinslabs/ddb/discussions
-- **Email**: [charles@watkinslabs.com](mailto:charles@watkinslabs.com)
+- **Email**: [chris@watkinslabs.com](mailto:chris@watkinslabs.com)
 
 ## Authors
 
-**Charles Watkins** - *Initial work* - [Watkins Labs](https://github.com/watkinslabs)
+**Chris Watkins** - *Initial work* - [Watkins Labs](https://github.com/watkinslabs)
 
 ## Acknowledgments
 
