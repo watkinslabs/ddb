@@ -1,0 +1,6 @@
+id,name,description,url
+1,"John Doe","A person with, commas in description","https://example.com"
+2,"Jane ""Quotes"" Smith","Person with quotes","http://test.com"
+3,Bob Johnson,Simple person,https://simple.com
+4,"Alice Brown","Line with
+newlines","https://multi-line.com"

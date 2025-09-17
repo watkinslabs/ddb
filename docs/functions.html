@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Functions Reference - DDB</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .section {
+            background: white;
+            margin: 2rem 0;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+        
+        .function-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        
+        .function-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .function-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .function-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .function-body {
+            padding: 1.5rem;
+        }
+        
+        .function-syntax {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+        }
+        
+        .function-example {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .function-example h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .function-args {
+            margin: 1rem 0;
+        }
+        
+        .function-args h4 {
+            color: #764ba2;
+            margin-bottom: 0.5rem;
+        }
+        
+        .arg-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+        
+        .arg-list li {
+            margin: 0.5rem 0;
+            padding: 0.25rem 0;
+        }
+        
+        .arg-name {
+            font-weight: bold;
+            color: #667eea;
+            font-family: monospace;
+        }
+        
+        .pattern-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .pattern-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1rem;
+        }
+        
+        .pattern-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pattern-example {
+            font-family: monospace;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 3px;
+            margin: 0.5rem 0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 2rem 0;
+            transition: background 0.3s;
+        }
+        
+        .back-link:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>SQL Functions Reference</h1>
+            <p>Complete guide to all 30+ built-in functions</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <a href="index.html">← Back to Main Documentation</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h2>🔤 String Functions</h2>
+            
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">UPPER(string)</div>
+                    <div class="function-desc">Converts a string to uppercase</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">UPPER(expression)</div>
+                    <div class="function-args">
+                        <h4>Parameters:</h4>
+                        <ul class="arg-list">
+                            <li><span class="arg-name">expression</span> - String expression to convert</li>
+                        </ul>
+                    </div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>SELECT UPPER(first_name) FROM employees</code><br>
+                        <code>"john" → "JOHN"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">LOWER(string)</div>
+                    <div class="function-desc">Converts a string to lowercase</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">LOWER(expression)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>SELECT LOWER(last_name) FROM employees</code><br>
+                        <code>"SMITH" → "smith"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">LENGTH(string) / LEN(string)</div>
+                    <div class="function-desc">Returns the length of a string</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">LENGTH(expression)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>SELECT LENGTH(email) FROM users</code><br>
+                        <code>"user@example.com" → 16</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">SUBSTR(string, start, length) / SUBSTRING(string, start, length)</div>
+                    <div class="function-desc">Extracts a substring from a string (1-based indexing)</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">SUBSTR(expression, start_position, [length])</div>
+                    <div class="function-args">
+                        <h4>Parameters:</h4>
+                        <ul class="arg-list">
+                            <li><span class="arg-name">expression</span> - Source string</li>
+                            <li><span class="arg-name">start_position</span> - Starting position (1-based)</li>
+                            <li><span class="arg-name">length</span> - Optional length to extract</li>
+                        </ul>
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>SUBSTR("Hello World", 1, 5) → "Hello"</code><br>
+                        <code>SUBSTR("Hello World", 7) → "World"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">CONCAT(string1, string2, ...)</div>
+                    <div class="function-desc">Concatenates multiple strings together</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">CONCAT(expression1, expression2, [expression3, ...])</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM employees</code><br>
+                        <code>CONCAT("John", " ", "Doe") → "John Doe"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">TRIM(string) / LTRIM(string) / RTRIM(string)</div>
+                    <div class="function-desc">Removes whitespace from strings</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        TRIM(expression)    -- Remove leading and trailing spaces<br>
+                        LTRIM(expression)   -- Remove leading spaces<br>
+                        RTRIM(expression)   -- Remove trailing spaces
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>TRIM("  hello  ") → "hello"</code><br>
+                        <code>LTRIM("  hello  ") → "hello  "</code><br>
+                        <code>RTRIM("  hello  ") → "  hello"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">LEFT(string, length) / RIGHT(string, length)</div>
+                    <div class="function-desc">Extract characters from left or right side of string</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        LEFT(expression, length)<br>
+                        RIGHT(expression, length)
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>LEFT("Hello World", 5) → "Hello"</code><br>
+                        <code>RIGHT("Hello World", 5) → "World"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">REPLACE(string, old_string, new_string)</div>
+                    <div class="function-desc">Replace all occurrences of a substring</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">REPLACE(expression, old_value, new_value)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>REPLACE("Hello World", "World", "Universe") → "Hello Universe"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">REVERSE(string)</div>
+                    <div class="function-desc">Reverses the characters in a string</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">REVERSE(expression)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>REVERSE("Hello") → "olleH"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">REPEAT(string, count)</div>
+                    <div class="function-desc">Repeats a string a specified number of times</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">REPEAT(expression, count)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>REPEAT("Ha", 3) → "HaHaHa"</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔢 Math Functions</h2>
+            
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">ABS(number)</div>
+                    <div class="function-desc">Returns the absolute value of a number</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">ABS(expression)</div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>ABS(-5) → 5</code><br>
+                        <code>ABS(3.14) → 3.14</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">ROUND(number, precision)</div>
+                    <div class="function-desc">Rounds a number to specified precision</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">ROUND(expression, [precision])</div>
+                    <div class="function-args">
+                        <h4>Parameters:</h4>
+                        <ul class="arg-list">
+                            <li><span class="arg-name">expression</span> - Number to round</li>
+                            <li><span class="arg-name">precision</span> - Optional decimal places (default: 0)</li>
+                        </ul>
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>ROUND(3.14159) → 3</code><br>
+                        <code>ROUND(3.14159, 2) → 3.14</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">FLOOR(number) / CEIL(number)</div>
+                    <div class="function-desc">Round down or up to nearest integer</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        FLOOR(expression)   -- Round down<br>
+                        CEIL(expression)    -- Round up<br>
+                        CEILING(expression) -- Round up (alias)
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>FLOOR(3.7) → 3</code><br>
+                        <code>CEIL(3.2) → 4</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">MOD(dividend, divisor) / MODULO(dividend, divisor)</div>
+                    <div class="function-desc">Returns the remainder of division</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">MOD(expression1, expression2)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>MOD(10, 3) → 1</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">POWER(base, exponent) / POW(base, exponent)</div>
+                    <div class="function-desc">Raises a number to a power</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">POWER(base, exponent)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>POWER(2, 3) → 8</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">SQRT(number)</div>
+                    <div class="function-desc">Returns the square root of a number</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">SQRT(expression)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>SQRT(16) → 4</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">SIGN(number)</div>
+                    <div class="function-desc">Returns the sign of a number (-1, 0, or 1)</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">SIGN(expression)</div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>SIGN(-5) → -1</code><br>
+                        <code>SIGN(0) → 0</code><br>
+                        <code>SIGN(3) → 1</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📅 Date/Time Functions</h2>
+            
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">NOW()</div>
+                    <div class="function-desc">Returns current date and time</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">NOW()</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>NOW() → "2025-09-17 15:30:45"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">DATE()</div>
+                    <div class="function-desc">Returns current date or extracts date from datetime</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        DATE()           -- Current date<br>
+                        DATE(expression) -- Extract date part
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>DATE() → "2025-09-17"</code><br>
+                        <code>DATE("2025-09-17 15:30:45") → "2025-09-17"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">YEAR(date) / MONTH(date) / DAY(date)</div>
+                    <div class="function-desc">Extract specific parts from a date</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        YEAR(expression)<br>
+                        MONTH(expression)<br>
+                        DAY(expression)
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>YEAR("2025-09-17") → 2025</code><br>
+                        <code>MONTH("2025-09-17") → 9</code><br>
+                        <code>DAY("2025-09-17") → 17</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🛠️ Utility Functions</h2>
+            
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">COALESCE(value1, value2, ...)</div>
+                    <div class="function-desc">Returns the first non-null/non-empty value</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">COALESCE(expression1, expression2, [expression3, ...])</div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>COALESCE(NULL, "", "default") → "default"</code><br>
+                        <code>COALESCE("", "John", "Anonymous") → "John"</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">ISNULL(value, default) / IFNULL(value, default)</div>
+                    <div class="function-desc">Returns default value if first value is null/empty</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">ISNULL(expression, default_value)</div>
+                    <div class="function-example">
+                        <h4>Example:</h4>
+                        <code>ISNULL(manager_id, "No Manager") → "No Manager" (if manager_id is empty)</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔍 Pattern Matching</h2>
+            
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">LIKE Pattern Matching</div>
+                    <div class="function-desc">Match strings using wildcards</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">column_name LIKE 'pattern'</div>
+                    <div class="function-args">
+                        <h4>Wildcards:</h4>
+                        <ul class="arg-list">
+                            <li><span class="arg-name">%</span> - Matches any sequence of characters (including zero)</li>
+                            <li><span class="arg-name">_</span> - Matches exactly one character</li>
+                        </ul>
+                    </div>
+                    <div class="pattern-examples">
+                        <div class="pattern-card">
+                            <div class="pattern-title">Starts With</div>
+                            <div class="pattern-example">name LIKE 'J%'</div>
+                            <div>Matches: "John", "Jane", "Jack"</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-title">Ends With</div>
+                            <div class="pattern-example">name LIKE '%son'</div>
+                            <div>Matches: "Johnson", "Anderson"</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-title">Contains</div>
+                            <div class="pattern-example">name LIKE '%an%'</div>
+                            <div>Matches: "Jane", "Diana", "Frank"</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-title">Single Character</div>
+                            <div class="pattern-example">name LIKE 'J_n%'</div>
+                            <div>Matches: "Jane", "June" but not "John"</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-title">Complex Pattern</div>
+                            <div class="pattern-example">email LIKE '%@gmail.%'</div>
+                            <div>Matches Gmail addresses</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-title">Multiple Wildcards</div>
+                            <div class="pattern-example">name LIKE '_a%e'</div>
+                            <div>Matches: "Jane", "Kate", "Dave"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <div class="function-header">
+                    <div class="function-name">NULL Testing</div>
+                    <div class="function-desc">Test for null or empty values</div>
+                </div>
+                <div class="function-body">
+                    <div class="function-syntax">
+                        column_name IS NULL<br>
+                        column_name IS NOT NULL
+                    </div>
+                    <div class="function-example">
+                        <h4>Examples:</h4>
+                        <code>SELECT * FROM employees WHERE manager_id IS NULL</code><br>
+                        <code>SELECT * FROM users WHERE email IS NOT NULL</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <a href="index.html" class="back-link">← Back to Main Documentation</a>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+name: "users"
+file_path: "./examples/users.csv"
+format: "csv"
+delimiter: ","
+has_header: true
+columns:
+  - name: "id"
+    type: "int"
+    index: 0
+    required: true
+  - name: "name"
+    type: "string"
+    index: 1
+    required: true
+  - name: "email"
+    type: "string"
+    index: 2
+    required: true
+  - name: "age"
+    type: "int"
+    index: 3
+    required: true
+  - name: "department"
+    type: "string"
+    index: 4
+    required: true
+
+# CSV-specific configuration
+quote: "\""
+escape: "\\"
+max_columns: 0          # 0 = unlimited
+trim_spaces: true
+allow_quoted: true
+strict_quotes: false
+skip_empty_lines: true
+
+# Performance configuration
+parallel_reading: false
+worker_threads: 2
+chunk_size: 1000
+buffer_size: 100

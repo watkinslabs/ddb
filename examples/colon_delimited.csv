@@ -1,0 +1,4 @@
+id:name:website
+1:John:https://example.com:8080/path?param=value
+2:Jane:http://test.com:3000/api/v1/users
+3:Bob:https://complex.site.com:9000/very/long/path?a=1&b=2

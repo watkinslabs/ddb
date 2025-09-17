@@ -1,0 +1,287 @@
+{
+    "flort.profiles": {
+        "Cherry Pick": {
+            "patterns": [
+                "*.*"
+            ],
+            "extensions": [],
+            "excludePatterns": [],
+            "excludeExtensions": [],
+            "ignoreDirs": [],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": true
+        },
+        "All Files": {
+            "patterns": [
+                "*.*"
+            ],
+            "extensions": [],
+            "excludePatterns": [
+                "*.log",
+                "*.tmp"
+            ],
+            "excludeExtensions": [
+                "log",
+                "tmp",
+                "cache"
+            ],
+            "ignoreDirs": [
+                "node_modules",
+                "__pycache__",
+                ".git",
+                ".svn",
+                "vendor",
+                "build",
+                "dist"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": true,
+            "all": true,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "Python": {
+            "patterns": [],
+            "extensions": [
+                "py"
+            ],
+            "excludePatterns": [
+                "__pycache__/*",
+                "*.pyc"
+            ],
+            "excludeExtensions": [
+                "pyc",
+                "pyo"
+            ],
+            "ignoreDirs": [
+                "__pycache__",
+                ".pytest_cache",
+                "venv",
+                ".venv",
+                "env",
+                ".env"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": true,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "JavaScript": {
+            "patterns": [],
+            "extensions": [
+                "js",
+                "ts",
+                "jsx",
+                "tsx",
+                "json"
+            ],
+            "excludePatterns": [
+                "node_modules/*",
+                "dist/*",
+                "build/*"
+            ],
+            "excludeExtensions": [
+                "min.js",
+                "bundle.js"
+            ],
+            "ignoreDirs": [
+                "node_modules",
+                "dist",
+                "build",
+                ".next",
+                "coverage"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "C": {
+            "patterns": [],
+            "extensions": [
+                "c",
+                "h"
+            ],
+            "excludePatterns": [
+                "*.o",
+                "*.obj",
+                "*.exe"
+            ],
+            "excludeExtensions": [
+                "o",
+                "obj",
+                "exe",
+                "dll",
+                "so"
+            ],
+            "ignoreDirs": [
+                "build",
+                "Debug",
+                "Release",
+                ".vs"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "C++": {
+            "patterns": [],
+            "extensions": [
+                "cpp",
+                "cc",
+                "cxx",
+                "hpp",
+                "h",
+                "hxx"
+            ],
+            "excludePatterns": [
+                "*.o",
+                "*.obj",
+                "*.exe"
+            ],
+            "excludeExtensions": [
+                "o",
+                "obj",
+                "exe",
+                "dll",
+                "so"
+            ],
+            "ignoreDirs": [
+                "build",
+                "Debug",
+                "Release",
+                ".vs",
+                "cmake-build-debug",
+                "cmake-build-release"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "PHP": {
+            "patterns": [],
+            "extensions": [
+                "php",
+                "phtml",
+                "php3",
+                "php4",
+                "php5"
+            ],
+            "excludePatterns": [
+                "vendor/*",
+                "cache/*"
+            ],
+            "excludeExtensions": [],
+            "ignoreDirs": [
+                "vendor",
+                "cache",
+                "storage/cache",
+                "bootstrap/cache"
+            ],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": false,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        },
+        "Markdown": {
+            "patterns": [],
+            "extensions": [
+                "md",
+                "markdown",
+                "mdown",
+                "mkd"
+            ],
+            "excludePatterns": [],
+            "excludeExtensions": [],
+            "ignoreDirs": [],
+            "manualFiles": [],
+            "debug": false,
+            "showConfig": false,
+            "hidden": false,
+            "all": false,
+            "includeBinary": false,
+            "noTree": true,
+            "outline": false,
+            "manifest": false,
+            "noDump": false,
+            "verbose": false,
+            "maxDepth": 0,
+            "archive": "",
+            "directoryScanOptional": false
+        }
+    },
+    "flort.currentProfile": "All Files"
+}

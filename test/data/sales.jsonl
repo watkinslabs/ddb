@@ -1,0 +1,8 @@
+{"sale_id": 1, "product_id": 1, "employee_id": 4, "quantity": 2, "sale_date": "2023-01-15", "amount": 2599.98}
+{"sale_id": 2, "product_id": 2, "employee_id": 4, "quantity": 10, "sale_date": "2023-01-20", "amount": 299.90}
+{"sale_id": 3, "product_id": 3, "employee_id": 9, "quantity": 1, "sale_date": "2023-02-01", "amount": 299.99}
+{"sale_id": 4, "product_id": 5, "employee_id": 4, "quantity": 3, "sale_date": "2023-02-10", "amount": 1349.97}
+{"sale_id": 5, "product_id": 4, "employee_id": 9, "quantity": 1, "sale_date": "2023-02-15", "amount": 599.99}
+{"sale_id": 6, "product_id": 1, "employee_id": 4, "quantity": 1, "sale_date": "2023-03-01", "amount": 1299.99}
+{"sale_id": 7, "product_id": 2, "employee_id": 10, "quantity": 25, "sale_date": "2023-03-05", "amount": 749.75}
+{"sale_id": 8, "product_id": 3, "employee_id": 9, "quantity": 2, "sale_date": "2023-03-10", "amount": 599.98}

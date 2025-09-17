@@ -1,0 +1,42 @@
+[
+  {
+    "product_id": 1,
+    "name": "Laptop Pro",
+    "category": "Electronics",
+    "price": 1299.99,
+    "stock": 25,
+    "supplier": "TechCorp"
+  },
+  {
+    "product_id": 2,
+    "name": "Wireless Mouse",
+    "category": "Electronics",
+    "price": 29.99,
+    "stock": 150,
+    "supplier": "AccessoryCo"
+  },
+  {
+    "product_id": 3,
+    "name": "Office Chair",
+    "category": "Furniture",
+    "price": 299.99,
+    "stock": 50,
+    "supplier": "FurniturePlus"
+  },
+  {
+    "product_id": 4,
+    "name": "Standing Desk",
+    "category": "Furniture", 
+    "price": 599.99,
+    "stock": 20,
+    "supplier": "FurniturePlus"
+  },
+  {
+    "product_id": 5,
+    "name": "Monitor 4K",
+    "category": "Electronics",
+    "price": 449.99,
+    "stock": 35,
+    "supplier": "TechCorp"
+  }
+]

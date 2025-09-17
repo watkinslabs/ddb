@@ -1,0 +1,5 @@
+department_id,department_name,location,budget
+1,Engineering,"San Francisco",2500000
+2,Marketing,"New York",1500000
+3,Sales,"Chicago",1800000
+4,HR,"Austin",800000

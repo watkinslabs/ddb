@@ -1,0 +1,11 @@
+columns:
+    - name
+    - price
+count: 3
+data:
+    - name: Standing Desk
+      price: 599.99
+    - name: Monitor 4K
+      price: 449.99
+    - name: Office Chair
+      price: 299.99

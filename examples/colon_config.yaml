@@ -1,0 +1,33 @@
+name: "colon_data"
+file_path: "./examples/colon_delimited.csv"
+format: "csv"
+delimiter: ":"
+has_header: true
+columns:
+  - name: "id"
+    type: "int"
+    index: 0
+    required: true
+  - name: "name"
+    type: "string"
+    index: 1
+    required: true
+  - name: "website"
+    type: "string"
+    index: 2
+    required: true
+
+# CSV-specific configuration  
+quote: "\""
+escape: "\\"
+max_columns: 3          # Limit to 3 columns - URL goes in last column
+trim_spaces: true
+allow_quoted: true
+strict_quotes: false
+skip_empty_lines: true
+
+# Performance configuration
+parallel_reading: false
+worker_threads: 2
+chunk_size: 1000
+buffer_size: 100

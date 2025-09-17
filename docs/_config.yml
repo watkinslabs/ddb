@@ -1,0 +1,42 @@
+# GitHub Pages configuration for Agent-DDB documentation
+title: Agent-DDB
+description: High-Performance Stateless SQL Engine for Text Files
+author: Agent-DDB Team
+email: contact@agent-ddb.com
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# GitHub Pages settings
+github_username: yourusername
+repository: agent-ddb
+
+# Custom settings
+show_downloads: true
+google_analytics: # Add your GA tracking ID here
+
+# Navigation
+nav_links:
+  - title: "Home"
+    url: "/agent-ddb/"
+  - title: "Functions Reference"
+    url: "/agent-ddb/functions.html"
+  - title: "Examples"
+    url: "/agent-ddb/examples.html"
+
+# SEO
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude files
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

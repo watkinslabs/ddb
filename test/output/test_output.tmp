@@ -1,0 +1,8 @@
++------------+--------------------+
+| first_name | project_name       |
++------------+--------------------+
+| John       | Website Redesign   |
+| Jane       | Marketing Campaign |
+| Frank      | Security Audit     |
++------------+--------------------+
+(3 rows)

@@ -1,0 +1,268 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  GO_VERSION: '1.21'
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Get version
+      id: get_version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.version }}
+        release_name: DDB ${{ steps.get_version.outputs.version }}
+        body: |
+          ## What's Changed
+          
+          ### Features
+          - High-performance SQL engine for file-based analytics
+          - Support for CSV, JSON, JSONL, YAML, and Parquet formats
+          - 30+ built-in SQL functions
+          - Parallel processing capabilities
+          - Memory-efficient streaming
+          
+          ### Supported Platforms
+          - Linux (x86_64, ARM64)
+          - macOS (Intel, Apple Silicon)
+          - Windows (x86_64)
+          
+          ### Installation
+          
+          #### Download Binary
+          Download the appropriate binary for your platform from the assets below.
+          
+          #### Go Install
+          ```bash
+          go install github.com/watkinslabs/ddb@${{ steps.get_version.outputs.version }}
+          ```
+          
+          #### Build from Source
+          ```bash
+          git clone https://github.com/watkinslabs/ddb.git
+          cd ddb
+          git checkout ${{ steps.get_version.outputs.version }}
+          go build -o ddb .
+          ```
+          
+          ### Quick Start
+          ```bash
+          # Query CSV file
+          ddb query "SELECT * FROM employees WHERE salary > 80000" --file employees:./data/employees.csv
+          
+          # Multi-format join
+          ddb query "SELECT e.name, d.department FROM employees e JOIN departments d ON e.dept_id = d.id" \
+            --file employees:./data/employees.csv \
+            --file departments:./data/departments.json
+          ```
+          
+          **Full Documentation**: https://watkinslabs.github.io/ddb/
+        draft: false
+        prerelease: false
+
+  build-and-upload:
+    name: Build and Upload Assets
+    needs: create-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+            goos: linux
+            goarch: amd64
+          - os: linux
+            arch: arm64
+            goos: linux
+            goarch: arm64
+          - os: darwin
+            arch: amd64
+            goos: darwin
+            goarch: amd64
+          - os: darwin
+            arch: arm64
+            goos: darwin
+            goarch: arm64
+          - os: windows
+            arch: amd64
+            goos: windows
+            goarch: amd64
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+    
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
+    
+    - name: Download dependencies
+      run: go mod download
+    
+    - name: Set build variables
+      run: |
+        echo "VERSION=${{ needs.create-release.outputs.version }}" >> $GITHUB_ENV
+        echo "COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+    
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+      run: |
+        binary_name="ddb-${{ matrix.os }}-${{ matrix.arch }}"
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          binary_name="${binary_name}.exe"
+        fi
+        
+        go build \
+          -ldflags="-X 'main.version=${{ env.VERSION }}' -X 'main.gitCommit=${{ env.COMMIT }}' -X 'main.buildDate=${{ env.DATE }}' -w -s" \
+          -o "$binary_name" \
+          .
+        
+        echo "BINARY_NAME=$binary_name" >> $GITHUB_ENV
+    
+    - name: Create checksum
+      run: |
+        if command -v sha256sum >/dev/null; then
+          sha256sum "${{ env.BINARY_NAME }}" > "${{ env.BINARY_NAME }}.sha256"
+        else
+          shasum -a 256 "${{ env.BINARY_NAME }}" > "${{ env.BINARY_NAME }}.sha256"
+        fi
+    
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ env.BINARY_NAME }}
+        asset_name: ${{ env.BINARY_NAME }}
+        asset_content_type: application/octet-stream
+    
+    - name: Upload Checksum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ env.BINARY_NAME }}.sha256
+        asset_name: ${{ env.BINARY_NAME }}.sha256
+        asset_content_type: text/plain
+
+  docker-build:
+    name: Build and Push Docker Image
+    needs: create-release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=tag
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          VERSION=${{ needs.create-release.outputs.version }}
+          COMMIT=${{ github.sha }}
+          DATE=${{ github.event.head_commit.timestamp }}
+
+  homebrew-update:
+    name: Update Homebrew Formula
+    needs: [create-release, build-and-upload]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Update Homebrew formula
+      uses: dawidd6/action-homebrew-bump-formula@v3
+      with:
+        token: ${{ secrets.HOMEBREW_TOKEN }}
+        formula: ddb
+        tag: ${{ needs.create-release.outputs.version }}
+        revision: ${{ github.sha }}
+        force: false
+
+  notify:
+    name: Notify Release
+    needs: [create-release, build-and-upload, docker-build]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify success
+      if: needs.build-and-upload.result == 'success' && needs.docker-build.result == 'success'
+      run: |
+        echo "🎉 Release ${{ needs.create-release.outputs.version }} completed successfully!"
+        echo "📦 Binaries uploaded for all platforms"
+        echo "🐳 Docker images pushed to registry"
+        echo "📖 Documentation: https://watkinslabs.github.io/ddb/"
+    
+    - name: Notify failure
+      if: needs.build-and-upload.result == 'failure' || needs.docker-build.result == 'failure'
+      run: |
+        echo "❌ Release ${{ needs.create-release.outputs.version }} failed"
+        echo "Check the workflow logs for details"
+        exit 1

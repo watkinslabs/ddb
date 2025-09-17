@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples & Tutorials - DDB</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .section {
+            background: white;
+            margin: 2rem 0;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section h3 {
+            font-size: 1.5rem;
+            color: #764ba2;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        .example-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .example-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .example-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .example-desc {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .example-body {
+            padding: 1.5rem;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .output-block {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+        }
+        
+        .scenario {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .scenario h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .data-sample {
+            background: #fffbf0;
+            border: 1px solid #ffd700;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .data-sample h4 {
+            color: #b7791f;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 2rem 0;
+            transition: background 0.3s;
+        }
+        
+        .back-link:hover {
+            background: #764ba2;
+        }
+        
+        .tip {
+            background: #e6f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .tip-title {
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Examples & Tutorials</h1>
+            <p>Learn DDB with real-world examples</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <a href="index.html">← Back to Main Documentation</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h2>🚀 Quick Start Examples</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Basic CSV Query</div>
+                    <div class="example-desc">Query a simple CSV file with employee data</div>
+                </div>
+                <div class="example-body">
+                    <div class="data-sample">
+                        <h4>Sample Data (employees.csv):</h4>
+                        <div class="code-block">id,first_name,last_name,salary,department_id
+1,John,Doe,75000,1
+2,Jane,Smith,85000,2
+3,Bob,Johnson,65000,1</div>
+                    </div>
+                    
+                    <div class="code-block"># Basic SELECT query
+./ddb query "SELECT first_name, last_name, salary FROM employees WHERE salary > 70000" \
+    --file employees:/data/employees.csv</div>
+                    
+                    <div class="output-block">+------------+-----------+--------+
+| first_name | last_name | salary |
++------------+-----------+--------+
+| John       | Doe       | 75000  |
+| Jane       | Smith     | 85000  |
++------------+-----------+--------+
+(2 rows)</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">JSON File Query</div>
+                    <div class="example-desc">Query JSON data with nested objects</div>
+                </div>
+                <div class="example-body">
+                    <div class="data-sample">
+                        <h4>Sample Data (products.json):</h4>
+                        <div class="code-block">[
+  {"name": "Laptop Pro", "price": 1299.99, "category": "Electronics"},
+  {"name": "Office Chair", "price": 299.99, "category": "Furniture"},
+  {"name": "Wireless Mouse", "price": 29.99, "category": "Electronics"}
+]</div>
+                    </div>
+                    
+                    <div class="code-block"># Query JSON with filtering
+./ddb query "SELECT name, price FROM products WHERE category = 'Electronics' AND price > 100" \
+    --file products:/data/products.json</div>
+                    
+                    <div class="output-block">+----------------+---------+
+| name           | price   |
++----------------+---------+
+| Laptop Pro     | 1299.99 |
++----------------+---------+
+(1 rows)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔗 JOIN Operations</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Multi-Table JOIN</div>
+                    <div class="example-desc">Join employees with departments to get readable department names</div>
+                </div>
+                <div class="example-body">
+                    <div class="data-sample">
+                        <h4>departments.csv:</h4>
+                        <div class="code-block">department_id,department_name,location
+1,Engineering,San Francisco
+2,Marketing,New York
+3,Sales,Chicago</div>
+                    </div>
+                    
+                    <div class="code-block"># JOIN employees with departments
+./ddb query "SELECT e.first_name, e.last_name, d.department_name, e.salary 
+    FROM employees e 
+    JOIN departments d ON e.department_id = d.department_id 
+    WHERE e.salary > 80000" \
+    --file employees:/data/employees.csv \
+    --file departments:/data/departments.csv</div>
+                    
+                    <div class="output-block">+------------+-----------+-----------------+--------+
+| first_name | last_name | department_name | salary |
++------------+-----------+-----------------+--------+
+| Jane       | Smith     | Marketing       | 85000  |
++------------+-----------+-----------------+--------+
+(1 rows)</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Complex JOIN with Functions</div>
+                    <div class="example-desc">Use functions and aliases in JOIN queries</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Complex JOIN with string functions and aliases
+./ddb query "SELECT 
+    UPPER(e.first_name) AS name,
+    CONCAT(e.first_name, ' ', e.last_name) AS full_name,
+    d.department_name AS dept,
+    ROUND(e.salary / 1000, 1) AS salary_k
+    FROM employees e 
+    JOIN departments d ON e.department_id = d.department_id 
+    WHERE UPPER(d.department_name) LIKE '%ENG%'" \
+    --file employees:/data/employees.csv \
+    --file departments:/data/departments.csv</div>
+                    
+                    <div class="output-block">+------+-----------+-------------+----------+
+| name | full_name | dept        | salary_k |
++------+-----------+-------------+----------+
+| JOHN | John Doe  | Engineering | 75.0     |
++------+-----------+-------------+----------+
+(1 rows)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🧮 Function Examples</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">String Manipulation</div>
+                    <div class="example-desc">Common string operations and transformations</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># String functions showcase
+./ddb query "SELECT 
+    first_name,
+    UPPER(first_name) AS upper_name,
+    LENGTH(first_name) AS name_length,
+    LEFT(first_name, 1) AS initial,
+    CONCAT(LEFT(first_name, 1), '.') AS abbrev,
+    REVERSE(first_name) AS reversed
+    FROM employees 
+    WHERE LENGTH(first_name) > 3" \
+    --file employees:/data/employees.csv</div>
+                    
+                    <div class="output-block">+------------+------------+-------------+---------+--------+----------+
+| first_name | upper_name | name_length | initial | abbrev | reversed |
++------------+------------+-------------+---------+--------+----------+
+| John       | JOHN       | 4           | J       | J.     | nhoJ     |
+| Jane       | JANE       | 4           | J       | J.     | enaJ     |
++------------+------------+-------------+---------+--------+----------+
+(2 rows)</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Mathematical Operations</div>
+                    <div class="example-desc">Perform calculations and math functions</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Math functions for salary analysis
+./ddb query "SELECT 
+    first_name,
+    salary,
+    ABS(salary - 75000) AS diff_from_avg,
+    ROUND(salary * 1.1, 0) AS with_10pct_raise,
+    FLOOR(salary / 1000) AS salary_k_floor,
+    POWER(2, 3) AS demo_power
+    FROM employees" \
+    --file employees:/data/employees.csv</div>
+                    
+                    <div class="output-block">+------------+--------+---------------+------------------+----------------+------------+
+| first_name | salary | diff_from_avg | with_10pct_raise | salary_k_floor | demo_power |
++------------+--------+---------------+------------------+----------------+------------+
+| John       | 75000  | 0             | 82500            | 75             | 8          |
+| Jane       | 85000  | 10000         | 93500            | 85             | 8          |
+| Bob        | 65000  | 10000         | 71500            | 65             | 8          |
++------------+--------+---------------+------------------+----------------+------------+
+(3 rows)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔍 Pattern Matching & Filtering</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">LIKE Pattern Matching</div>
+                    <div class="example-desc">Advanced pattern matching with wildcards</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Various LIKE pattern examples
+./ddb query "SELECT first_name, last_name 
+    FROM employees 
+    WHERE first_name LIKE 'J%'    -- Starts with J
+    OR last_name LIKE '%son'      -- Ends with 'son'
+    OR first_name LIKE '_a%'"     -- Second letter is 'a'
+    --file employees:/data/employees.csv</div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">Pattern Matching Tips:</div>
+                        <ul>
+                            <li><code>%</code> matches any number of characters (including zero)</li>
+                            <li><code>_</code> matches exactly one character</li>
+                            <li>LIKE is case-insensitive by default</li>
+                            <li>Combine patterns for complex matching</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">NULL Handling</div>
+                    <div class="example-desc">Working with missing or empty data</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Handle NULL values with various approaches
+./ddb query "SELECT 
+    first_name,
+    manager_id,
+    COALESCE(manager_id, 'No Manager') AS manager_status,
+    ISNULL(manager_id, 'Direct Report') AS report_type
+    FROM employees 
+    WHERE manager_id IS NULL OR manager_id IS NOT NULL" \
+    --file employees:/data/employees.csv</div>
+                    
+                    <div class="output-block">+------------+------------+----------------+---------------+
+| first_name | manager_id | manager_status | report_type   |
++------------+------------+----------------+---------------+
+| John       | 5          | 5              | 5             |
+| Jane       | 6          | 6              | 6             |
+| Charlie    |            | No Manager     | Direct Report |
++------------+------------+----------------+---------------+
+(3 rows)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📊 Aggregation & Grouping</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">GROUP BY Operations</div>
+                    <div class="example-desc">Group data and analyze patterns</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Group employees by department
+./ddb query "SELECT 
+    d.department_name,
+    COUNT(*) AS employee_count
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    GROUP BY d.department_name
+    ORDER BY employee_count DESC" \
+    --file employees:/data/employees.csv \
+    --file departments:/data/departments.csv</div>
+                    
+                    <div class="output-block">+-----------------+----------------+
+| department_name | employee_count |
++-----------------+----------------+
+| Engineering     | 4              |
+| Sales           | 3              |
+| Marketing       | 2              |
++-----------------+----------------+
+(3 rows)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📁 Multi-Format Data</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">JSON Lines (JSONL)</div>
+                    <div class="example-desc">Query streaming JSON data format</div>
+                </div>
+                <div class="example-body">
+                    <div class="data-sample">
+                        <h4>Sample Data (sales.jsonl):</h4>
+                        <div class="code-block">{"date": "2025-01-15", "amount": 1250.00, "customer": "Acme Corp"}
+{"date": "2025-01-16", "amount": 890.50, "customer": "Tech Solutions"}
+{"date": "2025-01-17", "amount": 2100.00, "customer": "Global Industries"}</div>
+                    </div>
+                    
+                    <div class="code-block"># Query JSONL sales data
+./ddb query "SELECT 
+    date,
+    customer,
+    amount,
+    ROUND(amount * 0.1, 2) AS commission
+    FROM sales 
+    WHERE amount > 1000" \
+    --file sales:/data/sales.jsonl</div>
+                    
+                    <div class="output-block">+------------+------------------+---------+------------+
+| date       | customer         | amount  | commission |
++------------+------------------+---------+------------+
+| 2025-01-15 | Acme Corp        | 1250    | 125.00     |
+| 2025-01-17 | Global Industries| 2100    | 210.00     |
++------------+------------------+---------+------------+
+(2 rows)</div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Custom CSV Delimiters</div>
+                    <div class="example-desc">Handle different CSV formats and delimiters</div>
+                </div>
+                <div class="example-body">
+                    <div class="data-sample">
+                        <h4>Sample Data (data.psv - pipe-separated):</h4>
+                        <div class="code-block">name|email|country|score
+John Doe|john@example.com|USA|95
+Jane Smith|jane@example.com|Canada|87</div>
+                    </div>
+                    
+                    <div class="code-block"># Query pipe-separated values
+./ddb query "SELECT name, country, score 
+    FROM users 
+    WHERE score > 90" \
+    --file users:/data/data.psv \
+    --delimiter "|"</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Performance Examples</h2>
+            
+            <div class="scenario">
+                <h4>Large File Processing</h4>
+                <p>When dealing with large files (> 100MB), use parallel processing for better performance:</p>
+                
+                <div class="code-block"># Process large CSV with parallel workers
+./ddb query "SELECT customer_id, SUM(amount) as total 
+    FROM large_transactions 
+    WHERE transaction_date >= '2025-01-01' 
+    GROUP BY customer_id 
+    ORDER BY total DESC 
+    LIMIT 10" \
+    --file large_transactions:/data/huge_file.csv \
+    --workers 8 \
+    --chunk-size 5000 \
+    --parallel</div>
+            </div>
+
+            <div class="scenario">
+                <h4>Memory-Efficient Configuration</h4>
+                <p>For memory-constrained environments, use smaller chunks:</p>
+                
+                <div class="code-block"># Memory-efficient processing
+./ddb query "SELECT * FROM big_data WHERE important_field IS NOT NULL" \
+    --file big_data:/data/massive.csv \
+    --chunk-size 500 \
+    --buffer-size 20 \
+    --workers 2</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📤 Output Formats</h2>
+            
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">Export to Different Formats</div>
+                    <div class="example-desc">Save query results in various formats</div>
+                </div>
+                <div class="example-body">
+                    <div class="code-block"># Export to JSON
+./ddb query "SELECT first_name, salary FROM employees WHERE salary > 80000" \
+    --file employees:/data/employees.csv \
+    --output json \
+    --export high_earners.json
+
+# Export to CSV
+./ddb query "SELECT department_name, COUNT(*) as count FROM..." \
+    --output csv \
+    --export department_summary.csv
+
+# Export to YAML
+./ddb query "SELECT name, price FROM products ORDER BY price DESC LIMIT 5" \
+    --file products:/data/products.json \
+    --output yaml \
+    --export top_products.yaml</div>
+                </div>
+            </div>
+        </section>
+
+        <a href="index.html" class="back-link">← Back to Main Documentation</a>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
