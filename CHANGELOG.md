@@ -22,21 +22,21 @@ SELECT COUNT(*) FROM benchmark_data WHERE region = 'West';
 -- Returns: 400673
 ```
 
-#### System Variables (@@VARIABLE Syntax)
-- Implemented MSSQL-style system variables with @@ prefix
+#### System Variables (`@@VARIABLE` Syntax)
+- Implemented MSSQL-style system variables with `@@` prefix
 - Created `SystemVariables` registry for managing system variables
-- Added lexer support for @@ prefix in identifiers
+- Added lexer support for `@@` prefix in identifiers
 - Added parser support for `Expression::SystemVariable` AST node
 - Added evaluator support for system variable evaluation
 - System variables work in both SELECT and WHERE clauses
 
 **Available System Variables**:
-- `@@VERSION` - DDB-Rust version number (0.1.0)
-- `@@DB_NAME` - Database name (DDB-Rust)
-- `@@DB_TYPE` - Database type (Flat File Database)
-- `@@ROWS_SCANNED` - Rows scanned placeholder (0)
-- `@@ROWS_RETURNED` - Rows returned placeholder (0)
-- `@@LAST_ERROR` - Last error placeholder (NULL)
+- `` `@@VERSION` `` - DDB-Rust version number (0.1.0)
+- `` `@@DB_NAME` `` - Database name (DDB-Rust)
+- `` `@@DB_TYPE` `` - Database type (Flat File Database)
+- `` `@@ROWS_SCANNED` `` - Rows scanned placeholder (0)
+- `` `@@ROWS_RETURNED` `` - Rows returned placeholder (0)
+- `` `@@LAST_ERROR` `` - Last error placeholder (NULL)
 
 **Examples**:
 ```sql
@@ -47,7 +47,7 @@ SELECT * FROM benchmark_data WHERE @@VERSION = '0.1.0';
 ### Changed
 
 #### Parser Improvements
-- Updated identifier parser to support @@ prefix
+- Updated identifier parser to support `@@` prefix
 - Enhanced expression evaluation to handle system variables
 - Improved column projection to recognize system variables
 
@@ -60,7 +60,7 @@ SELECT * FROM benchmark_data WHERE @@VERSION = '0.1.0';
 
 - **COUNT(*) Bug**: Fixed "Column not found: *" error when using COUNT(*)
 - **Aggregate Handling**: Proper separation of aggregate vs non-aggregate query execution
-- **System Variable Evaluation**: Correctly evaluate @@VARIABLE in SELECT and WHERE clauses
+- **System Variable Evaluation**: Correctly evaluate `@@VARIABLE` in SELECT and WHERE clauses
 
 ### Documentation
 
@@ -79,7 +79,7 @@ SELECT * FROM benchmark_data WHERE @@VERSION = '0.1.0';
 
 **Files Modified**:
 - `src/parser/ast.rs` - Added `SystemVariable` variant to Expression enum
-- `src/lexer/tokenizer.rs` - Added @@ support in `parse_identifier()`
+- `src/lexer/tokenizer.rs` - Added `@@` support in `parse_identifier()`
 - `src/parser/parser.rs` - Added system variable detection in `parse_primary_expression()`
 - `src/engine/evaluator.rs` - Added `SystemVariables` struct and `evaluate_system_variable()` method
 - `src/engine/executor.rs` - Fixed COUNT(*) handling, added system variable projection
@@ -123,10 +123,10 @@ System variables are opt-in and don't affect existing functionality.
 ### Future Enhancements
 
 Planned for future releases:
-1. Dynamic runtime variables (update @@ROWS_SCANNED after each query)
-2. Configuration variables (@@DELIMITER, @@DEFAULT_OUTPUT)
-3. Performance metrics variables (@@QUERY_TIME, @@MEMORY_USED)
-4. Session variables (user-defined @@ variables)
+1. Dynamic runtime variables (update `@@ROWS_SCANNED` after each query)
+2. Configuration variables (`@@DELIMITER`, `@@DEFAULT_OUTPUT`)
+3. Performance metrics variables (`@@QUERY_TIME`, `@@MEMORY_USED`)
+4. Session variables (user-defined `@@` variables)
 5. GROUP BY support for aggregate queries
 
 ### Testing
