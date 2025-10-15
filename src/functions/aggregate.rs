@@ -1,7 +1,11 @@
 // Aggregate functions (these operate on multiple rows)
 use super::Value;
 use crate::error::Result;
+use rayon::prelude::*;
 use std::collections::HashSet;
+
+/// Threshold for using parallel aggregation (1000 rows)
+const PARALLEL_THRESHOLD: usize = 1000;
 
 /// COUNT(*) / COUNT(expr) - Count rows or non-null values
 pub fn count(values: &[Value], count_nulls: bool) -> Result<Value> {
@@ -24,36 +28,73 @@ pub fn count_distinct(values: &[Value]) -> Result<Value> {
     Ok(Value::Integer(count as i64))
 }
 
-/// SUM(expr) - Sum of values
+/// SUM(expr) - Sum of values with automatic parallelization for large datasets
 pub fn sum(values: &[Value]) -> Result<Value> {
-    let mut int_sum: i64 = 0;
-    let mut float_sum: f64 = 0.0;
-    let mut has_float = false;
+    if values.len() >= PARALLEL_THRESHOLD {
+        // Parallel sum for large datasets
+        let (int_sum, float_sum, has_float) = values
+            .par_iter()
+            .filter(|v| !v.is_null())
+            .fold(
+                || (0i64, 0.0f64, false),
+                |(mut i_acc, mut f_acc, mut has_f), value| {
+                    match value {
+                        Value::Integer(i) => i_acc += i,
+                        Value::Float(f) => {
+                            f_acc += f;
+                            has_f = true;
+                        }
+                        _ => {
+                            if let Ok(f) = value.as_f64() {
+                                f_acc += f;
+                                has_f = true;
+                            }
+                        }
+                    }
+                    (i_acc, f_acc, has_f)
+                },
+            )
+            .reduce(
+                || (0i64, 0.0f64, false),
+                |(i1, f1, h1), (i2, f2, h2)| (i1 + i2, f1 + f2, h1 || h2),
+            );
 
-    for value in values {
-        if value.is_null() {
-            continue;
+        if has_float {
+            Ok(Value::Float(float_sum + int_sum as f64))
+        } else {
+            Ok(Value::Integer(int_sum))
         }
+    } else {
+        // Sequential sum for small datasets
+        let mut int_sum: i64 = 0;
+        let mut float_sum: f64 = 0.0;
+        let mut has_float = false;
 
-        match value {
-            Value::Integer(i) => int_sum += i,
-            Value::Float(f) => {
-                float_sum += f;
-                has_float = true;
+        for value in values {
+            if value.is_null() {
+                continue;
             }
-            _ => {
-                if let Ok(f) = value.as_f64() {
+
+            match value {
+                Value::Integer(i) => int_sum += i,
+                Value::Float(f) => {
                     float_sum += f;
                     has_float = true;
                 }
+                _ => {
+                    if let Ok(f) = value.as_f64() {
+                        float_sum += f;
+                        has_float = true;
+                    }
+                }
             }
         }
-    }
 
-    if has_float {
-        Ok(Value::Float(float_sum + int_sum as f64))
-    } else {
-        Ok(Value::Integer(int_sum))
+        if has_float {
+            Ok(Value::Float(float_sum + int_sum as f64))
+        } else {
+            Ok(Value::Integer(int_sum))
+        }
     }
 }
 
@@ -139,7 +180,7 @@ pub fn group_concat(values: &[Value], separator: Option<&str>) -> Result<Value> 
     Ok(Value::String(result.join(sep)))
 }
 
-/// STDDEV(expr) / STDDEV_POP(expr) - Standard deviation (population)
+/// STDDEV(expr) / STDDEV_POP(expr) - Standard deviation (population) with parallel support
 pub fn stddev_pop(values: &[Value]) -> Result<Value> {
     let non_null: Vec<_> = values.iter().filter(|v| !v.is_null()).collect();
 
@@ -154,25 +195,41 @@ pub fn stddev_pop(values: &[Value]) -> Result<Value> {
         _ => return Ok(Value::Null),
     };
 
-    // Calculate variance
-    let variance: f64 = non_null
-        .iter()
-        .map(|v| {
-            let val = match v {
-                Value::Integer(i) => *i as f64,
-                Value::Float(f) => *f,
-                _ => v.as_f64().unwrap_or(0.0),
-            };
-            let diff = val - mean;
-            diff * diff
-        })
-        .sum::<f64>()
-        / non_null.len() as f64;
+    // Calculate variance (parallelized for large datasets)
+    let variance: f64 = if non_null.len() >= PARALLEL_THRESHOLD {
+        non_null
+            .par_iter()
+            .map(|v| {
+                let val = match v {
+                    Value::Integer(i) => *i as f64,
+                    Value::Float(f) => *f,
+                    _ => v.as_f64().unwrap_or(0.0),
+                };
+                let diff = val - mean;
+                diff * diff
+            })
+            .sum::<f64>()
+            / non_null.len() as f64
+    } else {
+        non_null
+            .iter()
+            .map(|v| {
+                let val = match v {
+                    Value::Integer(i) => *i as f64,
+                    Value::Float(f) => *f,
+                    _ => v.as_f64().unwrap_or(0.0),
+                };
+                let diff = val - mean;
+                diff * diff
+            })
+            .sum::<f64>()
+            / non_null.len() as f64
+    };
 
     Ok(Value::Float(variance.sqrt()))
 }
 
-/// VARIANCE(expr) / VAR_POP(expr) - Variance (population)
+/// VARIANCE(expr) / VAR_POP(expr) - Variance (population) with parallel support
 pub fn var_pop(values: &[Value]) -> Result<Value> {
     let non_null: Vec<_> = values.iter().filter(|v| !v.is_null()).collect();
 
@@ -187,20 +244,36 @@ pub fn var_pop(values: &[Value]) -> Result<Value> {
         _ => return Ok(Value::Null),
     };
 
-    // Calculate variance
-    let variance: f64 = non_null
-        .iter()
-        .map(|v| {
-            let val = match v {
-                Value::Integer(i) => *i as f64,
-                Value::Float(f) => *f,
-                _ => v.as_f64().unwrap_or(0.0),
-            };
-            let diff = val - mean;
-            diff * diff
-        })
-        .sum::<f64>()
-        / non_null.len() as f64;
+    // Calculate variance (parallelized for large datasets)
+    let variance: f64 = if non_null.len() >= PARALLEL_THRESHOLD {
+        non_null
+            .par_iter()
+            .map(|v| {
+                let val = match v {
+                    Value::Integer(i) => *i as f64,
+                    Value::Float(f) => *f,
+                    _ => v.as_f64().unwrap_or(0.0),
+                };
+                let diff = val - mean;
+                diff * diff
+            })
+            .sum::<f64>()
+            / non_null.len() as f64
+    } else {
+        non_null
+            .iter()
+            .map(|v| {
+                let val = match v {
+                    Value::Integer(i) => *i as f64,
+                    Value::Float(f) => *f,
+                    _ => v.as_f64().unwrap_or(0.0),
+                };
+                let diff = val - mean;
+                diff * diff
+            })
+            .sum::<f64>()
+            / non_null.len() as f64
+    };
 
     Ok(Value::Float(variance))
 }

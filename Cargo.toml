@@ -52,6 +52,9 @@ env_logger = { version = "0.11", optional = true }
 # UUID generation
 uuid = { version = "1.6", features = ["v4", "serde"] }
 
+# Parallel processing
+rayon = "1.8"  # Data parallelism for aggregations
+
 # MCP (Model Context Protocol) support - using direct JSON-RPC implementation
 tokio = { version = "1.40", features = ["full"], optional = true }
 tracing = { version = "0.1", optional = true }
