@@ -75,6 +75,10 @@ required-features = ["cli"]
 name = "benchmarks"
 harness = false
 
+[[bench]]
+name = "concurrency_benchmark"
+harness = false
+
 [profile.release]
 opt-level = 3
 lto = true
