@@ -71,7 +71,7 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Version) => {
-            println!("DDB (Rust) version {}", VERSION);
+            println!("DDB v{}", VERSION);
             return;
         }
         Some(Commands::Interactive) => {

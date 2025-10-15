@@ -1,37 +1,54 @@
-# DDB-Rust
+# DDB
 
-A high-performance, secure Rust implementation of DDB (Delimited Database) - a serviceless SQL interface for flat files.
+A high-performance, secure serviceless SQL interface for flat files.
 
 ## Project Status
 
-This is an **in-progress** Rust port of the Python DDB project. The goal is to provide better performance, memory safety, and security while maintaining feature parity with the original.
+This is **DDB v2** - a complete rewrite in Rust. The goal is to provide better performance, memory safety, and security while maintaining the core functionality of querying delimited files with SQL.
 
 ### Current Implementation Status
 
-✅ **Completed:**
-- Project structure with Cargo workspace
-- Error handling with `thiserror`
-- SQL tokenizer/lexer with `nom` parser
-- Token types for all SQL keywords
-- Configuration structures (Database, Table, Column)
-- File I/O module with file locking (`fs2`)
-- Streaming line reader for memory-efficient processing
-- AST (Abstract Syntax Tree) definitions
-- CLI interface with `clap`
-- Benchmark suite with `criterion`
+✅ **Fully Implemented (v0.1.0):**
+- **SQL Query Support:**
+  - Complete SELECT statement implementation
+  - WHERE clause evaluation with complex conditions (AND, OR, comparison operators)
+  - ORDER BY (ASC/DESC, multiple columns)
+  - LIMIT and OFFSET
+  - DISTINCT
+  - Aggregate functions (COUNT, SUM, AVG, MIN, MAX, STDDEV, VARIANCE)
 
-🚧 **In Progress:**
-- SQL parser (tokens → AST)
-- Query execution engine
+- **101+ SQL Functions:**
+  - Math: ABS, ROUND, SQRT, POW, MOD, CEIL, FLOOR, etc.
+  - String: CONCAT, UPPER, LOWER, TRIM, SUBSTR, LENGTH, LIKE, etc.
+  - Date/Time: NOW, DATEDIFF, DATEADD, YEAR, MONTH, DAY, etc.
+  - Conditional: IF, IFNULL, COALESCE, CASE, NULLIF
+  - Utility: BASE64, HASH, REGEXP, SPLIT_PART, UUID, etc.
 
-📋 **Planned:**
-- WHERE clause evaluation
-- SELECT query implementation
-- INSERT/UPDATE/DELETE operations
-- SQL functions (database(), datetime(), count(), etc.)
-- Output formatters (JSON, YAML, XML, terminal tables)
+- **System Variables:**
+  - MSSQL-style `@@VARIABLE` syntax
+  - Variables: `@@VERSION`, `@@DB_NAME`, `@@DB_TYPE`, etc.
+
+- **Output Formats:**
+  - JSON, YAML, CSV, terminal tables
+
+- **Performance:**
+  - Streaming architecture (memory-efficient)
+  - Zero-copy parsing with `nom`
+  - LIKE pattern optimization (19.6x speedup)
+  - 2M row queries in ~4 seconds
+
+- **MCP Server:**
+  - Model Context Protocol integration for AI assistants
+  - 3 tools, 2 resources, 2 prompts
+  - Activated with `--mcp` flag
+
+📋 **Not Yet Implemented:**
+- INSERT, UPDATE, DELETE operations
+- CREATE TABLE, DROP TABLE statements
 - Transaction support (BEGIN, COMMIT, ROLLBACK)
-- ORDER BY, LIMIT, DISTINCT operations
+- JOIN operations (INNER, LEFT, RIGHT, FULL)
+- GROUP BY with HAVING clauses
+- Subqueries
 
 ## Features
 
@@ -99,9 +116,9 @@ cargo build --release
 ```
 
 The MCP server provides:
-- **6 Tools**: execute_query, list_tables, describe_table, query_file, get_functions, validate_query
-- **Dynamic Resources**: Configuration, table schemas, and SQL function documentation
-- **7 Prompts**: Intelligent templates for common SQL operations
+- **3 Tools**: execute_query, list_tables, describe_table
+- **2 Resource Types**: Configuration and table schemas
+- **2 Prompts**: Query generation and data analysis templates
 
 See [MCP_SERVER.md](MCP_SERVER.md) for complete documentation.
 
@@ -129,13 +146,12 @@ src/
 ├── output/             # Output formatters
 ├── mcp/                # Model Context Protocol server
 │   ├── mod.rs
-│   ├── server.rs       # MCP server implementation
-│   ├── tools.rs        # MCP tools (6 tools)
-│   ├── resources.rs    # MCP resources
-│   └── prompts.rs      # MCP prompts (7 prompts)
+│   ├── server.rs       # MCP server implementation (JSON-RPC over stdio)
+│   ├── tools.rs        # MCP tools (3 tools)
+│   ├── resources.rs    # MCP resources (2 types)
+│   └── prompts.rs      # MCP prompts (2 prompts)
 └── bin/
-    ├── ddb.rs          # CLI binary
-    └── ddb_mcp.rs      # MCP server binary
+    └── ddb.rs          # CLI binary (includes --mcp mode)
 ```
 
 ## Design Principles
@@ -170,19 +186,16 @@ Current tokenizer performance (SELECT query):
 
 ## Contributing
 
-This is an active development project. Key areas that need work:
+Contributions welcome! Key areas for future development:
 
-1. **Parser** - Convert token stream to AST
-2. **Query Executor** - Implement SELECT with WHERE/ORDER BY/LIMIT
-3. **Write Operations** - INSERT, UPDATE, DELETE with file locking
-4. **Functions** - Implement SQL functions
-5. **Output** - Terminal tables, JSON, YAML, XML formatters
-6. **Tests** - Comprehensive unit and integration tests
+1. **Write Operations** - INSERT, UPDATE, DELETE with file locking
+2. **JOIN Support** - INNER, LEFT, RIGHT, FULL JOIN operations
+3. **GROUP BY** - Grouping with HAVING clauses
+4. **Subqueries** - Nested SELECT statements
+5. **CREATE/DROP TABLE** - DDL operations
+6. **Transaction Support** - BEGIN, COMMIT, ROLLBACK
+7. **Additional Tests** - More unit and integration test coverage
 
 ## License
 
-Creative Commons Attribution-Noncommercial-Share Alike (same as Python DDB)
-
-## Acknowledgments
-
-Based on the original Python DDB by Charles Watkins (chris17453@gmail.com)
+Creative Commons Attribution-Noncommercial-Share Alike (CC-BY-NC-SA-4.0)

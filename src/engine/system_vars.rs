@@ -12,7 +12,7 @@ impl SystemVariables {
 
         // Static system variables
         variables.insert("VERSION".to_string(), Value::String(env!("CARGO_PKG_VERSION").to_string()));
-        variables.insert("DB_NAME".to_string(), Value::String("DDB-Rust".to_string()));
+        variables.insert("DB_NAME".to_string(), Value::String("DDB".to_string()));
         variables.insert("DB_TYPE".to_string(), Value::String("Flat File Database".to_string()));
 
         // Runtime variables (initialized with defaults)
