@@ -69,10 +69,10 @@ fn bench_concurrent_reads(c: &mut Criterion) {
             |b, &num_threads| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(1000);
+                        let (table, file) = create_test_table_with_rows(1000);
                         let table_arc = Arc::new(table);
                         let query = Arc::new(parse_query("SELECT * FROM test WHERE value > 50000"));
-                        (table_arc, _file, query)
+                        (table_arc, file, query)
                     },
                     |(table, _file, query)| {
                         let mut handles = vec![];
@@ -118,8 +118,8 @@ fn bench_sequential_writes(c: &mut Criterion) {
             |b, &num_ops| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(100);
-                        (table, _file)
+                        let (table, file) = create_test_table_with_rows(100);
+                        (table, file)
                     },
                     |(table, _file)| {
                         let executor = QueryExecutor::new();
@@ -154,8 +154,8 @@ fn bench_concurrent_inserts(c: &mut Criterion) {
             |b, &num_ops| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(100);
-                        (table, _file)
+                        let (table, file) = create_test_table_with_rows(100);
+                        (table, file)
                     },
                     |(table, _file)| {
                         let executor = QueryExecutor::new();
@@ -195,8 +195,8 @@ fn bench_upsert_locking(c: &mut Criterion) {
             |b, &size| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(size);
-                        (table, _file)
+                        let (table, file) = create_test_table_with_rows(size);
+                        (table, file)
                     },
                     |(table, _file)| {
                         let executor = QueryExecutor::new();
@@ -230,8 +230,8 @@ fn bench_delete_locking(c: &mut Criterion) {
             |b, &size| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(size);
-                        (table, _file)
+                        let (table, file) = create_test_table_with_rows(size);
+                        (table, file)
                     },
                     |(table, _file)| {
                         let executor = QueryExecutor::new();
@@ -263,8 +263,8 @@ fn bench_mixed_workload(c: &mut Criterion) {
             |b, &size| {
                 b.iter_batched(
                     || {
-                        let (table, _file) = create_test_table_with_rows(size);
-                        (table, _file)
+                        let (table, file) = create_test_table_with_rows(size);
+                        (table, file)
                     },
                     |(table, _file)| {
                         let executor = QueryExecutor::new();

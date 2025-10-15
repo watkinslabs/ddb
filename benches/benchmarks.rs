@@ -187,76 +187,59 @@ fn bench_select_operations(c: &mut Criterion) {
     let mut group = c.benchmark_group("select");
 
     for size in [100, 1000, 10000].iter() {
-        group.bench_with_input(BenchmarkId::new("full_scan", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT * FROM users"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        // Create test data once and keep file alive for all benchmarks at this size
+        let (table, _file) = create_test_table_with_rows(*size);
+
+        group.bench_with_input(BenchmarkId::new("full_scan", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT * FROM users");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("where_filter", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT * FROM users WHERE age > 30 AND salary > 50000"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("where_filter", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT * FROM users WHERE age > 30 AND salary > 50000");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("order_by", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT * FROM users ORDER BY salary DESC"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("order_by", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT * FROM users ORDER BY salary DESC");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("order_by_limit", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT * FROM users ORDER BY salary DESC LIMIT 10"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("order_by_limit", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT * FROM users ORDER BY salary DESC LIMIT 10");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
     }
 
@@ -271,79 +254,62 @@ fn bench_aggregations(c: &mut Criterion) {
     let mut group = c.benchmark_group("aggregation");
 
     for size in [100, 1000, 10000].iter() {
-        group.bench_with_input(BenchmarkId::new("count", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT COUNT(*) FROM users"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        // Create test data once and keep file alive for all benchmarks at this size
+        let (table, _file) = create_test_table_with_rows(*size);
+
+        group.bench_with_input(BenchmarkId::new("count", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT COUNT(*) FROM users");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("sum_avg", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT SUM(salary), AVG(age) FROM users"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("sum_avg", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT SUM(salary), AVG(age) FROM users");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("group_by", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("SELECT department, COUNT(*), AVG(salary) FROM users GROUP BY department"))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("group_by", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query("SELECT department, COUNT(*), AVG(salary) FROM users GROUP BY department");
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("group_by_having", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query(
-                        "SELECT department, COUNT(*) as cnt, AVG(salary) as avg_sal \
-                         FROM users GROUP BY department HAVING COUNT(*) > 5"
-                    ))
-                },
-                |(table, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select(&select_stmt, &table).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+        group.bench_with_input(BenchmarkId::new("group_by_having", size), size, |b, &_size| {
+            let table = table.clone();
+            let stmt = parse_query(
+                "SELECT department, COUNT(*) as cnt, AVG(salary) as avg_sal \
+                 FROM users GROUP BY department HAVING COUNT(*) > 5"
+            );
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select(select_stmt, &table).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
     }
 
@@ -358,62 +324,55 @@ fn bench_joins(c: &mut Criterion) {
     let mut group = c.benchmark_group("join");
 
     for size in [100, 500, 1000].iter() {
-        group.bench_with_input(BenchmarkId::new("inner_join", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (users_table, _users_file) = create_test_table_with_rows(size);
-                    let (orders_table, _orders_file) = create_orders_table(size * 2);
+        // Create test data once and keep files alive for all benchmarks at this size
+        let (users_table, _users_file) = create_test_table_with_rows(*size);
+        let (orders_table_inner, _orders_file_inner) = create_orders_table(*size * 2);
+        let (orders_table_left, _orders_file_left) = create_orders_table(*size / 2);
 
-                    let mut catalog = TableCatalog::new();
-                    let _ = catalog.add_table(users_table.clone());
-                    let _ = catalog.add_table(orders_table);
+        group.bench_with_input(BenchmarkId::new("inner_join", size), size, |b, &_size| {
+            let users_table = users_table.clone();
+            let orders_table = orders_table_inner.clone();
 
-                    let query = parse_query(
-                        "SELECT u.name, o.amount FROM users u \
-                         INNER JOIN orders o ON u.id = o.user_id"
-                    );
+            let mut catalog = TableCatalog::new();
+            let _ = catalog.add_table(users_table.clone());
+            let _ = catalog.add_table(orders_table);
 
-                    (users_table, catalog, query)
-                },
-                |(table, catalog, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select_with_catalog(&select_stmt, &table, Some(&catalog)).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+            let stmt = parse_query(
+                "SELECT u.name, o.amount FROM users u \
+                 INNER JOIN orders o ON u.id = o.user_id"
+            );
+
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select_with_catalog(select_stmt, &users_table, Some(&catalog)).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
 
-        group.bench_with_input(BenchmarkId::new("left_join", size), size, |b, &size| {
-            b.iter_batched(
-                || {
-                    let (users_table, _users_file) = create_test_table_with_rows(size);
-                    let (orders_table, _orders_file) = create_orders_table(size / 2);
+        group.bench_with_input(BenchmarkId::new("left_join", size), size, |b, &_size| {
+            let users_table = users_table.clone();
+            let orders_table = orders_table_left.clone();
 
-                    let mut catalog = TableCatalog::new();
-                    let _ = catalog.add_table(users_table.clone());
-                    let _ = catalog.add_table(orders_table);
+            let mut catalog = TableCatalog::new();
+            let _ = catalog.add_table(users_table.clone());
+            let _ = catalog.add_table(orders_table);
 
-                    let query = parse_query(
-                        "SELECT u.name, o.amount FROM users u \
-                         LEFT JOIN orders o ON u.id = o.user_id"
-                    );
+            let stmt = parse_query(
+                "SELECT u.name, o.amount FROM users u \
+                 LEFT JOIN orders o ON u.id = o.user_id"
+            );
 
-                    (users_table, catalog, query)
-                },
-                |(table, catalog, stmt)| {
-                    let executor = QueryExecutor::new();
-                    if let Statement::Select(select_stmt) = stmt {
-                        executor.execute_select_with_catalog(&select_stmt, &table, Some(&catalog)).unwrap()
-                    } else {
-                        panic!("Expected SELECT statement");
-                    }
-                },
-                BatchSize::SmallInput,
-            )
+            b.iter(|| {
+                let executor = QueryExecutor::new();
+                if let Statement::Select(ref select_stmt) = stmt {
+                    black_box(executor.execute_select_with_catalog(select_stmt, &users_table, Some(&catalog)).unwrap())
+                } else {
+                    panic!("Expected SELECT statement");
+                }
+            })
         });
     }
 
@@ -431,7 +390,7 @@ fn bench_insert_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("batch", batch_size), batch_size, |b, &batch_size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(0);
+                    let (table, file) = create_test_table_with_rows(0);
 
                     let mut values_str = String::new();
                     for i in 0..batch_size {
@@ -442,12 +401,12 @@ fn bench_insert_operations(c: &mut Criterion) {
                     }
 
                     let query = format!("INSERT INTO users (id, name, age, salary, department) VALUES {}", values_str);
-                    (table, parse_query(&query))
+                    (table, parse_query(&query), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Insert(insert_stmt) = stmt {
-                        executor.execute_insert(&insert_stmt, &table).unwrap()
+                        black_box(executor.execute_insert(&insert_stmt, &table).unwrap())
                     } else {
                         panic!("Expected INSERT statement");
                     }
@@ -471,13 +430,13 @@ fn bench_update_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("single_row", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("UPDATE users SET salary = 60000 WHERE id = 50"))
+                    let (table, file) = create_test_table_with_rows(size);
+                    (table, parse_query("UPDATE users SET salary = 60000 WHERE id = 50"), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Update(update_stmt) = stmt {
-                        executor.execute_update(&update_stmt, &table).unwrap()
+                        black_box(executor.execute_update(&update_stmt, &table).unwrap())
                     } else {
                         panic!("Expected UPDATE statement");
                     }
@@ -489,13 +448,13 @@ fn bench_update_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("multiple_rows", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("UPDATE users SET salary = salary * 1.1 WHERE age > 30"))
+                    let (table, file) = create_test_table_with_rows(size);
+                    (table, parse_query("UPDATE users SET salary = salary * 1.1 WHERE age > 30"), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Update(update_stmt) = stmt {
-                        executor.execute_update(&update_stmt, &table).unwrap()
+                        black_box(executor.execute_update(&update_stmt, &table).unwrap())
                     } else {
                         panic!("Expected UPDATE statement");
                     }
@@ -519,13 +478,13 @@ fn bench_delete_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("single_row", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("DELETE FROM users WHERE id = 50"))
+                    let (table, file) = create_test_table_with_rows(size);
+                    (table, parse_query("DELETE FROM users WHERE id = 50"), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Delete(delete_stmt) = stmt {
-                        executor.execute_delete(&delete_stmt, &table).unwrap()
+                        black_box(executor.execute_delete(&delete_stmt, &table).unwrap())
                     } else {
                         panic!("Expected DELETE statement");
                     }
@@ -537,13 +496,13 @@ fn bench_delete_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("multiple_rows", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
-                    (table, parse_query("DELETE FROM users WHERE age < 30"))
+                    let (table, file) = create_test_table_with_rows(size);
+                    (table, parse_query("DELETE FROM users WHERE age < 30"), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Delete(delete_stmt) = stmt {
-                        executor.execute_delete(&delete_stmt, &table).unwrap()
+                        black_box(executor.execute_delete(&delete_stmt, &table).unwrap())
                     } else {
                         panic!("Expected DELETE statement");
                     }
@@ -567,17 +526,17 @@ fn bench_upsert_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("insert_new", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
+                    let (table, file) = create_test_table_with_rows(size);
                     (table, parse_query(&format!(
                         "UPSERT INTO users (id, name, age, salary, department) \
                          VALUES ({}, 'NewUser', 25, 45000, 'dept5') ON id",
                         size + 1000
-                    )))
+                    )), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Upsert(upsert_stmt) = stmt {
-                        executor.execute_upsert(&upsert_stmt, &table).unwrap()
+                        black_box(executor.execute_upsert(&upsert_stmt, &table).unwrap())
                     } else {
                         panic!("Expected UPSERT statement");
                     }
@@ -589,16 +548,16 @@ fn bench_upsert_operations(c: &mut Criterion) {
         group.bench_with_input(BenchmarkId::new("update_existing", size), size, |b, &size| {
             b.iter_batched(
                 || {
-                    let (table, _file) = create_test_table_with_rows(size);
+                    let (table, file) = create_test_table_with_rows(size);
                     (table, parse_query(
                         "UPSERT INTO users (id, name, age, salary, department) \
                          VALUES (50, 'UpdatedUser', 35, 70000, 'dept1') ON id"
-                    ))
+                    ), file)
                 },
-                |(table, stmt)| {
+                |(table, stmt, _file)| {
                     let executor = QueryExecutor::new();
                     if let Statement::Upsert(upsert_stmt) = stmt {
-                        executor.execute_upsert(&upsert_stmt, &table).unwrap()
+                        black_box(executor.execute_upsert(&upsert_stmt, &table).unwrap())
                     } else {
                         panic!("Expected UPSERT statement");
                     }
