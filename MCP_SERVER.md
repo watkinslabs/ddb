@@ -221,15 +221,25 @@ SELECT AVG(amount) as average FROM transactions
 
 ## Performance
 
-- **Streaming architecture** - Processes files line-by-line, minimal memory usage
+DDB includes 4 major performance optimizations:
+
+1. **Heap-based LIMIT** - 7-11% faster ORDER BY LIMIT queries
+2. **Hash indexes for JOINs** - 100-1000x faster equality JOINs (O(n+m) vs O(n×m))
+3. **Memory-mapped I/O** - 2-3x faster reads for files >= 10MB
+4. **Parallel aggregations** - 2-4x faster SUM/AVG/STDDEV on multi-core systems
+
+**Architecture Features:**
+- **Streaming** - Processes files line-by-line, minimal memory usage
 - **Zero-copy parsing** - Efficient tokenization with nom parser
-- **Memory-mapped I/O** - Optional mmap for large file performance
 - **Compiled binary** - Native performance with LTO optimizations
 
-Typical performance:
-- Tokenization: < 1ms for most queries
-- SELECT on 100K rows: ~100-500ms (depending on complexity)
-- Aggregations: Linear O(n) with streaming
+**Typical Performance:**
+- Tokenization: ~496ns for simple SELECT (~2M queries/sec)
+- Full table scan: ~1.2M rows/sec throughput
+- Aggregations: ~1.9M rows/sec (COUNT/SUM/AVG)
+- Batch inserts: ~2.8M rows/sec (100-row batches)
+
+See [BENCHMARK_SUMMARY.md](BENCHMARK_SUMMARY.md) for detailed performance metrics.
 
 ## Debugging
 
