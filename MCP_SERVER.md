@@ -239,7 +239,7 @@ DDB includes 4 major performance optimizations:
 - Aggregations: ~1.9M rows/sec (COUNT/SUM/AVG)
 - Batch inserts: ~2.8M rows/sec (100-row batches)
 
-See [BENCHMARK_SUMMARY.md](BENCHMARK_SUMMARY.md) for detailed performance metrics.
+See [BENCHMARKS.md](BENCHMARKS.md) for detailed performance metrics with visual graphs.
 
 ## Debugging
 

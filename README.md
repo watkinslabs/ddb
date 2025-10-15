@@ -96,7 +96,7 @@ ddb --query "UPDATE customers.csv SET status = 'premium' WHERE total_purchases >
   - Streaming architecture (memory-efficient)
   - Zero-copy parsing with `nom`
   - LIKE pattern optimization (19.6x speedup)
-  - See [BENCHMARK_SUMMARY.md](BENCHMARK_SUMMARY.md) for detailed performance metrics
+  - See [BENCHMARKS.md](BENCHMARKS.md) for detailed performance metrics with graphs
 
 - **MCP Server:**
   - Model Context Protocol integration for AI assistants
@@ -423,13 +423,13 @@ open target/criterion/report/index.html
 ```
 
 **Performance Highlights:**
-- **Tokenization**: ~496ns for simple SELECT (~2M queries/sec)
+- **Tokenization**: ~0.5µs (0.0000005 sec) for simple SELECT (~2M queries/sec)
 - **Full table scan**: ~1.2M rows/sec throughput
 - **Aggregations**: ~1.9M rows/sec (COUNT/SUM/AVG)
-- **JOINs**: ~544µs for 1K×2K nested loop, much faster with hash indexes
-- **Batch inserts**: ~2.8M rows/sec (100-row batches)
+- **JOINs**: 100-1000x faster with hash index optimization (O(n+m) vs O(n×m))
+- **Batch inserts**: 36x faster per row than single inserts (~2.8M rows/sec for 100-row batches)
 
-See [BENCHMARK_SUMMARY.md](BENCHMARK_SUMMARY.md) for comprehensive benchmark results with detailed analysis.
+See [BENCHMARKS.md](BENCHMARKS.md) for comprehensive benchmark results with detailed performance graphs and human-readable time conversions.
 
 ## Contributing
 
