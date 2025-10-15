@@ -1,13 +1,25 @@
-// CSV/Delimited file reader
+// CSV/Delimited file reader with memory-mapped I/O support for large files
 use crate::engine::row::Row;
 use crate::error::{DdbError, Result};
 use crate::functions::Value;
+use memmap2::Mmap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+/// Threshold for using memory-mapped I/O (10MB)
+const MMAP_THRESHOLD: u64 = 10 * 1024 * 1024;
+
+enum ReaderBackend {
+    Buffered(BufReader<File>),
+    MemoryMapped {
+        mmap: Mmap,
+        position: usize,
+    },
+}
+
 pub struct CsvReader {
-    reader: BufReader<File>,
+    backend: ReaderBackend,
     delimiter: char,
     column_names: Vec<String>,
     line_number: usize,
@@ -16,12 +28,27 @@ pub struct CsvReader {
 
 impl CsvReader {
     /// Create a new CSV reader with specified delimiter
+    /// Automatically uses memory-mapped I/O for files larger than 10MB
     pub fn new<P: AsRef<Path>>(path: P, delimiter: char, has_header: bool) -> Result<Self> {
-        let file = File::open(path)?;
-        let reader = BufReader::new(file);
+        let path_ref = path.as_ref();
+        let file = File::open(path_ref)?;
+        let metadata = file.metadata()?;
+        let file_size = metadata.len();
+
+        let backend = if file_size >= MMAP_THRESHOLD {
+            // Use memory-mapped I/O for large files
+            let mmap = unsafe { Mmap::map(&file)? };
+            ReaderBackend::MemoryMapped {
+                mmap,
+                position: 0,
+            }
+        } else {
+            // Use buffered I/O for small files
+            ReaderBackend::Buffered(BufReader::new(file))
+        };
 
         Ok(Self {
-            reader,
+            backend,
             delimiter,
             column_names: Vec::new(),
             line_number: 0,
@@ -47,13 +74,24 @@ impl CsvReader {
 
     /// Read the next row
     pub fn next_row(&mut self) -> Result<Option<Row>> {
-        let mut line = String::new();
+        let line_opt = match &mut self.backend {
+            ReaderBackend::Buffered(reader) => {
+                let mut line = String::new();
+                match reader.read_line(&mut line) {
+                    Ok(0) => None,
+                    Ok(_) => Some(line.trim_end_matches(&['\r', '\n'][..]).to_string()),
+                    Err(e) => return Err(DdbError::IoError(e)),
+                }
+            }
+            ReaderBackend::MemoryMapped { mmap, position } => {
+                Self::read_line_from_mmap(mmap, position)?
+            }
+        };
 
-        match self.reader.read_line(&mut line) {
-            Ok(0) => Ok(None), // EOF
-            Ok(_) => {
+        match line_opt {
+            None => Ok(None), // EOF
+            Some(line) => {
                 self.line_number += 1;
-                line = line.trim_end_matches(&['\r', '\n'][..]).to_string();
 
                 // If this is the first line and we have a header, parse column names
                 if self.line_number == 1 && self.has_header {
@@ -73,8 +111,36 @@ impl CsvReader {
                 let row = self.create_row(values)?;
                 Ok(Some(row))
             }
-            Err(e) => Err(DdbError::IoError(e)),
         }
+    }
+
+    /// Read a line from memory-mapped file
+    fn read_line_from_mmap(mmap: &Mmap, position: &mut usize) -> Result<Option<String>> {
+        if *position >= mmap.len() {
+            return Ok(None);
+        }
+
+        // Find the next newline
+        let start = *position;
+        let mut end = start;
+
+        while end < mmap.len() && mmap[end] != b'\n' {
+            end += 1;
+        }
+
+        // Extract the line
+        let line_bytes = &mmap[start..end];
+        let mut line = String::from_utf8_lossy(line_bytes).to_string();
+
+        // Trim \r if present (for Windows line endings)
+        if line.ends_with('\r') {
+            line.pop();
+        }
+
+        // Update position to after the newline
+        *position = if end < mmap.len() { end + 1 } else { end };
+
+        Ok(Some(line))
     }
 
     /// Parse a line into fields
