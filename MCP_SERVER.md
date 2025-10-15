@@ -14,11 +14,16 @@ The DDB MCP Server exposes DDB's functionality through the Model Context Protoco
 
 ### Tools (3 available)
 
-1. **execute_query** - Execute SQL queries
-   - Run SELECT statements against configured tables
+1. **execute_query** - Execute SQL queries (read & write operations)
+   - **SELECT** statements with JOIN, GROUP BY, HAVING support
+   - **INSERT** - Insert new rows into tables
+   - **UPDATE** - Modify existing rows with WHERE conditions
+   - **DELETE** - Remove rows with WHERE conditions
+   - **UPSERT** - Insert or update rows based on key column
    - Support for WHERE clauses, ORDER BY, LIMIT, DISTINCT
    - Multiple output formats (JSON, YAML, CSV, table)
    - Full access to 101+ SQL functions
+   - File locking for safe concurrent operations
 
 2. **list_tables** - List all configured tables
    - Shows all tables from the DDB catalog
@@ -106,7 +111,7 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 {
   "mcpServers": {
     "ddb": {
-      "command": "/path/to/ddb-rust/target/release/ddb",
+      "command": "/path/to/ddb/target/release/ddb",
       "args": ["--mcp"],
       "env": {
         "RUST_LOG": "info"
@@ -118,17 +123,48 @@ Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/
 
 ## Usage Examples
 
-### Execute a Query
+### SELECT with JOIN and GROUP BY
 
 Using the `execute_query` tool:
 
 ```json
 {
-  "query": "SELECT name, email FROM users WHERE age > 25 ORDER BY name LIMIT 10",
+  "query": "SELECT u.name, COUNT(o.id) as order_count FROM users u INNER JOIN orders o ON u.id = o.user_id GROUP BY u.name HAVING order_count > 5",
   "output_format": "json"
 }
 ```
 
+### INSERT Data
+
+```json
+{
+  "query": "INSERT INTO users (id, name, email, age) VALUES (101, 'John Doe', 'john@example.com', 30)"
+}
+```
+
+### UPDATE Records
+
+```json
+{
+  "query": "UPDATE users SET age = 31 WHERE name = 'John Doe'"
+}
+```
+
+### DELETE Records
+
+```json
+{
+  "query": "DELETE FROM users WHERE age < 18"
+}
+```
+
+### UPSERT (Insert or Update)
+
+```json
+{
+  "query": "UPSERT INTO users (id, name, email, age) VALUES (101, 'John Doe', 'newemail@example.com', 31) ON id"
+}
+```
 
 ### Analyze Data
 
@@ -155,26 +191,33 @@ SELECT AVG(amount) as average FROM transactions
 - **SELECT statements** with full support for:
   - Column selection (wildcards, specific columns, aliases)
   - WHERE clauses (complex conditions with AND/OR)
+  - **JOIN operations** (INNER, LEFT, RIGHT, FULL OUTER)
+  - **GROUP BY** with aggregate functions
+  - **HAVING** clause for filtered aggregations
   - ORDER BY (ASC/DESC, multiple columns)
   - LIMIT and OFFSET
   - DISTINCT
-  - Aggregate functions (COUNT, SUM, AVG, MIN, MAX, etc.)
+
+- **Data Modification Operations**:
+  - **INSERT** - Add new rows to tables
+  - **UPDATE** - Modify existing rows with WHERE conditions
+  - **DELETE** - Remove rows with WHERE conditions
+  - **UPSERT** - Insert or update based on key column (INSERT ON DUPLICATE KEY UPDATE pattern)
 
 - **101+ SQL Functions** across categories:
   - Math: ABS, ROUND, SQRT, POW, MOD, etc.
   - String: CONCAT, UPPER, LOWER, TRIM, SUBSTR, etc.
   - Date/Time: NOW, DATEDIFF, DATEADD, YEAR, MONTH, etc.
-  - Aggregate: COUNT, SUM, AVG, MIN, MAX, STDDEV, etc.
+  - Aggregate: COUNT, SUM, AVG, MIN, MAX, STDDEV, VARIANCE, etc.
   - Conditional: IF, IFNULL, COALESCE, CASE, etc.
   - Utility: BASE64, HASH, REGEXP, SPLIT_PART, etc.
 
 ### Coming Soon
 
-- INSERT, UPDATE, DELETE operations
 - CREATE TABLE, DROP TABLE
 - Transaction support (BEGIN, COMMIT, ROLLBACK)
-- JOIN operations
-- GROUP BY with HAVING
+- Subqueries and CTEs (Common Table Expressions)
+- Window functions
 
 ## Performance
 
@@ -227,14 +270,18 @@ All errors are returned in a structured format with context.
 
 ## Security
 
-- **Read-only by default** - SELECT operations are safe
-- **No SQL injection** - Parsed and validated before execution
-- **File system isolation** - Can be configured to restrict file access
+- **Write operations supported** - INSERT, UPDATE, DELETE, UPSERT modify files directly
+- **File locking** - Exclusive locks prevent concurrent write conflicts
+- **No SQL injection** - All queries parsed and validated before execution
+- **File system isolation** - Operations restricted to configured table files
 - **No network access** - Pure local file processing
+- **Atomic operations** - Updates rewrite entire files to ensure consistency
+
+**Important**: Write operations (INSERT, UPDATE, DELETE, UPSERT) modify your data files. Ensure you have backups or use version control for important data.
 
 ## Contributing
 
-The MCP server is part of the ddb-rust project. Contributions welcome!
+The MCP server is part of the DDB v2 project. Contributions welcome!
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 

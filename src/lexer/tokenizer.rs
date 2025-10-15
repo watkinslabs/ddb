@@ -136,6 +136,7 @@ fn parse_keyword(input: &str) -> IResult<&str, TokenType> {
         "insert" => TokenType::Insert,
         "update" => TokenType::Update,
         "delete" => TokenType::Delete,
+        "upsert" => TokenType::Upsert,
         "create" => TokenType::Create,
         "drop" => TokenType::Drop,
         "use" => TokenType::Use,
@@ -174,6 +175,15 @@ fn parse_keyword(input: &str) -> IResult<&str, TokenType> {
         "delimiter" => TokenType::Delimiter,
         "variables" => TokenType::Variables,
         "offset" => TokenType::Offset,
+        "join" => TokenType::Join,
+        "inner" => TokenType::Inner,
+        "left" => TokenType::Left,
+        "right" => TokenType::Right,
+        "full" => TokenType::Full,
+        "outer" => TokenType::Outer,
+        "on" => TokenType::On,
+        "having" => TokenType::Having,
+        "group" => TokenType::Group,
         _ => {
             // Not a keyword, fail to match
             return Err(nom::Err::Error(nom::error::Error::new(

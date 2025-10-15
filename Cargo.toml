@@ -2,7 +2,7 @@
 name = "ddb-core"
 version = "0.1.0"
 edition = "2021"
-authors = ["Charles Watkins <chris17453@gmail.com>"]
+authors = ["Charles Watkins <chris@watkinslabs.com>"]
 description = "A serviceless SQL interface for flat files written in Rust"
 license = "CC-BY-NC-SA-4.0"
 repository = "https://github.com/watkinslabs/ddb/"

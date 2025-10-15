@@ -1,6 +1,6 @@
 // String functions
 use super::Value;
-use crate::error::{DdbError, Result};
+use crate::error::Result;
 
 /// CONCAT(str1, str2, ...) - Concatenate strings
 pub fn concat(values: &[Value]) -> Result<Value> {

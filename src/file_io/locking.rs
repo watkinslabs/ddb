@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 pub struct FileLock {
     file: File,
-    path: PathBuf,
+    _path: PathBuf,
 }
 
 impl FileLock {
@@ -15,7 +15,7 @@ impl FileLock {
         let file = File::open(&path)
             .map_err(|e| DdbError::LockError(format!("Failed to open file: {}", e)))?;
 
-        Ok(Self { file, path })
+        Ok(Self { file, _path: path })
     }
 
     pub fn lock_shared(&self) -> Result<()> {

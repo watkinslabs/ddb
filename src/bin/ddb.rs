@@ -299,6 +299,54 @@ fn execute_query(cli: &Cli, query: &str, config: &Config, catalog: &TableCatalog
 
             Ok(())
         }
+        Statement::Upsert(upsert_stmt) => {
+            // Get table definition
+            let table = if let Some(ref path) = cli.file {
+                // Use explicit --file argument
+                let delimiter = cli
+                    .delimiter
+                    .chars()
+                    .next()
+                    .unwrap_or(config.default_delimiter);
+
+                Table {
+                    name: "temp".to_string(),
+                    database: "temp".to_string(),
+                    data_file: path.to_string_lossy().to_string(),
+                    columns: vec![],
+                    field_delimiter: delimiter,
+                    data_starts_on: config.data_starts_on,
+                    comment_char: config.comment_char,
+                }
+            } else {
+                // Look up table in catalog
+                catalog.get_table(&upsert_stmt.table)
+                    .ok_or_else(|| format!("Table '{}' not found in catalog. Use --file to specify a file, or add table definition to schema directory.", upsert_stmt.table))?
+                    .clone()
+            };
+
+            if cli.debug {
+                println!("=== Table Info ===");
+                println!("Name: {}", table.name);
+                println!("File: {}", table.data_file);
+                println!("Delimiter: {:?}", table.field_delimiter);
+                println!();
+            }
+
+            // Execute UPSERT
+            let executor = QueryExecutor::new();
+            let (rows_inserted, rows_updated) = executor.execute_upsert(&upsert_stmt, &table)?;
+
+            if cli.debug {
+                println!("=== Results ===");
+                println!("{} rows inserted, {} rows updated", rows_inserted, rows_updated);
+                println!();
+            } else {
+                println!("{} rows inserted, {} rows updated", rows_inserted, rows_updated);
+            }
+
+            Ok(())
+        }
         Statement::Delete(delete_stmt) => {
             // Get table definition
             let table = if let Some(ref path) = cli.file {

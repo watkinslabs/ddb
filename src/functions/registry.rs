@@ -1,6 +1,6 @@
 // Function registry - maps function names to implementations
 use super::Value;
-use crate::error::{DdbError, Result};
+use crate::error::Result;
 use std::collections::HashMap;
 
 /// Function signature types

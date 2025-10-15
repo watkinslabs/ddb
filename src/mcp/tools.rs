@@ -1,6 +1,6 @@
 //! MCP Tool implementations for DDB
 
-use crate::config::{Config, Table, TableCatalog};
+use crate::config::{Config, TableCatalog};
 use crate::engine::QueryExecutor;
 use crate::lexer::Tokenizer;
 use crate::output::{format_results, OutputFormat};
@@ -13,13 +13,13 @@ use tokio::sync::RwLock;
 use tracing::info;
 
 pub struct ToolHandler {
-    config: Arc<RwLock<Config>>,
+    _config: Arc<RwLock<Config>>,
     catalog: Arc<RwLock<TableCatalog>>,
 }
 
 impl ToolHandler {
     pub fn new(config: Arc<RwLock<Config>>, catalog: Arc<RwLock<TableCatalog>>) -> Self {
-        Self { config, catalog }
+        Self { _config: config, catalog }
     }
 
     /// List all available tools
@@ -27,12 +27,12 @@ impl ToolHandler {
         vec![
             json!({
                 "name": "execute_query",
-                "description": "Execute a SQL query against DDB tables or CSV files",
+                "description": "Execute a SQL query against DDB tables or CSV files. Supports SELECT (with JOIN, GROUP BY, HAVING), INSERT, UPDATE, DELETE, and UPSERT statements.",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "query": { "type": "string", "description": "SQL query to execute" },
-                        "output_format": { "type": "string", "enum": ["json", "yaml", "csv", "table"], "default": "json" }
+                        "query": { "type": "string", "description": "SQL query to execute (SELECT, INSERT, UPDATE, DELETE, UPSERT)" },
+                        "output_format": { "type": "string", "enum": ["json", "yaml", "csv", "table"], "default": "json", "description": "Output format for SELECT queries" }
                     },
                     "required": ["query"]
                 }
@@ -91,17 +91,87 @@ impl ToolHandler {
                 let table = catalog.get_table(table_name).ok_or_else(|| anyhow!("Table not found"))?.clone();
 
                 let executor = QueryExecutor::new();
-                let results = executor.execute_select(&select_stmt, &table)?;
+                // Use execute_select_with_catalog to support JOINs
+                let results = executor.execute_select_with_catalog(&select_stmt, &table, Some(&catalog))?;
                 let format = OutputFormat::from_str(output_format);
                 let formatted = format_results(&results, format)?;
 
                 Ok(json!({
                     "success": true,
+                    "statement": "SELECT",
                     "rows": results.len(),
                     "data": formatted
                 }))
             }
-            _ => Ok(json!({ "success": false, "error": "Only SELECT supported" }))
+            Statement::Insert(insert_stmt) => {
+                let catalog = self.catalog.read().await;
+                let table = catalog.get_table(&insert_stmt.table)
+                    .ok_or_else(|| anyhow!("Table '{}' not found", insert_stmt.table))?
+                    .clone();
+
+                let executor = QueryExecutor::new();
+                let rows_inserted = executor.execute_insert(&insert_stmt, &table)?;
+
+                Ok(json!({
+                    "success": true,
+                    "statement": "INSERT",
+                    "rows_inserted": rows_inserted,
+                    "message": format!("{} row(s) inserted", rows_inserted)
+                }))
+            }
+            Statement::Update(update_stmt) => {
+                let catalog = self.catalog.read().await;
+                let table = catalog.get_table(&update_stmt.table)
+                    .ok_or_else(|| anyhow!("Table '{}' not found", update_stmt.table))?
+                    .clone();
+
+                let executor = QueryExecutor::new();
+                let rows_updated = executor.execute_update(&update_stmt, &table)?;
+
+                Ok(json!({
+                    "success": true,
+                    "statement": "UPDATE",
+                    "rows_updated": rows_updated,
+                    "message": format!("{} row(s) updated", rows_updated)
+                }))
+            }
+            Statement::Delete(delete_stmt) => {
+                let catalog = self.catalog.read().await;
+                let table = catalog.get_table(&delete_stmt.table)
+                    .ok_or_else(|| anyhow!("Table '{}' not found", delete_stmt.table))?
+                    .clone();
+
+                let executor = QueryExecutor::new();
+                let rows_deleted = executor.execute_delete(&delete_stmt, &table)?;
+
+                Ok(json!({
+                    "success": true,
+                    "statement": "DELETE",
+                    "rows_deleted": rows_deleted,
+                    "message": format!("{} row(s) deleted", rows_deleted)
+                }))
+            }
+            Statement::Upsert(upsert_stmt) => {
+                let catalog = self.catalog.read().await;
+                let table = catalog.get_table(&upsert_stmt.table)
+                    .ok_or_else(|| anyhow!("Table '{}' not found", upsert_stmt.table))?
+                    .clone();
+
+                let executor = QueryExecutor::new();
+                let (rows_inserted, rows_updated) = executor.execute_upsert(&upsert_stmt, &table)?;
+
+                Ok(json!({
+                    "success": true,
+                    "statement": "UPSERT",
+                    "rows_inserted": rows_inserted,
+                    "rows_updated": rows_updated,
+                    "message": format!("{} row(s) inserted, {} row(s) updated", rows_inserted, rows_updated)
+                }))
+            }
+            _ => Ok(json!({
+                "success": false,
+                "error": "Statement type not supported in MCP server"
+            }))
         }
     }
 

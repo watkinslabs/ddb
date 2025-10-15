@@ -492,7 +492,7 @@ mod tests {
     #[test]
     fn test_evaluate_like() {
         let evaluator = Evaluator::new();
-        let row = Row::new();
+        let _row = Row::new();
 
         let value = Value::String("hello world".to_string());
         let pattern = Value::String("hello%".to_string());

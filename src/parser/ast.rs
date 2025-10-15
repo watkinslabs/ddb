@@ -7,6 +7,7 @@ pub enum Statement {
     Insert(InsertStatement),
     Update(UpdateStatement),
     Delete(DeleteStatement),
+    Upsert(UpsertStatement),
     CreateTable(CreateTableStatement),
     DropTable(DropTableStatement),
     Use(UseStatement),
@@ -22,9 +23,27 @@ pub struct SelectStatement {
     pub distinct: bool,
     pub columns: Vec<SelectColumn>,
     pub from: Option<String>,
+    pub joins: Vec<JoinClause>,
     pub where_clause: Option<Expression>,
+    pub group_by: Vec<String>,
+    pub having: Option<Expression>,
     pub order_by: Vec<OrderByColumn>,
     pub limit: Option<Limit>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct JoinClause {
+    pub join_type: JoinType,
+    pub table: String,
+    pub on_condition: Expression,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum JoinType {
+    Inner,
+    Left,
+    Right,
+    Full,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -57,6 +76,14 @@ pub struct InsertStatement {
     pub table: String,
     pub columns: Vec<String>,
     pub values: Vec<Vec<Expression>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct UpsertStatement {
+    pub table: String,
+    pub columns: Vec<String>,
+    pub values: Vec<Vec<Expression>>,
+    pub key_column: String, // Column to check for duplicates
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

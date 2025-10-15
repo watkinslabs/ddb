@@ -7,7 +7,7 @@ use serde_json::Value;
 use std::io::{self, BufRead, Write};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::{info, error, debug};
+use tracing::{info, debug};
 
 use super::tools::ToolHandler;
 use super::resources::ResourceHandler;
@@ -41,8 +41,8 @@ struct JsonRpcError {
 
 /// DDB MCP Server
 pub struct DdbMcpServer {
-    config: Arc<RwLock<Config>>,
-    catalog: Arc<RwLock<TableCatalog>>,
+    _config: Arc<RwLock<Config>>,
+    _catalog: Arc<RwLock<TableCatalog>>,
     tool_handler: ToolHandler,
     resource_handler: ResourceHandler,
     prompt_handler: PromptHandler,
@@ -68,8 +68,8 @@ impl DdbMcpServer {
         let catalog = Arc::new(RwLock::new(catalog));
 
         Ok(Self {
-            config: config.clone(),
-            catalog: catalog.clone(),
+            _config: config.clone(),
+            _catalog: catalog.clone(),
             tool_handler: ToolHandler::new(config.clone(), catalog.clone()),
             resource_handler: ResourceHandler::new(config.clone(), catalog.clone()),
             prompt_handler: PromptHandler::new(),

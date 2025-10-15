@@ -10,12 +10,22 @@ This is **DDB v2** - a complete rewrite in Rust. The goal is to provide better p
 
 ✅ **Fully Implemented (v0.1.0):**
 - **SQL Query Support:**
-  - Complete SELECT statement implementation
-  - WHERE clause evaluation with complex conditions (AND, OR, comparison operators)
-  - ORDER BY (ASC/DESC, multiple columns)
-  - LIMIT and OFFSET
-  - DISTINCT
+  - Complete SELECT statement implementation with:
+    - **JOIN operations** (INNER, LEFT, RIGHT, FULL OUTER)
+    - **GROUP BY** with aggregate functions
+    - **HAVING** clause for filtered aggregations
+    - WHERE clause evaluation with complex conditions (AND, OR, comparison operators)
+    - ORDER BY (ASC/DESC, multiple columns)
+    - LIMIT and OFFSET
+    - DISTINCT
   - Aggregate functions (COUNT, SUM, AVG, MIN, MAX, STDDEV, VARIANCE)
+
+- **Data Modification Operations:**
+  - **INSERT** - Add new rows to tables
+  - **UPDATE** - Modify existing rows with WHERE conditions
+  - **DELETE** - Remove rows with WHERE conditions
+  - **UPSERT** - Insert or update based on key column
+  - File locking for safe concurrent operations
 
 - **101+ SQL Functions:**
   - Math: ABS, ROUND, SQRT, POW, MOD, CEIL, FLOOR, etc.
@@ -39,16 +49,14 @@ This is **DDB v2** - a complete rewrite in Rust. The goal is to provide better p
 
 - **MCP Server:**
   - Model Context Protocol integration for AI assistants
-  - 3 tools, 2 resources, 2 prompts
+  - 3 tools (with full CRUD support), 2 resources, 2 prompts
   - Activated with `--mcp` flag
 
 📋 **Not Yet Implemented:**
-- INSERT, UPDATE, DELETE operations
 - CREATE TABLE, DROP TABLE statements
 - Transaction support (BEGIN, COMMIT, ROLLBACK)
-- JOIN operations (INNER, LEFT, RIGHT, FULL)
-- GROUP BY with HAVING clauses
-- Subqueries
+- Subqueries and CTEs (Common Table Expressions)
+- Window functions
 
 ## Features
 
@@ -116,7 +124,10 @@ cargo build --release
 ```
 
 The MCP server provides:
-- **3 Tools**: execute_query, list_tables, describe_table
+- **3 Tools**:
+  - `execute_query` - Full CRUD support (SELECT with JOIN/GROUP BY/HAVING, INSERT, UPDATE, DELETE, UPSERT)
+  - `list_tables` - List all configured tables
+  - `describe_table` - Get table schema and metadata
 - **2 Resource Types**: Configuration and table schemas
 - **2 Prompts**: Query generation and data analysis templates
 
@@ -188,12 +199,12 @@ Current tokenizer performance (SELECT query):
 
 Contributions welcome! Key areas for future development:
 
-1. **Write Operations** - INSERT, UPDATE, DELETE with file locking
-2. **JOIN Support** - INNER, LEFT, RIGHT, FULL JOIN operations
-3. **GROUP BY** - Grouping with HAVING clauses
-4. **Subqueries** - Nested SELECT statements
-5. **CREATE/DROP TABLE** - DDL operations
-6. **Transaction Support** - BEGIN, COMMIT, ROLLBACK
+1. **Subqueries** - Nested SELECT statements
+2. **CREATE/DROP TABLE** - DDL operations
+3. **Transaction Support** - BEGIN, COMMIT, ROLLBACK
+4. **Window Functions** - ROW_NUMBER, RANK, LAG, LEAD, etc.
+5. **CTEs** - Common Table Expressions (WITH clause)
+6. **Performance Optimizations** - Query planning, index support
 7. **Additional Tests** - More unit and integration test coverage
 
 ## License

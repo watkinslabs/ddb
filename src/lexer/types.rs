@@ -8,6 +8,7 @@ pub enum TokenType {
     Insert,
     Update,
     Delete,
+    Upsert,
     Create,
     Drop,
     Use,
@@ -48,6 +49,15 @@ pub enum TokenType {
     Delimiter,
     Variables,
     Offset,
+    Join,
+    Inner,
+    Left,
+    Right,
+    Full,
+    Outer,
+    On,
+    Having,
+    Group,
 
     // Operators
     Multiply,        // * (alias for Star when used in expressions)
@@ -117,6 +127,7 @@ impl Token {
                 | TokenType::Insert
                 | TokenType::Update
                 | TokenType::Delete
+                | TokenType::Upsert
                 | TokenType::Create
                 | TokenType::Drop
                 | TokenType::Use
@@ -151,6 +162,15 @@ impl Token {
                 | TokenType::Between
                 | TokenType::Asc
                 | TokenType::Desc
+                | TokenType::Join
+                | TokenType::Inner
+                | TokenType::Left
+                | TokenType::Right
+                | TokenType::Full
+                | TokenType::Outer
+                | TokenType::On
+                | TokenType::Having
+                | TokenType::Group
         )
     }
 }

@@ -22,6 +22,7 @@ impl Parser {
             TokenType::Insert => self.parse_insert(),
             TokenType::Update => self.parse_update(),
             TokenType::Delete => self.parse_delete(),
+            TokenType::Upsert => self.parse_upsert(),
             TokenType::Create => self.parse_create(),
             TokenType::Drop => self.parse_drop(),
             TokenType::Use => self.parse_use(),
@@ -63,8 +64,28 @@ impl Parser {
             None
         };
 
+        // Parse JOINs (must come after FROM, before WHERE)
+        let joins = self.parse_joins()?;
+
         // Parse WHERE clause
         let where_clause = if self.match_token(TokenType::Where) {
+            Some(self.parse_expression()?)
+        } else {
+            None
+        };
+
+        // Parse GROUP BY (must come after WHERE, before ORDER BY)
+        let group_by = if self.match_token(TokenType::Group) {
+            self.expect(TokenType::By)?;
+            self.parse_group_by()?
+        } else if self.match_token(TokenType::GroupBy) {
+            self.parse_group_by()?
+        } else {
+            Vec::new()
+        };
+
+        // Parse HAVING (must come after GROUP BY)
+        let having = if self.match_token(TokenType::Having) {
             Some(self.parse_expression()?)
         } else {
             None
@@ -91,7 +112,10 @@ impl Parser {
             distinct,
             columns,
             from,
+            joins,
             where_clause,
+            group_by,
+            having,
             order_by,
             limit,
         }))
@@ -194,6 +218,67 @@ impl Parser {
         }
     }
 
+    /// Parse JOIN clauses
+    fn parse_joins(&mut self) -> Result<Vec<JoinClause>> {
+        let mut joins = Vec::new();
+
+        loop {
+            // Check for join type
+            let join_type = if self.match_token(TokenType::Inner) {
+                self.expect(TokenType::Join)?;
+                JoinType::Inner
+            } else if self.match_token(TokenType::Left) {
+                self.match_token(TokenType::Outer); // Optional OUTER keyword
+                self.expect(TokenType::Join)?;
+                JoinType::Left
+            } else if self.match_token(TokenType::Right) {
+                self.match_token(TokenType::Outer); // Optional OUTER keyword
+                self.expect(TokenType::Join)?;
+                JoinType::Right
+            } else if self.match_token(TokenType::Full) {
+                self.match_token(TokenType::Outer); // Optional OUTER keyword
+                self.expect(TokenType::Join)?;
+                JoinType::Full
+            } else if self.match_token(TokenType::Join) {
+                // Default to INNER JOIN
+                JoinType::Inner
+            } else {
+                // No more joins
+                break;
+            };
+
+            // Parse table name
+            let table = self.expect_identifier()?;
+
+            // Parse ON condition
+            self.expect(TokenType::On)?;
+            let on_condition = self.parse_expression()?;
+
+            joins.push(JoinClause {
+                join_type,
+                table,
+                on_condition,
+            });
+        }
+
+        Ok(joins)
+    }
+
+    /// Parse GROUP BY clause (column list)
+    fn parse_group_by(&mut self) -> Result<Vec<String>> {
+        let mut group_by = Vec::new();
+
+        loop {
+            group_by.push(self.expect_identifier()?);
+
+            if !self.match_token(TokenType::Comma) {
+                break;
+            }
+        }
+
+        Ok(group_by)
+    }
+
     /// Parse INSERT statement
     fn parse_insert(&mut self) -> Result<Statement> {
         self.expect(TokenType::Insert)?;
@@ -229,6 +314,46 @@ impl Parser {
             table,
             columns,
             values,
+        }))
+    }
+
+    /// Parse UPSERT statement
+    /// Syntax: UPSERT INTO table (columns) VALUES (...) ON key_column
+    fn parse_upsert(&mut self) -> Result<Statement> {
+        self.expect(TokenType::Upsert)?;
+        self.expect(TokenType::Into)?;
+
+        let table = self.expect_identifier()?;
+
+        // Parse column list (required for UPSERT)
+        self.expect(TokenType::LeftParen)?;
+        let columns = self.parse_identifier_list()?;
+        self.expect(TokenType::RightParen)?;
+
+        self.expect(TokenType::Values)?;
+
+        // Parse values
+        let mut values = Vec::new();
+        loop {
+            self.expect(TokenType::LeftParen)?;
+            let value_row = self.parse_expression_list()?;
+            self.expect(TokenType::RightParen)?;
+            values.push(value_row);
+
+            if !self.match_token(TokenType::Comma) {
+                break;
+            }
+        }
+
+        // Parse ON key_column
+        self.expect(TokenType::On)?;
+        let key_column = self.expect_identifier()?;
+
+        Ok(Statement::Upsert(UpsertStatement {
+            table,
+            columns,
+            values,
+            key_column,
         }))
     }
 
