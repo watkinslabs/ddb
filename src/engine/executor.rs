@@ -1,10 +1,12 @@
-// Query executor for SELECT statements
+// Query executor for SELECT, INSERT, UPDATE, DELETE statements
 use crate::config::Table;
 use crate::engine::{evaluator::Evaluator, row::Row};
 use crate::error::{DdbError, Result};
-use crate::file_io::CsvReader;
+use crate::file_io::{CsvReader, FileLock};
 use crate::functions::Value;
-use crate::parser::{OrderDirection, SelectColumn, SelectStatement};
+use crate::parser::{DeleteStatement, Expression, InsertStatement, OrderDirection, SelectColumn, SelectStatement, UpdateStatement};
+use std::fs::{File, OpenOptions};
+use std::io::{BufRead, BufReader, BufWriter, Write};
 
 pub struct QueryExecutor {
     evaluator: Evaluator,
@@ -302,6 +304,275 @@ impl QueryExecutor {
             Value::Null => Ok(false),
             _ => Ok(true),
         }
+    }
+
+    /// Execute an INSERT statement
+    pub fn execute_insert(&self, stmt: &InsertStatement, table: &Table) -> Result<usize> {
+        // Acquire exclusive lock on the file
+        let lock = FileLock::new(&table.data_file)?;
+        lock.lock_exclusive()?;
+
+        // Open file in append mode
+        let file = OpenOptions::new()
+            .append(true)
+            .open(&table.data_file)?;
+
+        let mut writer = BufWriter::new(file);
+        let mut rows_inserted = 0;
+
+        // Get column names from table or from INSERT statement
+        let column_names = if stmt.columns.is_empty() {
+            // No columns specified - use table columns
+            table.columns.iter().map(|c| c.name.clone()).collect::<Vec<_>>()
+        } else {
+            stmt.columns.clone()
+        };
+
+        // Process each row of values
+        for value_row in &stmt.values {
+            if !stmt.columns.is_empty() && value_row.len() != stmt.columns.len() {
+                return Err(DdbError::ExecutionError(format!(
+                    "Column count ({}) doesn't match value count ({})",
+                    stmt.columns.len(),
+                    value_row.len()
+                )));
+            }
+
+            // Build CSV row
+            let mut csv_row = Vec::new();
+            for expr in value_row {
+                // Evaluate expression to get value
+                let empty_row = Row::new();
+                let value = self.evaluator.evaluate(expr, &empty_row)?;
+                csv_row.push(self.value_to_csv_string(&value));
+            }
+
+            // Write row to file
+            writeln!(writer, "{}", csv_row.join(&table.field_delimiter.to_string()))?;
+
+            rows_inserted += 1;
+        }
+
+        writer.flush()?;
+
+        // Lock is automatically released when dropped
+        Ok(rows_inserted)
+    }
+
+    /// Execute an UPDATE statement
+    pub fn execute_update(&self, stmt: &UpdateStatement, table: &Table) -> Result<usize> {
+        // Acquire exclusive lock on the file
+        let lock = FileLock::new(&table.data_file)?;
+        lock.lock_exclusive()?;
+
+        // Read all rows
+        let file = File::open(&table.data_file)?;
+        let reader = BufReader::new(file);
+        let mut lines: Vec<String> = reader.lines().collect::<std::result::Result<Vec<_>, _>>()?;
+
+        if lines.is_empty() {
+            return Ok(0);
+        }
+
+        // Parse header
+        let header = lines[0].clone();
+        let column_names: Vec<String> = header
+            .split(table.field_delimiter)
+            .map(|s| s.trim().to_string())
+            .collect();
+
+        let mut rows_updated = 0;
+
+        // Process data rows
+        for i in (table.data_starts_on as usize + 1)..lines.len() {
+            let line = &lines[i];
+
+            // Skip empty lines
+            if line.trim().is_empty() {
+                continue;
+            }
+
+            // Parse row
+            let values: Vec<String> = line
+                .split(table.field_delimiter)
+                .map(|s| s.trim().to_string())
+                .collect();
+
+            let mut row = Row::new();
+            for (idx, col_name) in column_names.iter().enumerate() {
+                if idx < values.len() {
+                    row.set(col_name, self.parse_value(&values[idx]));
+                }
+            }
+
+            // Check if row matches WHERE clause
+            let matches = if let Some(where_expr) = &stmt.where_clause {
+                let result = self.evaluator.evaluate(where_expr, &row)?;
+                self.to_boolean(&result)?
+            } else {
+                true // No WHERE clause, update all rows
+            };
+
+            if matches {
+                // Update the row
+                for (column, value_expr) in &stmt.assignments {
+                    let new_value = self.evaluator.evaluate(value_expr, &row)?;
+                    row.set(column, new_value);
+                }
+
+                // Rebuild CSV line
+                let mut csv_values = Vec::new();
+                for col_name in &column_names {
+                    if let Some(value) = row.get(col_name) {
+                        csv_values.push(self.value_to_csv_string(value));
+                    } else {
+                        csv_values.push(String::new());
+                    }
+                }
+
+                lines[i] = csv_values.join(&table.field_delimiter.to_string());
+                rows_updated += 1;
+            }
+        }
+
+        // Rewrite file
+        let file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(&table.data_file)?;
+
+        let mut writer = BufWriter::new(file);
+        for line in &lines {
+            writeln!(writer, "{}", line)?;
+        }
+        writer.flush()?;
+
+        Ok(rows_updated)
+    }
+
+    /// Execute a DELETE statement
+    pub fn execute_delete(&self, stmt: &DeleteStatement, table: &Table) -> Result<usize> {
+        // Acquire exclusive lock on the file
+        let lock = FileLock::new(&table.data_file)?;
+        lock.lock_exclusive()?;
+
+        // Read all rows
+        let file = File::open(&table.data_file)?;
+        let reader = BufReader::new(file);
+        let lines: Vec<String> = reader.lines().collect::<std::result::Result<Vec<_>, _>>()?;
+
+        if lines.is_empty() {
+            return Ok(0);
+        }
+
+        // Parse header
+        let header = lines[0].clone();
+        let column_names: Vec<String> = header
+            .split(table.field_delimiter)
+            .map(|s| s.trim().to_string())
+            .collect();
+
+        let mut kept_lines = vec![header]; // Keep header
+        let mut rows_deleted = 0;
+
+        // Process data rows
+        for i in (table.data_starts_on as usize + 1)..lines.len() {
+            let line = &lines[i];
+
+            // Skip empty lines
+            if line.trim().is_empty() {
+                continue;
+            }
+
+            // Parse row
+            let values: Vec<String> = line
+                .split(table.field_delimiter)
+                .map(|s| s.trim().to_string())
+                .collect();
+
+            let mut row = Row::new();
+            for (idx, col_name) in column_names.iter().enumerate() {
+                if idx < values.len() {
+                    row.set(col_name, self.parse_value(&values[idx]));
+                }
+            }
+
+            // Check if row matches WHERE clause
+            let should_delete = if let Some(where_expr) = &stmt.where_clause {
+                let result = self.evaluator.evaluate(where_expr, &row)?;
+                self.to_boolean(&result)?
+            } else {
+                true // No WHERE clause, delete all rows
+            };
+
+            if should_delete {
+                rows_deleted += 1;
+            } else {
+                kept_lines.push(line.clone());
+            }
+        }
+
+        // Rewrite file with kept lines only
+        let file = OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(&table.data_file)?;
+
+        let mut writer = BufWriter::new(file);
+        for line in &kept_lines {
+            writeln!(writer, "{}", line)?;
+        }
+        writer.flush()?;
+
+        Ok(rows_deleted)
+    }
+
+    /// Convert a Value to CSV string representation
+    fn value_to_csv_string(&self, value: &Value) -> String {
+        match value {
+            Value::String(s) => {
+                // Escape quotes and wrap in quotes if contains delimiter or quotes
+                if s.contains(',') || s.contains('"') || s.contains('\n') {
+                    format!("\"{}\"", s.replace('"', "\"\""))
+                } else {
+                    s.clone()
+                }
+            }
+            Value::Integer(i) => i.to_string(),
+            Value::Float(f) => f.to_string(),
+            Value::Boolean(b) => b.to_string(),
+            Value::Null => String::new(),
+            Value::Date(d) => d.format("%Y-%m-%d").to_string(),
+            Value::DateTime(dt) => dt.format("%Y-%m-%d %H:%M:%S").to_string(),
+            Value::Time(t) => t.format("%H:%M:%S").to_string(),
+        }
+    }
+
+    /// Parse a string value into a Value
+    fn parse_value(&self, s: &str) -> Value {
+        if s.is_empty() {
+            return Value::Null;
+        }
+
+        // Try parsing as integer
+        if let Ok(i) = s.parse::<i64>() {
+            return Value::Integer(i);
+        }
+
+        // Try parsing as float
+        if let Ok(f) = s.parse::<f64>() {
+            return Value::Float(f);
+        }
+
+        // Try parsing as boolean
+        match s.to_lowercase().as_str() {
+            "true" | "t" | "yes" | "y" | "1" => return Value::Boolean(true),
+            "false" | "f" | "no" | "n" | "0" => return Value::Boolean(false),
+            _ => {}
+        }
+
+        // Default to string
+        Value::String(s.to_string())
     }
 }
 

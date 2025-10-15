@@ -203,14 +203,149 @@ fn execute_query(cli: &Cli, query: &str, config: &Config, catalog: &TableCatalog
 
             Ok(())
         }
-        Statement::Insert(_) => {
-            Err("INSERT statements are not yet implemented".into())
+        Statement::Insert(insert_stmt) => {
+            // Get table definition
+            let table = if let Some(ref path) = cli.file {
+                // Use explicit --file argument
+                let delimiter = cli
+                    .delimiter
+                    .chars()
+                    .next()
+                    .unwrap_or(config.default_delimiter);
+
+                Table {
+                    name: "temp".to_string(),
+                    database: "temp".to_string(),
+                    data_file: path.to_string_lossy().to_string(),
+                    columns: vec![],
+                    field_delimiter: delimiter,
+                    data_starts_on: config.data_starts_on,
+                    comment_char: config.comment_char,
+                }
+            } else {
+                // Look up table in catalog
+                catalog.get_table(&insert_stmt.table)
+                    .ok_or_else(|| format!("Table '{}' not found in catalog. Use --file to specify a file, or add table definition to schema directory.", insert_stmt.table))?
+                    .clone()
+            };
+
+            if cli.debug {
+                println!("=== Table Info ===");
+                println!("Name: {}", table.name);
+                println!("File: {}", table.data_file);
+                println!("Delimiter: {:?}", table.field_delimiter);
+                println!();
+            }
+
+            // Execute INSERT
+            let executor = QueryExecutor::new();
+            let rows_inserted = executor.execute_insert(&insert_stmt, &table)?;
+
+            if cli.debug {
+                println!("=== Results ===");
+                println!("{} rows inserted", rows_inserted);
+                println!();
+            } else {
+                println!("{} rows inserted", rows_inserted);
+            }
+
+            Ok(())
         }
-        Statement::Update(_) => {
-            Err("UPDATE statements are not yet implemented".into())
+        Statement::Update(update_stmt) => {
+            // Get table definition
+            let table = if let Some(ref path) = cli.file {
+                // Use explicit --file argument
+                let delimiter = cli
+                    .delimiter
+                    .chars()
+                    .next()
+                    .unwrap_or(config.default_delimiter);
+
+                Table {
+                    name: "temp".to_string(),
+                    database: "temp".to_string(),
+                    data_file: path.to_string_lossy().to_string(),
+                    columns: vec![],
+                    field_delimiter: delimiter,
+                    data_starts_on: config.data_starts_on,
+                    comment_char: config.comment_char,
+                }
+            } else {
+                // Look up table in catalog
+                catalog.get_table(&update_stmt.table)
+                    .ok_or_else(|| format!("Table '{}' not found in catalog. Use --file to specify a file, or add table definition to schema directory.", update_stmt.table))?
+                    .clone()
+            };
+
+            if cli.debug {
+                println!("=== Table Info ===");
+                println!("Name: {}", table.name);
+                println!("File: {}", table.data_file);
+                println!("Delimiter: {:?}", table.field_delimiter);
+                println!();
+            }
+
+            // Execute UPDATE
+            let executor = QueryExecutor::new();
+            let rows_updated = executor.execute_update(&update_stmt, &table)?;
+
+            if cli.debug {
+                println!("=== Results ===");
+                println!("{} rows updated", rows_updated);
+                println!();
+            } else {
+                println!("{} rows updated", rows_updated);
+            }
+
+            Ok(())
         }
-        Statement::Delete(_) => {
-            Err("DELETE statements are not yet implemented".into())
+        Statement::Delete(delete_stmt) => {
+            // Get table definition
+            let table = if let Some(ref path) = cli.file {
+                // Use explicit --file argument
+                let delimiter = cli
+                    .delimiter
+                    .chars()
+                    .next()
+                    .unwrap_or(config.default_delimiter);
+
+                Table {
+                    name: "temp".to_string(),
+                    database: "temp".to_string(),
+                    data_file: path.to_string_lossy().to_string(),
+                    columns: vec![],
+                    field_delimiter: delimiter,
+                    data_starts_on: config.data_starts_on,
+                    comment_char: config.comment_char,
+                }
+            } else {
+                // Look up table in catalog
+                catalog.get_table(&delete_stmt.table)
+                    .ok_or_else(|| format!("Table '{}' not found in catalog. Use --file to specify a file, or add table definition to schema directory.", delete_stmt.table))?
+                    .clone()
+            };
+
+            if cli.debug {
+                println!("=== Table Info ===");
+                println!("Name: {}", table.name);
+                println!("File: {}", table.data_file);
+                println!("Delimiter: {:?}", table.field_delimiter);
+                println!();
+            }
+
+            // Execute DELETE
+            let executor = QueryExecutor::new();
+            let rows_deleted = executor.execute_delete(&delete_stmt, &table)?;
+
+            if cli.debug {
+                println!("=== Results ===");
+                println!("{} rows deleted", rows_deleted);
+                println!();
+            } else {
+                println!("{} rows deleted", rows_deleted);
+            }
+
+            Ok(())
         }
         Statement::CreateTable(_) => {
             Err("CREATE TABLE statements are not yet implemented".into())
