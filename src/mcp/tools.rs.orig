@@ -1,0 +1,484 @@
+//! MCP Tool implementations for DDB
+
+use crate::config::{Config, Table, TableCatalog};
+use crate::engine::QueryExecutor;
+use crate::lexer::Tokenizer;
+use crate::output::{format_results, OutputFormat};
+use crate::parser::Parser as SqlParser;
+use crate::parser::Statement;
+use anyhow::{anyhow, Result};
+use serde_json::{json, Value};
+use std::path::PathBuf;
+use std::sync::Arc;
+use tokio::sync::RwLock;
+use tracing::{info, warn};
+
+pub struct ToolHandler {
+    config: Arc<RwLock<Config>>,
+    catalog: Arc<RwLock<TableCatalog>>,
+}
+
+impl ToolHandler {
+    pub fn new(config: Arc<RwLock<Config>>, catalog: Arc<RwLock<TableCatalog>>) -> Self {
+        Self { config, catalog }
+    }
+
+    /// List all available tools
+    pub fn list_tools(&self) -> Vec<Value> {
+        vec![
+            json!({
+                "name": "execute_query",
+                "description": "Execute a SQL query against DDB tables or CSV files. Supports SELECT, INSERT, UPDATE, DELETE, and other SQL statements.",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "The SQL query to execute (e.g., 'SELECT * FROM users WHERE age > 25')"
+                        },
+                        "output_format": {
+                            "type": "string",
+                            "enum": ["json", "yaml", "csv", "table"],
+                            "description": "Output format for the results (default: json)",
+                            "default": "json"
+                        },
+                        "file_path": {
+                            "type": "string",
+                            "description": "Optional: Direct path to a CSV/delimited file instead of using configured tables"
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "description": "Optional: Field delimiter for direct file queries (default: comma)",
+                            "default": ","
+                        }
+                    },
+                    "required": ["query"]
+            }),
+            json!({
+                "name": "list_tables",
+                "description": "List all configured tables in the DDB database with their metadata.",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "database": {
+                            "type": "string",
+                            "description": "Optional: Filter tables by database name"
+                        }
+                    }
+            }),
+            json!({
+                "name": "describe_table",
+                "description": "Get detailed schema information about a specific table including columns, data types, and file location.",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "table_name": {
+                            "type": "string",
+                            "description": "The name of the table to describe"
+                        }
+                    },
+                    "required": ["table_name"]
+            }),
+            json!({
+                "name": "query_file",
+                "description": "Directly query a CSV or delimited file without requiring table configuration. Useful for ad-hoc queries.",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to the CSV or delimited file"
+                        },
+                        "query": {
+                            "type": "string",
+                            "description": "SQL query to execute (use 'FROM temp' or omit FROM clause)"
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "description": "Field delimiter (default: comma)",
+                            "default": ","
+                        },
+                        "has_header": {
+                            "type": "boolean",
+                            "description": "Whether the file has a header row (default: true)",
+                            "default": true
+                        },
+                        "output_format": {
+                            "type": "string",
+                            "enum": ["json", "yaml", "csv", "table"],
+                            "description": "Output format for the results (default: json)",
+                            "default": "json"
+                        }
+                    },
+                    "required": ["file_path", "query"]
+            }),
+            json!({
+                "name": "get_functions",
+                "description": "Get a list of all available SQL functions organized by category (math, string, date/time, aggregate, etc.).",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "category": {
+                            "type": "string",
+                            "description": "Optional: Filter functions by category (math, string, conversion, datetime, aggregate, system, conditional, utility)",
+                            "enum": ["math", "string", "conversion", "datetime", "aggregate", "system", "conditional", "utility"]
+                        }
+                    }
+            }),
+            json!({
+                "name": "validate_query",
+                "description": "Validate SQL query syntax without executing it. Returns parse errors if any.",
+                "inputSchema": json!({
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "The SQL query to validate"
+                        }
+                    },
+                    "required": ["query"]
+            }),
+        ]
+    }
+
+    /// Call a tool
+    pub async fn call_tool(&self, name: &str, arguments: Option<Value>) -> Result<Value> {
+        let args = arguments.unwrap_or(json!({}));
+
+        match name {
+            "execute_query" => self.execute_query(args).await,
+            "list_tables" => self.list_tables(args).await,
+            "describe_table" => self.describe_table(args).await,
+            "query_file" => self.query_file(args).await,
+            "get_functions" => self.get_functions(args).await,
+            "validate_query" => self.validate_query(args).await,
+            _ => Err(anyhow!("Unknown tool: {}", name)),
+        }
+    }
+
+    /// Execute a SQL query
+    async fn execute_query(&self, args: Value) -> Result<Value> {
+        let query = args["query"]
+            .as_str()
+            .ok_or_else(|| anyhow!("Missing 'query' parameter"))?;
+
+        let output_format = args["output_format"]
+            .as_str()
+            .unwrap_or("json");
+
+        info!("Executing query: {}", query);
+
+        // Tokenize
+        let mut tokenizer = Tokenizer::new();
+        let tokens = tokenizer.tokenize(query)?;
+
+        // Parse
+        let mut parser = SqlParser::new(tokens);
+        let statement = parser.parse()?;
+
+        // Execute based on statement type
+        let result = match statement {
+            Statement::Select(select_stmt) => {
+                let catalog = self.catalog.read().await;
+                let config = self.config.read().await;
+
+                // Determine table
+                let table = if let Some(file_path) = args["file_path"].as_str() {
+                    // Use explicit file argument
+                    let delimiter = args["delimiter"]
+                        .as_str()
+                        .and_then(|d| d.chars().next())
+                        .unwrap_or(config.default_delimiter);
+
+                    Table {
+                        name: "temp".to_string(),
+                        database: "temp".to_string(),
+                        data_file: file_path.to_string(),
+                        columns: vec![],
+                        field_delimiter: delimiter,
+                        data_starts_on: config.data_starts_on,
+                        comment_char: config.comment_char,
+                    }
+                } else if let Some(ref table_name) = select_stmt.from {
+                    // Look up table in catalog
+                    catalog
+                        .get_table(table_name)
+                        .ok_or_else(|| anyhow!("Table '{}' not found", table_name))?
+                        .clone()
+                } else {
+                    return Err(anyhow!("SELECT requires a FROM clause or file_path parameter"));
+                };
+
+                // Execute query
+                let executor = QueryExecutor::new();
+                let results = executor.execute_select(&select_stmt, &table)?;
+
+                // Format output
+                let format = OutputFormat::from_str(output_format);
+                let formatted = format_results(&results, format)?;
+
+                json!({
+                    "success": true,
+                    "rows_returned": results.len(),
+                    "data": formatted,
+            }
+            Statement::Insert(_) => {
+                json!({
+                    "success": false,
+                    "error": "INSERT statements are not yet implemented"
+            }
+            Statement::Update(_) => {
+                json!({
+                    "success": false,
+                    "error": "UPDATE statements are not yet implemented"
+            }
+            Statement::Delete(_) => {
+                json!({
+                    "success": false,
+                    "error": "DELETE statements are not yet implemented"
+            }
+            Statement::Show(_) => {
+                json!({
+                    "success": false,
+                    "error": "SHOW statements are not yet implemented"
+            }
+            _ => {
+                json!({
+                    "success": false,
+                    "error": format!("Statement type not yet implemented: {:?}", statement)
+            }
+        };
+
+        Ok(result)
+    }
+
+    /// List all tables
+    async fn list_tables(&self, args: Value) -> Result<Value> {
+        let catalog = self.catalog.read().await;
+        let database_filter = args["database"].as_str();
+
+        let tables = catalog.list_tables();
+        let filtered_tables: Vec<String> = if let Some(db) = database_filter {
+            tables.into_iter().filter(|t| {
+                if let Some(table) = catalog.get_table(t) {
+                    table.database == db
+                } else {
+                    false
+                }
+            }).collect()
+        } else {
+            tables
+        };
+
+        let result = json!({
+            "success": true,
+            "count": filtered_tables.len(),
+            "tables": filtered_tables,
+        });
+
+        Ok(result)
+    }
+
+    /// Describe a table
+    async fn describe_table(&self, args: Value) -> Result<Value> {
+        let table_name = args["table_name"]
+            .as_str()
+            .ok_or_else(|| anyhow!("Missing 'table_name' parameter"))?;
+
+        let catalog = self.catalog.read().await;
+        let table = catalog
+            .get_table(table_name)
+            .ok_or_else(|| anyhow!("Table '{}' not found", table_name))?;
+
+        let columns: Vec<Value> = table
+            .columns
+            .iter()
+            .map(|col| {
+                json!({
+                    "name": col.name,
+                    "type": format!("{:?}", col.data_type),
+                    "nullable": col.nullable,
+            .collect();
+
+        let result = json!({
+            "success": true,
+            "table": {
+                "name": table.name,
+                "database": table.database,
+                "file": table.data_file,
+                "delimiter": table.field_delimiter.to_string(),
+                "data_starts_on": table.data_starts_on,
+                "comment_char": table.comment_char.map(|c| c.to_string()),
+                "columns": columns,
+                "column_count": table.columns.len(),
+            }
+        });
+
+        Ok(result)
+    }
+
+    /// Query a file directly
+    async fn query_file(&self, args: Value) -> Result<Value> {
+        let file_path = args["file_path"]
+            .as_str()
+            .ok_or_else(|| anyhow!("Missing 'file_path' parameter"))?;
+
+        let query = args["query"]
+            .as_str()
+            .ok_or_else(|| anyhow!("Missing 'query' parameter"))?;
+
+        let delimiter = args["delimiter"]
+            .as_str()
+            .and_then(|d| d.chars().next())
+            .unwrap_or(',');
+
+        let output_format = args["output_format"].as_str().unwrap_or("json");
+        let config = self.config.read().await;
+
+        // Create temporary table definition
+        let table = Table {
+            name: "temp".to_string(),
+            database: "temp".to_string(),
+            data_file: file_path.to_string(),
+            columns: vec![],
+            field_delimiter: delimiter,
+            data_starts_on: config.data_starts_on,
+            comment_char: config.comment_char,
+        };
+
+        // Execute query
+        let mut tokenizer = Tokenizer::new();
+        let tokens = tokenizer.tokenize(query)?;
+
+        let mut parser = SqlParser::new(tokens);
+        let statement = parser.parse()?;
+
+        match statement {
+            Statement::Select(select_stmt) => {
+                let executor = QueryExecutor::new();
+                let results = executor.execute_select(&select_stmt, &table)?;
+
+                let format = OutputFormat::from_str(output_format);
+                let formatted = format_results(&results, format)?;
+
+                let result = json!({
+                    "success": true,
+                    "file": file_path,
+                    "rows_returned": results.len(),
+                    "data": formatted,
+                });
+
+        Ok(result)
+            }
+            _ => Err(anyhow!("Only SELECT queries are supported for direct file queries")),
+        }
+    }
+
+    /// Get available functions
+    async fn get_functions(&self, args: Value) -> Result<Value> {
+        let category_filter = args["category"].as_str();
+
+        // Function categories
+        let functions = json!({
+            "math": [
+                "ABS", "CEIL", "CEILING", "FLOOR", "ROUND", "SQRT", "POW", "POWER",
+                "EXP", "LN", "LOG", "LOG10", "MOD", "SIGN", "TRUNC", "PI", "RAND", "RANDOM"
+            ],
+            "string": [
+                "CONCAT", "CONCAT_WS", "UPPER", "UCASE", "LOWER", "LCASE", "LENGTH",
+                "CHAR_LENGTH", "TRIM", "LTRIM", "RTRIM", "SUBSTR", "SUBSTRING", "LEFT",
+                "RIGHT", "REPLACE", "REVERSE", "LPAD", "RPAD", "POSITION", "INSTR",
+                "REPEAT", "SPACE"
+            ],
+            "conversion": [
+                "CAST", "CONVERT", "ATOF", "ATOI", "TO_STRING", "TO_NUMBER", "HEX",
+                "BIN", "OCT", "FORMAT"
+            ],
+            "datetime": [
+                "NOW", "CURRENT_TIMESTAMP", "CURDATE", "CURRENT_DATE", "CURTIME",
+                "CURRENT_TIME", "DATE", "TIME", "YEAR", "MONTH", "DAY", "HOUR",
+                "MINUTE", "SECOND", "DAYOFWEEK", "DAYNAME", "MONTHNAME", "DAYOFYEAR",
+                "WEEK", "QUARTER", "DATEDIFF", "DATEADD", "DATESUB", "TIMESTAMPDIFF",
+                "AGE", "DATE_FORMAT", "UNIX_TIMESTAMP", "FROM_UNIXTIME"
+            ],
+            "aggregate": [
+                "COUNT", "SUM", "AVG", "MIN", "MAX", "GROUP_CONCAT", "STDDEV_POP", "VAR_POP"
+            ],
+            "system": [
+                "DATABASE", "VERSION", "UUID", "ROW_NUMBER", "USER", "CONNECTION_ID"
+            ],
+            "conditional": [
+                "IF", "IFNULL", "NULLIF", "COALESCE", "GREATEST", "LEAST", "ISNULL"
+            ],
+            "utility": [
+                "HASH", "MD5", "SHA1", "SHA256", "BASE64_ENCODE", "BASE64_DECODE",
+                "URL_ENCODE", "URL_DECODE", "SPLIT_PART", "REGEXP_REPLACE",
+                "REGEXP_MATCH", "LEVENSHTEIN"
+            ]
+        });
+
+        let result = if let Some(category) = category_filter {
+            if let Some(cat_functions) = functions.get(category) {
+                json!({
+                    "success": true,
+                    "category": category,
+                    "functions": cat_functions,
+                    "count": cat_functions.as_array().map(|a| a.len()).unwrap_or(0),
+            } else {
+                json!({
+                    "success": false,
+                    "error": format!("Unknown category: {}", category),
+                    "available_categories": ["math", "string", "conversion", "datetime", "aggregate", "system", "conditional", "utility"]
+            }
+        } else {
+            json!({
+                "success": true,
+                "categories": functions,
+                "total_functions": 101,
+        };
+
+        Ok(result)
+    }
+
+    /// Validate query syntax
+    async fn validate_query(&self, args: Value) -> Result<Value> {
+        let query = args["query"]
+            .as_str()
+            .ok_or_else(|| anyhow!("Missing 'query' parameter"))?;
+
+        // Try to tokenize and parse
+        let mut tokenizer = Tokenizer::new();
+        let tokens_result = tokenizer.tokenize(query);
+
+        let result = match tokens_result {
+            Ok(tokens) => {
+                let mut parser = SqlParser::new(tokens);
+                match parser.parse() {
+                    Ok(statement) => {
+                        json!({
+                            "success": true,
+                            "valid": true,
+                            "statement_type": format!("{:?}", statement).split('(').next().unwrap_or("Unknown"),
+                            "message": "Query syntax is valid"
+                    }
+                    Err(e) => {
+                        json!({
+                            "success": true,
+                            "valid": false,
+                            "error": format!("Parse error: {}", e),
+                            "message": "Query has syntax errors"
+                    }
+                }
+            }
+            Err(e) => {
+                json!({
+                    "success": true,
+                    "valid": false,
+                    "error": format!("Tokenization error: {}", e),
+                    "message": "Query has syntax errors"
+            }
+        };
+
+        Ok(result)
+    }
+}

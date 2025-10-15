@@ -1,0 +1,26 @@
+# Rust build artifacts
+/target/
+
+# IDE / Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment files
+.env
+.env.local
+
+# Test outputs
+*.gif
+*.webm
+*.mp4
+build_test/
+
+# Logs
+*.log
+
+# Large benchmark data files
+benchmarks/data/benchmark_data.csv

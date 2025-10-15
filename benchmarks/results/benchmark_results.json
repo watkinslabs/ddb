@@ -1,0 +1,398 @@
+{
+  "system_info": {
+    "hostname": "fedora",
+    "platform": "Linux-6.16.10-200.fc42.x86_64-x86_64-with-glibc2.41",
+    "processor": "",
+    "python_version": "3.13.7",
+    "timestamp": "2025-10-14T19:22:36.350724"
+  },
+  "binary": "./target/release/ddb",
+  "dataset": {
+    "rows": 2000000,
+    "file": "examples/benchmark_data.csv",
+    "size_mb": 123.20013618469238
+  },
+  "iterations_per_test": 3,
+  "benchmarks": [
+    {
+      "name": "count_all",
+      "category": "aggregation",
+      "query": "SELECT COUNT(*) FROM benchmark_data",
+      "description": "Count all 2M rows",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 4.322896894998848,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 7,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 4.242979596994701,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 7,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 4.216183305004961,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 7,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 4.216183305004961,
+        "max": 4.322896894998848,
+        "mean": 4.260686598999503,
+        "median": 4.242979596994701
+      }
+    },
+    {
+      "name": "filter_region",
+      "category": "filtering",
+      "query": "SELECT * FROM benchmark_data WHERE region = 'West' LIMIT 1000",
+      "description": "Filter by region with LIMIT",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 2.6982156339945504,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 2.6296412970041274,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 2.688892810998368,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 2.6296412970041274,
+        "max": 2.6982156339945504,
+        "mean": 2.6722499139990155,
+        "median": 2.688892810998368
+      }
+    },
+    {
+      "name": "filter_price_range",
+      "category": "filtering",
+      "query": "SELECT * FROM benchmark_data WHERE price > 500 AND price < 600 LIMIT 1000",
+      "description": "Filter by price range",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 2.1119484469963936,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 2.1606528510019416,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 2.163846816001751,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 2.1119484469963936,
+        "max": 2.163846816001751,
+        "mean": 2.1454827046666956,
+        "median": 2.1606528510019416
+      }
+    },
+    {
+      "name": "like_prefix",
+      "category": "pattern_matching",
+      "query": "SELECT * FROM benchmark_data WHERE customer_name LIKE 'John%' LIMIT 1000",
+      "description": "LIKE prefix match (optimized)",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 2.031401921005454,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 2.121177009001258,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 2.1015897299948847,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 2.031401921005454,
+        "max": 2.121177009001258,
+        "mean": 2.084722886667199,
+        "median": 2.1015897299948847
+      }
+    },
+    {
+      "name": "like_suffix",
+      "category": "pattern_matching",
+      "query": "SELECT * FROM benchmark_data WHERE customer_name LIKE '%son' LIMIT 1000",
+      "description": "LIKE suffix match (optimized)",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 3.1952476899969042,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 3.201077413999883,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 3.100737865002884,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 3.100737865002884,
+        "max": 3.201077413999883,
+        "mean": 3.165687656333224,
+        "median": 3.1952476899969042
+      }
+    },
+    {
+      "name": "like_contains",
+      "category": "pattern_matching",
+      "query": "SELECT * FROM benchmark_data WHERE customer_name LIKE '%John%' LIMIT 1000",
+      "description": "LIKE contains match (optimized)",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 2.3537983909991453,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 2.3401123759977054,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 2.3651068920007674,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 2.3401123759977054,
+        "max": 2.3651068920007674,
+        "mean": 2.3530058863325394,
+        "median": 2.3537983909991453
+      }
+    },
+    {
+      "name": "like_complex",
+      "category": "pattern_matching",
+      "query": "SELECT * FROM benchmark_data WHERE customer_name LIKE 'J_hn%' LIMIT 1000",
+      "description": "LIKE with underscore wildcard (regex)",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 45.85230024300108,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 43.26578282999981,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 43.189822045002074,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 2005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 43.189822045002074,
+        "max": 45.85230024300108,
+        "mean": 44.102635039334324,
+        "median": 43.26578282999981
+      }
+    },
+    {
+      "name": "sort_price",
+      "category": "sorting",
+      "query": "SELECT * FROM benchmark_data ORDER BY price DESC LIMIT 100",
+      "description": "Sort by price descending",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 14.11957218900352,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 205,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 14.087756455002818,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 205,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 14.407259879000776,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 205,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 14.087756455002818,
+        "max": 14.407259879000776,
+        "mean": 14.204862841002372,
+        "median": 14.11957218900352
+      }
+    },
+    {
+      "name": "large_result_10k",
+      "category": "scanning",
+      "query": "SELECT * FROM benchmark_data LIMIT 10000",
+      "description": "Read 10K rows",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 5.947247077005159,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 20005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 5.825049821003631,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 20005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 5.648724692000542,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 20005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 5.648724692000542,
+        "max": 5.947247077005159,
+        "mean": 5.807007196669777,
+        "median": 5.825049821003631
+      }
+    },
+    {
+      "name": "large_result_100k",
+      "category": "scanning",
+      "query": "SELECT * FROM benchmark_data LIMIT 100000",
+      "description": "Read 100K rows",
+      "iterations": [
+        {
+          "iteration": 1,
+          "duration_seconds": 5.942252505999932,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 200005,
+          "stderr": null
+        },
+        {
+          "iteration": 2,
+          "duration_seconds": 5.895420417000423,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 200005,
+          "stderr": null
+        },
+        {
+          "iteration": 3,
+          "duration_seconds": 5.921506179998687,
+          "success": true,
+          "returncode": 0,
+          "output_lines": 200005,
+          "stderr": null
+        }
+      ],
+      "statistics": {
+        "min": 5.895420417000423,
+        "max": 5.942252505999932,
+        "mean": 5.919726367666347,
+        "median": 5.921506179998687
+      }
+    }
+  ]
+}

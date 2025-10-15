@@ -1,0 +1,57 @@
+# DDB Configuration File
+# This file configures global settings for DDB
+
+# Default database to use
+default_database: default
+
+# Directory containing SQL schema files
+# Schema files define table structures and data file locations
+schema_dir: .ddb/schemas
+
+# Default field delimiter for CSV files
+default_delimiter: ','
+
+# Trim whitespace from fields
+trim_whitespace: true
+
+# Ignore lines starting with comment character
+ignore_comments: true
+
+# Comment character (lines starting with this are ignored)
+comment_char: '#'
+
+# Line number where data starts (0 = first line, 1 = second line, etc.)
+data_starts_on: 0
+
+# Whether first data line contains column headers
+has_header: true
+
+# Quote character for escaping delimiters within fields
+quote_char: '"'
+
+# Skip empty lines when reading files
+skip_empty_lines: true
+
+# Whether fields are enclosed in quotes
+quoted_fields: false
+
+# Remove quotes from quoted fields
+strip_quotes: true
+
+# Default output format: table, json, yaml, csv
+default_output_format: table
+
+# Ignore errors (continue processing on errors)
+ignore_errors: false
+
+# Additional databases (optional)
+# databases:
+#   analytics:
+#     name: analytics
+#     schema_dir: .ddb/schemas/analytics
+#     delimiter: '|'
+#     has_header: false
+
+# Environment Variables:
+# - DDB_CONFIG: Path to this config file
+# - DDB_SCHEMA_DIR: Override schema directory location
