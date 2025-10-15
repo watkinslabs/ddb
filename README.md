@@ -1,10 +1,56 @@
-# DDB
+# DDB v2
 
-A high-performance, secure serviceless SQL interface for flat files.
+**A high-performance, secure SQL interface for CSV and delimited files.**
 
-## Project Status
+Query flat files with full SQL power - no database server required. Built in Rust for maximum performance and safety.
 
-This is **DDB v2** - a complete rewrite in Rust. The goal is to provide better performance, memory safety, and security while maintaining the core functionality of querying delimited files with SQL.
+```sql
+SELECT u.name, COUNT(o.id) as orders, SUM(o.total) as revenue
+FROM users.csv u
+INNER JOIN orders.csv o ON u.id = o.user_id
+GROUP BY u.name
+HAVING revenue > 10000
+ORDER BY revenue DESC
+```
+
+## Why DDB v2?
+
+- 🚀 **Fast** - Zero-copy parsing, streaming architecture, compiled performance
+- 🔒 **Safe** - Memory-safe Rust, file locking, no SQL injection
+- 💪 **Powerful** - Full SQL: JOIN, GROUP BY, HAVING, UPSERT, 101+ functions
+- 🤖 **AI-Ready** - Built-in MCP server for Claude and other AI assistants
+- 📦 **Portable** - Single binary, no dependencies, works anywhere
+- 🎯 **Simple** - No database server, no setup complexity
+
+This is **DDB v2** - a complete rewrite in Rust. Provides better performance, memory safety, and security while maintaining the core functionality of querying delimited files with SQL.
+
+## Use Cases
+
+**Perfect for:**
+- 📊 Ad-hoc analysis of CSV/TSV exports
+- 🔄 ETL data transformations without setting up a database
+- 🧪 Testing and prototyping with flat file data
+- 📝 Log file analysis and reporting
+- 🤖 AI assistants querying structured data files
+- 🚀 Serverless data processing in containers/CI
+- 💼 Data auditing and compliance checks
+
+**Example scenarios:**
+```bash
+# Analyze web server logs
+ddb --query "SELECT ip, COUNT(*) FROM access.log GROUP BY ip ORDER BY count DESC LIMIT 10"
+
+# Join sales data from multiple CSV exports
+ddb --query "
+  SELECT r.region, SUM(s.amount) as total_sales
+  FROM sales.csv s
+  JOIN regions.csv r ON s.region_id = r.id
+  GROUP BY r.region
+"
+
+# Update customer records in place
+ddb --query "UPDATE customers.csv SET status = 'premium' WHERE total_purchases > 10000"
+```
 
 ### Current Implementation Status
 
@@ -57,6 +103,56 @@ This is **DDB v2** - a complete rewrite in Rust. The goal is to provide better p
 - Transaction support (BEGIN, COMMIT, ROLLBACK)
 - Subqueries and CTEs (Common Table Expressions)
 - Window functions
+
+## Quick Start
+
+```bash
+# 1. Build DDB
+cargo build --release
+
+# 2. Create configuration directory
+mkdir -p ~/.ddb/schemas
+
+# 3. Create main config file
+cat > ~/.ddb/ddb.yaml <<EOF
+default_database: main
+schema_dir: ~/.ddb/schemas
+default_delimiter: ','
+data_starts_on: 0
+default_output_format: json
+EOF
+
+# 4. Create a table schema (example: users.yaml)
+cat > ~/.ddb/schemas/users.yaml <<EOF
+name: users
+database: main
+data_file: /path/to/your/users.csv
+field_delimiter: ','
+data_starts_on: 1
+columns:
+  - name: id
+    type: Integer
+    nullable: false
+  - name: name
+    type: String
+    nullable: false
+  - name: email
+    type: String
+    nullable: true
+EOF
+
+# 5. Query your data!
+./target/release/ddb --query "SELECT * FROM users WHERE id = 1"
+
+# 6. Use with JOIN and aggregation
+./target/release/ddb --query "
+  SELECT u.name, COUNT(o.id) as order_count
+  FROM users u
+  INNER JOIN orders o ON u.id = o.user_id
+  GROUP BY u.name
+  HAVING order_count > 5
+"
+```
 
 ## Features
 
@@ -111,6 +207,66 @@ cargo bench
 ./target/release/ddb version
 ```
 
+### SQL Examples
+
+**SELECT with JOIN:**
+```sql
+SELECT u.name, o.order_id, o.total
+FROM users u
+INNER JOIN orders o ON u.id = o.user_id
+WHERE o.total > 100
+ORDER BY o.total DESC
+```
+
+**GROUP BY with HAVING:**
+```sql
+SELECT category, COUNT(*) as total, AVG(price) as avg_price
+FROM products
+GROUP BY category
+HAVING COUNT(*) > 5 AND AVG(price) > 50
+ORDER BY total DESC
+```
+
+**INSERT data:**
+```sql
+INSERT INTO users (id, name, email, age)
+VALUES (101, 'John Doe', 'john@example.com', 30)
+```
+
+**UPDATE records:**
+```sql
+UPDATE users
+SET age = 31, email = 'newemail@example.com'
+WHERE name = 'John Doe'
+```
+
+**DELETE records:**
+```sql
+DELETE FROM users WHERE age < 18
+```
+
+**UPSERT (insert or update):**
+```sql
+UPSERT INTO users (id, name, email, age)
+VALUES (101, 'John Doe', 'updated@example.com', 32)
+ON id
+```
+
+**Advanced aggregation:**
+```sql
+SELECT
+  department,
+  COUNT(*) as employee_count,
+  AVG(salary) as avg_salary,
+  MIN(salary) as min_salary,
+  MAX(salary) as max_salary,
+  STDDEV(salary) as salary_stddev
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 50000
+ORDER BY avg_salary DESC
+```
+
 ### MCP Server (AI Integration)
 
 DDB includes an MCP (Model Context Protocol) server for seamless integration with AI assistants like Claude.
@@ -132,6 +288,69 @@ The MCP server provides:
 - **2 Prompts**: Query generation and data analysis templates
 
 See [MCP_SERVER.md](MCP_SERVER.md) for complete documentation.
+
+## Configuration
+
+DDB uses YAML configuration files located in `~/.ddb/` (or a custom directory via `--config`).
+
+### Main Configuration (`~/.ddb/ddb.yaml`)
+
+```yaml
+default_database: main
+schema_dir: ~/.ddb/schemas
+default_delimiter: ','
+data_starts_on: 0         # Line where data starts (0 = after header)
+comment_char: '#'          # Optional: lines starting with this are ignored
+default_output_format: json
+```
+
+### Table Schema (`~/.ddb/schemas/users.yaml`)
+
+```yaml
+name: users
+database: main
+data_file: /path/to/users.csv
+field_delimiter: ','
+data_starts_on: 1         # Skip header row
+columns:
+  - name: id
+    type: Integer
+    nullable: false
+  - name: name
+    type: String
+    nullable: false
+  - name: email
+    type: String
+    nullable: true
+  - name: age
+    type: Integer
+    nullable: true
+  - name: created_at
+    type: DateTime
+    nullable: false
+```
+
+### Supported Data Types
+
+- `Integer` - 64-bit signed integers
+- `Float` - 64-bit floating point
+- `String` - UTF-8 text
+- `Boolean` - true/false
+- `Date` - Date only (YYYY-MM-DD)
+- `DateTime` - Date and time
+- `Time` - Time only (HH:MM:SS)
+
+### Directory Structure
+
+```
+~/.ddb/
+├── ddb.yaml              # Main configuration
+└── schemas/
+    ├── users.yaml        # Table definition
+    ├── orders.yaml       # Table definition
+    ├── products.yaml     # Table definition
+    └── ...
+```
 
 ## Architecture
 
