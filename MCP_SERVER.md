@@ -307,6 +307,6 @@ Creative Commons Attribution-Noncommercial-Share Alike (CC-BY-NC-SA-4.0)
 
 ## Version
 
-Current version: 0.1.0
+Current version: 2.0.0 (DDB v2)
 
 MCP Protocol: 2024-11-05
