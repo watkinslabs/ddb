@@ -58,6 +58,8 @@ pub enum TokenType {
     On,
     Having,
     Group,
+    If,
+    Exists,
 
     // Operators
     Multiply,        // * (alias for Star when used in expressions)
@@ -171,6 +173,8 @@ impl Token {
                 | TokenType::On
                 | TokenType::Having
                 | TokenType::Group
+                | TokenType::If
+                | TokenType::Exists
         )
     }
 }

@@ -9,6 +9,7 @@ pub enum OutputFormat {
     Json,
     Yaml,
     Csv,
+    Xml,
 }
 
 impl OutputFormat {
@@ -17,6 +18,7 @@ impl OutputFormat {
             "json" => OutputFormat::Json,
             "yaml" => OutputFormat::Yaml,
             "csv" => OutputFormat::Csv,
+            "xml" => OutputFormat::Xml,
             _ => OutputFormat::Table,
         }
     }
@@ -33,6 +35,7 @@ pub fn format_results(rows: &[Row], format: OutputFormat) -> Result<String> {
         OutputFormat::Json => format_json(rows),
         OutputFormat::Yaml => format_yaml(rows),
         OutputFormat::Csv => format_csv(rows),
+        OutputFormat::Xml => format_xml(rows),
     }
 }
 
@@ -123,6 +126,61 @@ fn format_csv(rows: &[Row]) -> Result<String> {
     }
 
     Ok(output)
+}
+
+/// Format results as XML
+fn format_xml(rows: &[Row]) -> Result<String> {
+    if rows.is_empty() {
+        return Ok("<results></results>".to_string());
+    }
+
+    let mut output = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<results>\n");
+
+    for row in rows {
+        output.push_str("  <row>\n");
+        for (key, value) in row.as_map() {
+            // Escape XML special characters in tag name
+            let safe_key = escape_xml_tag(key);
+            let value_str = escape_xml(&value_to_string(value));
+            output.push_str(&format!("    <{}>{}</{}>\n", safe_key, value_str, safe_key));
+        }
+        output.push_str("  </row>\n");
+    }
+
+    output.push_str("</results>");
+    Ok(output)
+}
+
+/// Escape XML tag name (replace invalid characters with underscores)
+fn escape_xml_tag(s: &str) -> String {
+    s.chars()
+        .map(|c| if c.is_alphanumeric() || c == '_' { c } else { '_' })
+        .collect()
+}
+
+/// Escape XML special characters in content
+fn escape_xml(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&apos;")
+}
+
+/// Convert Value to string for XML
+fn value_to_string(value: &crate::functions::Value) -> String {
+    use crate::functions::Value;
+
+    match value {
+        Value::Null => String::new(),
+        Value::Boolean(b) => b.to_string(),
+        Value::Integer(i) => i.to_string(),
+        Value::Float(f) => f.to_string(),
+        Value::String(s) => s.clone(),
+        Value::Date(d) => d.format("%Y-%m-%d").to_string(),
+        Value::DateTime(dt) => dt.format("%Y-%m-%d %H:%M:%S").to_string(),
+        Value::Time(t) => t.format("%H:%M:%S").to_string(),
+    }
 }
 
 /// Escape CSV field if needed
@@ -228,5 +286,20 @@ mod tests {
         assert!(output.contains("name:"));
         assert!(output.contains("Alice"));
         assert!(output.contains("Bob"));
+    }
+
+    #[test]
+    fn test_format_xml() {
+        let rows = create_test_rows();
+        let output = format_xml(&rows).unwrap();
+
+        assert!(output.contains("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assert!(output.contains("<results>"));
+        assert!(output.contains("<row>"));
+        assert!(output.contains("<id>"));
+        assert!(output.contains("<name>"));
+        assert!(output.contains("Alice"));
+        assert!(output.contains("Bob"));
+        assert!(output.contains("</results>"));
     }
 }

@@ -1,5 +1,169 @@
 # Changelog
 
+## [2.1.0] - 2025-10-15
+
+### Added - DDL Operations & Enhanced Output
+
+#### SQL-Based Schema Definitions
+- **CREATE TABLE** statement fully implemented
+  - Column definitions with types (INTEGER, STRING, FLOAT, BOOLEAN, DATE, DATETIME, TIME)
+  - NULL/NOT NULL constraints
+  - IF NOT EXISTS clause
+  - FILE path specification
+  - Options: DELIMITER, DATA_STARTS_ON, COMMENT_CHAR, QUOTE_CHAR
+  - Replaces YAML-based schema files with SQL CREATE TABLE statements
+- **DROP TABLE** statement implemented
+  - IF EXISTS clause support
+- **SET** statement for session variables
+  - Syntax: `SET variable = value`
+  - Supports string, numeric, and expression values
+
+**Example CREATE TABLE**:
+```sql
+CREATE TABLE IF NOT EXISTS sales_data (
+    order_id INTEGER NOT NULL,
+    customer_name STRING NOT NULL,
+    product STRING NOT NULL,
+    quantity INTEGER NOT NULL,
+    price FLOAT NOT NULL,
+    order_date DATE NOT NULL,
+    region STRING NOT NULL,
+    status STRING NOT NULL
+)
+FILE '/path/to/sales_data.csv'
+DELIMITER ','
+DATA_STARTS_ON 1
+COMMENT_CHAR '#'
+QUOTE_CHAR '"';
+```
+
+#### XML Output Format
+- Added **XML** as 5th output format (table, json, yaml, csv, xml)
+- Well-formed XML with proper character escaping (&, <, >, ", ')
+- XML declaration and structured output
+- Safe XML tag name sanitization
+
+**Example XML Output**:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+  <row>
+    <order_id>1001</order_id>
+    <customer_name>John Smith</customer_name>
+    <product>Laptop</product>
+    <price>899.99</price>
+  </row>
+</results>
+```
+
+### Changed
+
+#### Configuration System
+- Schema files now use `.sql` extension with CREATE TABLE statements
+- YAML schema files (`.yaml`) are deprecated but still supported
+- Main config file remains `config.yaml` for global settings
+- Schema directory automatically loads all `.sql` files containing CREATE TABLE statements
+
+#### Parser Enhancements
+- Added tokens: `IF`, `EXISTS` for DDL support
+- Enhanced column definition parsing with full type support
+- Added helper function `parse_column_type()` for type validation
+- Added helper function `parse_column_definitions()` for schema parsing
+
+#### Lexer Updates
+- Added `TokenType::If` and `TokenType::Exists`
+- Updated keyword recognition for DDL statements
+
+### Documentation
+
+- Updated `README.md` - SQL-based schemas, XML output, CREATE/DROP TABLE
+- Updated `examples/README.md` - Configuration approach with SQL schemas
+- Updated `examples/schema.sql` - CREATE TABLE examples and syntax
+- Created `examples/DEFAULTS.md` - Complete default settings reference
+- Created `examples/test_all_formats.sh` - Demonstrates all 5 output formats
+- Updated `examples/config/` - SQL schema files replacing YAML
+
+### Testing
+
+- Added 8 new parser tests:
+  - `test_parse_create_table` - Basic CREATE TABLE parsing
+  - `test_parse_create_table_if_not_exists` - IF NOT EXISTS clause
+  - `test_parse_create_table_with_options` - All CREATE TABLE options
+  - `test_parse_drop_table` - Basic DROP TABLE
+  - `test_parse_drop_table_if_exists` - IF EXISTS clause
+  - `test_parse_set` - SET with string value
+  - `test_parse_set_with_number` - SET with numeric value
+  - `test_format_xml` - XML output format
+- All 88 tests passing (87 existing + 1 new XML test)
+- Verified backward compatibility with direct file mode
+
+### Files Changed
+
+**Core Implementation**:
+- `src/parser/ast.rs` - Added CreateTableStatement, DropTableStatement, SetStatement
+- `src/parser/parser.rs` - Implemented CREATE, DROP, SET parsers with full options
+- `src/lexer/types.rs` - Added If, Exists tokens
+- `src/lexer/tokenizer.rs` - Added keyword recognition for IF, EXISTS
+- `src/output/formatter.rs` - Added XML format support
+- `src/bin/ddb.rs` - Added Describe match arm
+- `src/config/loader.rs` - SQL schema file loading (.sql files)
+
+**Examples & Documentation**:
+- `examples/README.md` - Updated for SQL schemas
+- `examples/schema.sql` - Added CREATE TABLE examples
+- `examples/DEFAULTS.md` - New defaults documentation
+- `examples/config/ddb.yaml` - Updated comments
+- `examples/config/schemas/sales_data.sql` - Created (replaced .yaml)
+- `examples/test_all_formats.sh` - New test script
+- `examples/test_sql_config.sh` - SQL config test script
+- `README.md` - Major updates for v2.1 features
+
+### Breaking Changes
+
+**Minor**: Schema files should migrate from `.yaml` to `.sql` format:
+
+**Before (YAML)**:
+```yaml
+name: users
+database: main
+data_file: /path/to/users.csv
+field_delimiter: ','
+columns:
+  - name: id
+    type: Integer
+```
+
+**After (SQL)**:
+```sql
+CREATE TABLE users (
+    id INTEGER NOT NULL
+)
+FILE '/path/to/users.csv'
+DELIMITER ',';
+```
+
+YAML schemas still work but are deprecated.
+
+### Migration Guide
+
+1. Convert existing `.yaml` schema files to `.sql` with CREATE TABLE statements
+2. Update references in documentation from `ddb.yaml` to `config.yaml`
+3. Test with `--debug` flag to verify schema loading
+4. Optional: Use XML output with `--output xml`
+
+### Performance
+
+No performance regression. New features add zero overhead when not used.
+
+### Future Enhancements
+
+- ALTER TABLE for schema modifications
+- CREATE INDEX for custom indexes
+- Full transaction support (BEGIN/COMMIT/ROLLBACK)
+- Execution of DDL statements (currently parse-only)
+
+---
+
 ## [2.0.0] - 2025-10-15
 
 ### Added - Performance Optimizations

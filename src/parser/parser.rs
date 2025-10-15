@@ -412,15 +412,28 @@ impl Parser {
     fn parse_create(&mut self) -> Result<Statement> {
         self.expect(TokenType::Create)?;
         self.expect(TokenType::Table)?;
+
+        // Check for IF NOT EXISTS
+        let if_not_exists = if self.match_token(TokenType::If) {
+            self.expect(TokenType::Not)?;
+            self.expect(TokenType::Exists)?;
+            true
+        } else {
+            false
+        };
+
         let name = self.expect_identifier()?;
 
         self.expect(TokenType::LeftParen)?;
-        let columns = self.parse_identifier_list()?;
+        let columns = self.parse_column_definitions()?;
         self.expect(TokenType::RightParen)?;
 
         // Parse optional FILE and DELIMITER
         let mut file_path = String::new();
         let mut delimiter = None;
+        let mut data_starts_on = None;
+        let mut comment_char = None;
+        let mut quote_char = None;
 
         if self.match_token(TokenType::File) {
             file_path = self.expect_string()?;
@@ -431,21 +444,110 @@ impl Parser {
             delimiter = delim_str.chars().next();
         }
 
+        // Parse additional options
+        while let Ok(token) = self.peek() {
+            if let TokenType::Identifier(ref id) = token.token_type {
+                match id.to_uppercase().as_str() {
+                    "DATA_STARTS_ON" => {
+                        self.advance()?;
+                        data_starts_on = Some(self.expect_integer()? as usize);
+                    }
+                    "COMMENT_CHAR" => {
+                        self.advance()?;
+                        let comment_str = self.expect_string()?;
+                        comment_char = comment_str.chars().next();
+                    }
+                    "QUOTE_CHAR" => {
+                        self.advance()?;
+                        let quote_str = self.expect_string()?;
+                        quote_char = quote_str.chars().next();
+                    }
+                    _ => break,
+                }
+            } else {
+                break;
+            }
+        }
+
         Ok(Statement::CreateTable(CreateTableStatement {
             name,
             columns,
             file_path,
             delimiter,
+            data_starts_on,
+            comment_char,
+            quote_char,
+            if_not_exists,
         }))
+    }
+
+    /// Parse column definitions with types
+    fn parse_column_definitions(&mut self) -> Result<Vec<ColumnDefinition>> {
+        let mut columns = Vec::new();
+
+        loop {
+            let col_name = self.expect_identifier()?;
+
+            // Parse column type
+            let type_str = self.expect_identifier()?;
+            let data_type = self.parse_column_type(&type_str)?;
+
+            // Check for NULL/NOT NULL
+            let nullable = if self.match_token(TokenType::Not) {
+                self.expect(TokenType::Null)?;
+                false
+            } else {
+                self.match_token(TokenType::Null); // Optional NULL keyword
+                true
+            };
+
+            columns.push(ColumnDefinition {
+                name: col_name,
+                data_type,
+                nullable,
+            });
+
+            if !self.match_token(TokenType::Comma) {
+                break;
+            }
+        }
+
+        Ok(columns)
+    }
+
+    /// Parse column type from string
+    fn parse_column_type(&self, type_str: &str) -> Result<ColumnType> {
+        match type_str.to_uppercase().as_str() {
+            "INTEGER" | "INT" => Ok(ColumnType::Integer),
+            "FLOAT" | "DOUBLE" | "REAL" => Ok(ColumnType::Float),
+            "STRING" | "VARCHAR" | "TEXT" | "CHAR" => Ok(ColumnType::String),
+            "BOOLEAN" | "BOOL" => Ok(ColumnType::Boolean),
+            "DATE" => Ok(ColumnType::Date),
+            "DATETIME" | "TIMESTAMP" => Ok(ColumnType::DateTime),
+            "TIME" => Ok(ColumnType::Time),
+            _ => Err(DdbError::ParseError(format!(
+                "Unknown column type: {}",
+                type_str
+            ))),
+        }
     }
 
     /// Parse DROP TABLE statement
     fn parse_drop(&mut self) -> Result<Statement> {
         self.expect(TokenType::Drop)?;
         self.expect(TokenType::Table)?;
+
+        // Check for IF EXISTS
+        let if_exists = if self.match_token(TokenType::If) {
+            self.expect(TokenType::Exists)?;
+            true
+        } else {
+            false
+        };
+
         let name = self.expect_identifier()?;
 
-        Ok(Statement::DropTable(DropTableStatement { name }))
+        Ok(Statement::DropTable(DropTableStatement { name, if_exists }))
     }
 
     /// Parse USE statement
@@ -932,6 +1034,124 @@ mod tests {
                 assert!(del.where_clause.is_some());
             }
             _ => panic!("Expected DELETE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_create_table() {
+        let stmt = parse_sql(
+            "CREATE TABLE users (id INTEGER NOT NULL, name STRING, age INTEGER)"
+        ).unwrap();
+
+        match stmt {
+            Statement::CreateTable(create) => {
+                assert_eq!(create.name, "users");
+                assert_eq!(create.columns.len(), 3);
+                assert_eq!(create.columns[0].name, "id");
+                assert!(matches!(create.columns[0].data_type, ColumnType::Integer));
+                assert!(!create.columns[0].nullable);
+                assert_eq!(create.columns[1].name, "name");
+                assert!(matches!(create.columns[1].data_type, ColumnType::String));
+                assert!(create.columns[1].nullable);
+                assert_eq!(create.columns[2].name, "age");
+                assert!(matches!(create.columns[2].data_type, ColumnType::Integer));
+                assert!(create.columns[2].nullable);
+                assert!(!create.if_not_exists);
+            }
+            _ => panic!("Expected CREATE TABLE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_create_table_if_not_exists() {
+        let stmt = parse_sql(
+            "CREATE TABLE IF NOT EXISTS users (id INTEGER NOT NULL)"
+        ).unwrap();
+
+        match stmt {
+            Statement::CreateTable(create) => {
+                assert_eq!(create.name, "users");
+                assert!(create.if_not_exists);
+                assert_eq!(create.columns.len(), 1);
+            }
+            _ => panic!("Expected CREATE TABLE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_create_table_with_options() {
+        let stmt = parse_sql(
+            "CREATE TABLE users (id INTEGER, name STRING) FILE '/path/to/file.csv' DELIMITER ',' DATA_STARTS_ON 2 COMMENT_CHAR '#' QUOTE_CHAR '\"'"
+        ).unwrap();
+
+        match stmt {
+            Statement::CreateTable(create) => {
+                assert_eq!(create.name, "users");
+                assert_eq!(create.file_path, "/path/to/file.csv");
+                assert_eq!(create.delimiter, Some(','));
+                assert_eq!(create.data_starts_on, Some(2));
+                assert_eq!(create.comment_char, Some('#'));
+                assert_eq!(create.quote_char, Some('"'));
+            }
+            _ => panic!("Expected CREATE TABLE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_drop_table() {
+        let stmt = parse_sql("DROP TABLE users").unwrap();
+
+        match stmt {
+            Statement::DropTable(drop) => {
+                assert_eq!(drop.name, "users");
+                assert!(!drop.if_exists);
+            }
+            _ => panic!("Expected DROP TABLE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_drop_table_if_exists() {
+        let stmt = parse_sql("DROP TABLE IF EXISTS users").unwrap();
+
+        match stmt {
+            Statement::DropTable(drop) => {
+                assert_eq!(drop.name, "users");
+                assert!(drop.if_exists);
+            }
+            _ => panic!("Expected DROP TABLE statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_set() {
+        let stmt = parse_sql("SET output_format = 'json'").unwrap();
+
+        match stmt {
+            Statement::Set(set) => {
+                assert_eq!(set.variable, "output_format");
+                match set.value {
+                    Expression::Literal(Literal::String(s)) => assert_eq!(s, "json"),
+                    _ => panic!("Expected string literal"),
+                }
+            }
+            _ => panic!("Expected SET statement"),
+        }
+    }
+
+    #[test]
+    fn test_parse_set_with_number() {
+        let stmt = parse_sql("SET max_rows = 100").unwrap();
+
+        match stmt {
+            Statement::Set(set) => {
+                assert_eq!(set.variable, "max_rows");
+                match set.value {
+                    Expression::Literal(Literal::Integer(i)) => assert_eq!(i, 100),
+                    _ => panic!("Expected integer literal"),
+                }
+            }
+            _ => panic!("Expected SET statement"),
         }
     }
 }

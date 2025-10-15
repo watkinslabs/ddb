@@ -410,6 +410,9 @@ fn execute_query(cli: &Cli, query: &str, config: &Config, catalog: &TableCatalog
         Statement::Set(_) => {
             Err("SET statements are not yet implemented".into())
         }
+        Statement::Describe(_) => {
+            Err("DESCRIBE statements are not yet implemented".into())
+        }
         Statement::Begin | Statement::Commit | Statement::Rollback => {
             Err("Transaction statements are not yet implemented".into())
         }

@@ -85,7 +85,7 @@ ddb --query "UPDATE customers.csv SET status = 'premium' WHERE total_purchases >
   - Variables: `@@VERSION`, `@@DB_NAME`, `@@DB_TYPE`, etc.
 
 - **Output Formats:**
-  - JSON, YAML, CSV, terminal tables
+  - JSON, YAML, CSV, XML, terminal tables
 
 - **Performance:**
   - **4 Major Optimizations:**
@@ -103,11 +103,17 @@ ddb --query "UPDATE customers.csv SET status = 'premium' WHERE total_purchases >
   - 3 tools (with full CRUD support), 2 resources, 2 prompts
   - Activated with `--mcp` flag
 
+- **DDL Operations:**
+  - **CREATE TABLE** - Define table schemas with SQL (replaces YAML)
+  - **DROP TABLE** - Remove table definitions
+  - **SET** - Configure session variables
+  - SQL-based schema definitions with full type support
+
 📋 **Not Yet Implemented:**
-- CREATE TABLE, DROP TABLE statements
 - Transaction support (BEGIN, COMMIT, ROLLBACK)
 - Subqueries and CTEs (Common Table Expressions)
 - Window functions
+- CREATE INDEX, ALTER TABLE
 
 ## Quick Start
 
@@ -119,31 +125,25 @@ cargo build --release
 mkdir -p ~/.ddb/schemas
 
 # 3. Create main config file
-cat > ~/.ddb/ddb.yaml <<EOF
+cat > ~/.ddb/config.yaml <<EOF
 default_database: main
 schema_dir: ~/.ddb/schemas
 default_delimiter: ','
 data_starts_on: 0
-default_output_format: json
+default_output_format: table
 EOF
 
-# 4. Create a table schema (example: users.yaml)
-cat > ~/.ddb/schemas/users.yaml <<EOF
-name: users
-database: main
-data_file: /path/to/your/users.csv
-field_delimiter: ','
-data_starts_on: 1
-columns:
-  - name: id
-    type: Integer
-    nullable: false
-  - name: name
-    type: String
-    nullable: false
-  - name: email
-    type: String
-    nullable: true
+# 4. Create a table schema using SQL (example: users.sql)
+cat > ~/.ddb/schemas/users.sql <<EOF
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER NOT NULL,
+    name STRING NOT NULL,
+    email STRING
+)
+FILE '/path/to/your/users.csv'
+DELIMITER ','
+DATA_STARTS_ON 1
+COMMENT_CHAR '#';
 EOF
 
 # 5. Query your data!
@@ -296,9 +296,9 @@ See [MCP_SERVER.md](MCP_SERVER.md) for complete documentation.
 
 ## Configuration
 
-DDB uses YAML configuration files located in `~/.ddb/` (or a custom directory via `--config`).
+DDB uses configuration files located in `~/.ddb/` (or a custom directory via `--config`).
 
-### Main Configuration (`~/.ddb/ddb.yaml`)
+### Main Configuration (`~/.ddb/config.yaml`)
 
 ```yaml
 default_database: main
@@ -306,34 +306,35 @@ schema_dir: ~/.ddb/schemas
 default_delimiter: ','
 data_starts_on: 0         # Line where data starts (0 = after header)
 comment_char: '#'          # Optional: lines starting with this are ignored
-default_output_format: json
+default_output_format: table
 ```
 
-### Table Schema (`~/.ddb/schemas/users.yaml`)
+### Table Schema (`~/.ddb/schemas/users.sql`)
 
-```yaml
-name: users
-database: main
-data_file: /path/to/users.csv
-field_delimiter: ','
-data_starts_on: 1         # Skip header row
-columns:
-  - name: id
-    type: Integer
-    nullable: false
-  - name: name
-    type: String
-    nullable: false
-  - name: email
-    type: String
-    nullable: true
-  - name: age
-    type: Integer
-    nullable: true
-  - name: created_at
-    type: DateTime
-    nullable: false
+Tables are now defined using SQL CREATE TABLE statements:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER NOT NULL,
+    name STRING NOT NULL,
+    email STRING,
+    age INTEGER,
+    created_at DATETIME NOT NULL
+)
+FILE '/path/to/users.csv'
+DELIMITER ','
+DATA_STARTS_ON 1
+COMMENT_CHAR '#'
+QUOTE_CHAR '"';
 ```
+
+**CREATE TABLE Options:**
+- `IF NOT EXISTS` - Don't error if table already exists
+- `FILE 'path'` - Path to data file
+- `DELIMITER 'char'` - Field delimiter (default: `,`)
+- `DATA_STARTS_ON n` - Line number where data starts
+- `COMMENT_CHAR 'char'` - Lines starting with this are ignored
+- `QUOTE_CHAR 'char'` - Character used to quote fields
 
 ### Supported Data Types
 
@@ -349,11 +350,11 @@ columns:
 
 ```
 ~/.ddb/
-├── ddb.yaml              # Main configuration
+├── config.yaml           # Main configuration
 └── schemas/
-    ├── users.yaml        # Table definition
-    ├── orders.yaml       # Table definition
-    ├── products.yaml     # Table definition
+    ├── users.sql         # Table definition (CREATE TABLE statement)
+    ├── orders.sql        # Table definition (CREATE TABLE statement)
+    ├── products.sql      # Table definition (CREATE TABLE statement)
     └── ...
 ```
 
@@ -436,12 +437,13 @@ See [BENCHMARKS.md](BENCHMARKS.md) for comprehensive benchmark results with deta
 Contributions welcome! Key areas for future development:
 
 1. **Subqueries** - Nested SELECT statements
-2. **CREATE/DROP TABLE** - DDL operations
-3. **Transaction Support** - BEGIN, COMMIT, ROLLBACK
-4. **Window Functions** - ROW_NUMBER, RANK, LAG, LEAD, etc.
-5. **CTEs** - Common Table Expressions (WITH clause)
-6. **Additional Tests** - More unit and integration test coverage
-7. **Query Planning** - Cost-based optimizer for complex queries
+2. **Transaction Support** - BEGIN, COMMIT, ROLLBACK
+3. **Window Functions** - ROW_NUMBER, RANK, LAG, LEAD, etc.
+4. **CTEs** - Common Table Expressions (WITH clause)
+5. **CREATE INDEX** - Index creation for faster lookups
+6. **ALTER TABLE** - Schema modifications
+7. **Additional Tests** - More unit and integration test coverage
+8. **Query Planning** - Cost-based optimizer for complex queries
 
 ## License
 

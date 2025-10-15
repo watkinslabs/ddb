@@ -12,6 +12,7 @@ pub enum Statement {
     DropTable(DropTableStatement),
     Use(UseStatement),
     Show(ShowStatement),
+    Describe(String), // Describe table_name
     Set(SetStatement),
     Begin,
     Commit,
@@ -102,14 +103,37 @@ pub struct DeleteStatement {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CreateTableStatement {
     pub name: String,
-    pub columns: Vec<String>,
+    pub columns: Vec<ColumnDefinition>,
     pub file_path: String,
     pub delimiter: Option<char>,
+    pub data_starts_on: Option<usize>,
+    pub comment_char: Option<char>,
+    pub quote_char: Option<char>,
+    pub if_not_exists: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ColumnDefinition {
+    pub name: String,
+    pub data_type: ColumnType,
+    pub nullable: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ColumnType {
+    Integer,
+    Float,
+    String,
+    Boolean,
+    Date,
+    DateTime,
+    Time,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DropTableStatement {
     pub name: String,
+    pub if_exists: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

@@ -1,0 +1,15 @@
+# DDB Configuration for Examples
+#
+# This configuration demonstrates how to set up DDB for querying
+# multiple tables with full SQL support including JOINs.
+#
+# Table schemas are defined using SQL CREATE TABLE statements in the
+# schemas/ directory. DDB will automatically load all .sql files from
+# the schema_dir on startup.
+
+default_database: main
+schema_dir: examples/config/schemas
+default_delimiter: ','
+data_starts_on: 1  # Skip header row (0 means no header)
+comment_char: '#'  # Lines starting with # are ignored
+default_output_format: table  # Options: table, json, yaml, csv

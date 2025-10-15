@@ -184,6 +184,8 @@ fn parse_keyword(input: &str) -> IResult<&str, TokenType> {
         "on" => TokenType::On,
         "having" => TokenType::Having,
         "group" => TokenType::Group,
+        "if" => TokenType::If,
+        "exists" => TokenType::Exists,
         _ => {
             // Not a keyword, fail to match
             return Err(nom::Err::Error(nom::error::Error::new(

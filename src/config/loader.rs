@@ -413,7 +413,7 @@ mod tests {
         let mut file = fs::File::create(&sql_file).unwrap();
         writeln!(
             file,
-            "CREATE TABLE users (id, name, email) FILE 'data/users.csv' DELIMITER ',';"
+            "CREATE TABLE users (id INTEGER, name STRING, email STRING) FILE 'data/users.csv' DELIMITER ',';"
         )
         .unwrap();
         file.flush().unwrap();
