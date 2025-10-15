@@ -142,8 +142,8 @@ impl QueryExecutor {
                 right_rows.push(row);
             }
 
-            // Perform the join
-            result = self.perform_join(result, right_rows, join)?;
+            // Perform the join with index optimization
+            result = self.perform_join_indexed(result, right_rows, join)?;
         }
 
         Ok(result)
@@ -244,6 +244,164 @@ impl QueryExecutor {
         }
 
         Ok(joined_rows)
+    }
+
+    /// Perform a join with index optimization
+    /// Tries to use hash index for equality joins, falls back to nested loop for complex conditions
+    fn perform_join_indexed(
+        &self,
+        left_rows: Vec<Row>,
+        right_rows: Vec<Row>,
+        join: &JoinClause,
+    ) -> Result<Vec<Row>> {
+        use crate::engine::index::HashIndex;
+
+        // Try to detect simple equality condition for index optimization
+        // Pattern: left_col = right_col (or right_col = left_col)
+        let index_info = self.try_extract_equality_join(&join.on_condition);
+
+        if let Some((left_col, right_col)) = index_info {
+            // We can use index optimization!
+            // Build hash index on the right table's join column
+            let right_index = HashIndex::build(&right_col, &right_rows);
+
+            let mut joined_rows = Vec::new();
+
+            match join.join_type {
+                JoinType::Inner => {
+                    // For each left row, use index to find matching right rows
+                    for left_row in &left_rows {
+                        if let Some(left_value) = left_row.get(&left_col) {
+                            if let Some(matching_indices) = right_index.lookup(left_value) {
+                                for &right_idx in matching_indices {
+                                    let right_row = &right_rows[right_idx];
+                                    let combined = self.merge_rows(left_row, right_row);
+
+                                    // Still need to evaluate full condition in case there are additional clauses
+                                    let result = self.evaluator.evaluate(&join.on_condition, &combined)?;
+                                    if self.to_boolean(&result)? {
+                                        joined_rows.push(combined);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                JoinType::Left => {
+                    // LEFT JOIN: All rows from left, with NULLs for right if no match
+                    for left_row in &left_rows {
+                        let mut matched = false;
+                        if let Some(left_value) = left_row.get(&left_col) {
+                            if let Some(matching_indices) = right_index.lookup(left_value) {
+                                for &right_idx in matching_indices {
+                                    let right_row = &right_rows[right_idx];
+                                    let combined = self.merge_rows(left_row, right_row);
+
+                                    let result = self.evaluator.evaluate(&join.on_condition, &combined)?;
+                                    if self.to_boolean(&result)? {
+                                        joined_rows.push(combined);
+                                        matched = true;
+                                    }
+                                }
+                            }
+                        }
+                        if !matched {
+                            joined_rows.push(left_row.clone());
+                        }
+                    }
+                }
+                JoinType::Right => {
+                    // RIGHT JOIN: Build index on left table instead
+                    let left_index = HashIndex::build(&left_col, &left_rows);
+                    let mut matched_right = vec![false; right_rows.len()];
+
+                    for (right_idx, right_row) in right_rows.iter().enumerate() {
+                        if let Some(right_value) = right_row.get(&right_col) {
+                            if let Some(matching_indices) = left_index.lookup(right_value) {
+                                for &left_idx in matching_indices {
+                                    let left_row = &left_rows[left_idx];
+                                    let combined = self.merge_rows(left_row, right_row);
+
+                                    let result = self.evaluator.evaluate(&join.on_condition, &combined)?;
+                                    if self.to_boolean(&result)? {
+                                        joined_rows.push(combined);
+                                        matched_right[right_idx] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Add unmatched right rows
+                    for (idx, right_row) in right_rows.iter().enumerate() {
+                        if !matched_right[idx] {
+                            joined_rows.push(right_row.clone());
+                        }
+                    }
+                }
+                JoinType::Full => {
+                    // FULL OUTER JOIN: Need to track both sides
+                    let mut matched_left = vec![false; left_rows.len()];
+                    let mut matched_right = vec![false; right_rows.len()];
+
+                    // Use index on right table
+                    for (left_idx, left_row) in left_rows.iter().enumerate() {
+                        if let Some(left_value) = left_row.get(&left_col) {
+                            if let Some(matching_indices) = right_index.lookup(left_value) {
+                                for &right_idx in matching_indices {
+                                    let right_row = &right_rows[right_idx];
+                                    let combined = self.merge_rows(left_row, right_row);
+
+                                    let result = self.evaluator.evaluate(&join.on_condition, &combined)?;
+                                    if self.to_boolean(&result)? {
+                                        joined_rows.push(combined);
+                                        matched_left[left_idx] = true;
+                                        matched_right[right_idx] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Add unmatched left rows
+                    for (idx, left_row) in left_rows.iter().enumerate() {
+                        if !matched_left[idx] {
+                            joined_rows.push(left_row.clone());
+                        }
+                    }
+
+                    // Add unmatched right rows
+                    for (idx, right_row) in right_rows.iter().enumerate() {
+                        if !matched_right[idx] {
+                            joined_rows.push(right_row.clone());
+                        }
+                    }
+                }
+            }
+
+            Ok(joined_rows)
+        } else {
+            // Can't use index - fall back to nested loop
+            self.perform_join(left_rows, right_rows, join)
+        }
+    }
+
+    /// Try to extract simple equality join condition (e.g., "a.id = b.user_id")
+    /// Returns Some((left_column, right_column)) if it's a simple equality, None otherwise
+    fn try_extract_equality_join(&self, expr: &crate::parser::Expression) -> Option<(String, String)> {
+        use crate::parser::{BinaryOperator, Expression};
+
+        if let Expression::BinaryOp { left, op, right } = expr {
+            // Check if it's an equality operator
+            if matches!(op, BinaryOperator::Equal) {
+                // Both sides must be column references
+                if let (Expression::Column(left_col), Expression::Column(right_col)) = (left.as_ref(), right.as_ref()) {
+                    return Some((left_col.clone(), right_col.clone()));
+                }
+            }
+        }
+
+        None
     }
 
     /// Merge two rows into one (for JOINs)
@@ -1255,5 +1413,93 @@ mod tests {
             results[2].get("name"),
             Some(&Value::String("Bob".to_string()))
         );
+    }
+
+    #[test]
+    fn test_indexed_join() {
+        use crate::file_io::CsvReader;
+
+        // Create left table (users)
+        let mut users_file = NamedTempFile::new().unwrap();
+        writeln!(users_file, "id,name").unwrap();
+        writeln!(users_file, "1,Alice").unwrap();
+        writeln!(users_file, "2,Bob").unwrap();
+        writeln!(users_file, "3,Charlie").unwrap();
+        users_file.flush().unwrap();
+
+        let users_table = Table {
+            name: "users".to_string(),
+            database: "test".to_string(),
+            data_file: users_file.path().to_string_lossy().to_string(),
+            columns: vec![],
+            field_delimiter: ',',
+            data_starts_on: 0,
+            comment_char: None,
+        };
+
+        // Create right table (orders)
+        let mut orders_file = NamedTempFile::new().unwrap();
+        writeln!(orders_file, "order_id,user_id,amount").unwrap();
+        writeln!(orders_file, "101,1,50").unwrap();
+        writeln!(orders_file, "102,2,75").unwrap();
+        writeln!(orders_file, "103,1,100").unwrap();
+        orders_file.flush().unwrap();
+
+        // Read users data
+        let mut users_reader = CsvReader::new(&users_table.data_file, ',', true).unwrap();
+        let mut left_rows = Vec::new();
+        while let Some(row) = users_reader.next_row().unwrap() {
+            left_rows.push(row);
+        }
+
+        // Read orders data
+        let orders_path = orders_file.path().to_string_lossy().to_string();
+        let mut orders_reader = CsvReader::new(&orders_path, ',', true).unwrap();
+        let mut right_rows = Vec::new();
+        while let Some(row) = orders_reader.next_row().unwrap() {
+            right_rows.push(row);
+        }
+
+        // Create JOIN condition: id = user_id
+        let join_condition = Expression::BinaryOp {
+            left: Box::new(Expression::Column("id".to_string())),
+            op: BinaryOperator::Equal,
+            right: Box::new(Expression::Column("user_id".to_string())),
+        };
+
+        let join_clause = JoinClause {
+            join_type: JoinType::Inner,
+            table: "orders".to_string(),
+            on_condition: join_condition,
+        };
+
+        // Test the indexed join directly
+        let executor = QueryExecutor::new();
+        let results = executor
+            .perform_join_indexed(left_rows, right_rows, &join_clause)
+            .unwrap();
+
+        // Should have 3 rows (Alice has 2 orders, Bob has 1, Charlie has 0)
+        assert_eq!(results.len(), 3);
+
+        // Verify JOIN worked correctly
+        let alice_orders: Vec<_> = results
+            .iter()
+            .filter(|r| r.get("name") == Some(&Value::String("Alice".to_string())))
+            .collect();
+        assert_eq!(alice_orders.len(), 2);
+
+        let bob_orders: Vec<_> = results
+            .iter()
+            .filter(|r| r.get("name") == Some(&Value::String("Bob".to_string())))
+            .collect();
+        assert_eq!(bob_orders.len(), 1);
+
+        // Charlie should have 0 orders (INNER JOIN excludes unmatched)
+        let charlie_orders: Vec<_> = results
+            .iter()
+            .filter(|r| r.get("name") == Some(&Value::String("Charlie".to_string())))
+            .collect();
+        assert_eq!(charlie_orders.len(), 0);
     }
 }
