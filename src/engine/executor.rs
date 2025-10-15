@@ -74,13 +74,25 @@ impl QueryExecutor {
             rows = self.deduplicate_rows(rows);
         }
 
-        // Apply ORDER BY
+        // Apply ORDER BY with optional LIMIT optimization
         if !stmt.order_by.is_empty() {
-            rows = self.sort_rows(rows, &stmt.order_by)?;
-        }
-
-        // Apply LIMIT
-        if let Some(limit) = &stmt.limit {
+            // Heap-based optimization: If we have LIMIT without OFFSET, use a heap to avoid full sort
+            if let Some(limit) = &stmt.limit {
+                if limit.offset.is_none() || limit.offset == Some(0) {
+                    // Use heap-based top-K algorithm for better performance
+                    rows = self.sort_rows_with_limit(rows, &stmt.order_by, limit.count)?;
+                } else {
+                    // Has OFFSET - need full sort
+                    rows = self.sort_rows(rows, &stmt.order_by)?;
+                    let start = limit.offset.unwrap_or(0);
+                    rows = rows.into_iter().skip(start).take(limit.count).collect();
+                }
+            } else {
+                // No LIMIT - full sort required
+                rows = self.sort_rows(rows, &stmt.order_by)?;
+            }
+        } else if let Some(limit) = &stmt.limit {
+            // LIMIT without ORDER BY - just take first N rows
             let start = limit.offset.unwrap_or(0);
             rows = rows.into_iter().skip(start).take(limit.count).collect();
         }
@@ -574,6 +586,62 @@ impl QueryExecutor {
             }
             std::cmp::Ordering::Equal
         });
+
+        Ok(rows)
+    }
+
+    /// Sort rows with LIMIT optimization using partial sorting
+    /// This uses select_nth_unstable for O(n) partitioning + O(k log k) sorting = O(n + k log k)
+    fn sort_rows_with_limit(
+        &self,
+        mut rows: Vec<Row>,
+        order_by: &[crate::parser::OrderByColumn],
+        limit: usize,
+    ) -> Result<Vec<Row>> {
+        use std::cmp::Ordering;
+
+        // If limit is 0, return empty
+        if limit == 0 {
+            return Ok(Vec::new());
+        }
+
+        // If we have fewer rows than the limit, just do a full sort
+        if rows.len() <= limit {
+            return self.sort_rows(rows, order_by);
+        }
+
+        // If limit is very close to total size, full sort is better
+        if limit * 2 > rows.len() {
+            return self.sort_rows(rows, order_by);
+        }
+
+        // Create a comparator closure
+        let cmp_fn = |a: &Row, b: &Row| -> Ordering {
+            for order_col in order_by {
+                let a_val = a.get(&order_col.column).cloned().unwrap_or(Value::Null);
+                let b_val = b.get(&order_col.column).cloned().unwrap_or(Value::Null);
+
+                let cmp = self.compare_values(&a_val, &b_val);
+
+                let cmp = match order_col.direction {
+                    OrderDirection::Asc => cmp,
+                    OrderDirection::Desc => cmp.reverse(),
+                };
+
+                if cmp != Ordering::Equal {
+                    return cmp;
+                }
+            }
+            Ordering::Equal
+        };
+
+        // Use select_nth_unstable to partition the array so that the first `limit` elements
+        // are the smallest, without fully sorting them. This is O(n) average case.
+        rows.select_nth_unstable_by(limit, |a, b| cmp_fn(a, b));
+
+        // Now take the first `limit` elements and sort them properly
+        rows.truncate(limit);
+        rows.sort_by(|a, b| cmp_fn(a, b));
 
         Ok(rows)
     }
